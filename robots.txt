@@ -1,0 +1,13 @@
+# Loom Saga Robots.txt
+# https://loomsaga.com
+
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Block internal/development pages
+Disallow: /assets/
+Disallow: /*.json$
+
+# Sitemap location
+Sitemap: https://loomsaga.com/sitemap.xml
