@@ -13,15 +13,51 @@ const navOverlay = document.getElementById('navOverlay');
 
 // ==================== HEADER SCROLL EFFECT ====================
 /**
- * Adds a 'scrolled' class to header when page is scrolled
- * This enables the frosted glass effect on scroll
+ * Header visibility management:
+ * - Hide on scroll down
+ * - Show on scroll up
+ * - Remove entirely when reaching footer
  */
+let lastScrollY = window.scrollY;
+let headerVisible = true;
+
 function handleHeaderScroll() {
-    if (window.scrollY > 50) {
+    const currentScrollY = window.scrollY;
+    const footer = document.getElementById('footer');
+    const footerTop = footer ? footer.offsetTop : Infinity;
+    const windowHeight = window.innerHeight;
+    
+    // Add/remove scrolled class for background
+    if (currentScrollY > 50) {
         header.classList.add('scrolled');
     } else {
         header.classList.remove('scrolled');
     }
+    
+    // Hide header when reaching footer
+    if (currentScrollY + windowHeight >= footerTop - 50) {
+        header.classList.add('header-hidden');
+        headerVisible = false;
+        lastScrollY = currentScrollY;
+        return;
+    }
+    
+    // Scrolling down - hide header (only after scrolling 100px)
+    if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        if (headerVisible) {
+            header.classList.add('header-hidden');
+            headerVisible = false;
+        }
+    }
+    // Scrolling up - show header
+    else if (currentScrollY < lastScrollY) {
+        if (!headerVisible) {
+            header.classList.remove('header-hidden');
+            headerVisible = true;
+        }
+    }
+    
+    lastScrollY = currentScrollY;
 }
 
 // Listen for scroll events with throttling for performance
@@ -1509,5 +1545,128 @@ function initProductDetail() {
 document.addEventListener('DOMContentLoaded', () => {
     init();
     initProductDetail();
+    initCarouselArrows();
 });
 
+// ==================== CAROUSEL ARROW NAVIGATION ====================
+/**
+ * Initialize carousel arrow navigation
+ */
+function initCarouselArrows() {
+    const carouselArrows = document.querySelectorAll('.carousel-arrow');
+    
+    carouselArrows.forEach(arrow => {
+        arrow.addEventListener('click', () => {
+            const carouselId = arrow.dataset.carousel;
+            const carousel = document.getElementById(carouselId);
+            
+            if (!carousel) return;
+            
+            const scrollAmount = carousel.offsetWidth * 0.8; // Scroll 80% of visible width
+            const isLeft = arrow.classList.contains('carousel-arrow-left');
+            
+            carousel.scrollBy({
+                left: isLeft ? -scrollAmount : scrollAmount,
+                behavior: 'smooth'
+            });
+        });
+    });
+}
+
+// ==================== SCROLL REVEAL ANIMATIONS ====================
+/**
+ * Initialize scroll reveal animations using Intersection Observer
+ * Adds elegant fade-in animations as sections enter the viewport
+ */
+function initScrollReveal() {
+    // Check for reduced motion preference
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    
+    if (prefersReducedMotion) {
+        // If user prefers reduced motion, show all elements immediately
+        document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-stagger').forEach(el => {
+            el.classList.add('revealed');
+        });
+        return;
+    }
+    
+    // Create Intersection Observer
+    const observerOptions = {
+        root: null, // viewport
+        rootMargin: '0px 0px -80px 0px', // Trigger slightly before element enters viewport
+        threshold: 0.1 // 10% visibility triggers animation
+    };
+    
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+                // Optionally unobserve after revealing (performance optimization)
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+    
+    // Observe all reveal elements
+    const revealElements = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-stagger');
+    revealElements.forEach(el => {
+        revealObserver.observe(el);
+    });
+}
+
+// ==================== AUTO-ADD REVEAL CLASSES ====================
+/**
+ * Automatically add reveal classes to sections for elegant page animations
+ * This runs on DOMContentLoaded to enhance the page with animations
+ */
+function autoAddRevealClasses() {
+    // Add reveal to intro section
+    const introSection = document.querySelector('.intro-section');
+    if (introSection) {
+        introSection.classList.add('reveal');
+    }
+    
+    // Add reveal to discover/video section
+    const discoverSection = document.querySelector('.discover-video-section');
+    if (discoverSection) {
+        discoverSection.classList.add('reveal');
+    }
+    
+    // Add reveal to explore section title
+    const exploreTitle = document.querySelector('.explore-title');
+    if (exploreTitle) {
+        exploreTitle.classList.add('reveal');
+    }
+    
+    // Add reveal to story sections with directional animations
+    const artistLegacy = document.querySelector('#artist-legacy .story-image');
+    const artistContent = document.querySelector('#artist-legacy .story-content');
+    if (artistLegacy) artistLegacy.classList.add('reveal-left');
+    if (artistContent) artistContent.classList.add('reveal-right');
+    
+    const craftImage = document.querySelector('#craft-matters .story-image');
+    const craftContent = document.querySelector('#craft-matters .story-content');
+    if (craftImage) craftImage.classList.add('reveal-right');
+    if (craftContent) craftContent.classList.add('reveal-left');
+    
+    // Add reveal to insights section title
+    const insightsTitle = document.querySelector('.insights-title');
+    if (insightsTitle) {
+        insightsTitle.classList.add('reveal');
+    }
+    
+    // Add reveal to footer
+    const footer = document.querySelector('.footer-content');
+    if (footer) {
+        footer.classList.add('reveal');
+    }
+}
+
+// Update the DOMContentLoaded event to include scroll reveal
+document.addEventListener('DOMContentLoaded', () => {
+    // Auto-add reveal classes first
+    autoAddRevealClasses();
+    
+    // Initialize scroll reveal animations
+    initScrollReveal();
+});
