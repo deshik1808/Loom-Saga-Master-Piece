@@ -46,6 +46,9 @@
     <!---Bootstrap--->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
     <!-- Main Stylesheet -->
     <link rel="stylesheet" href="css/styles.css" />
 
@@ -135,7 +138,7 @@
         <nav class="main-nav" aria-label="Main Navigation">
           <ul class="nav-list">
                     <li class="nav-item has-dropdown">
-              <a href="#" class="nav-link">New Arrivals <svg class="dropdown-arrow" width="8" height="5" viewBox="0 0 8 5" fill="none"><path d="M1 1L4 4L7 1" stroke="currentColor" stroke-width="1.2"/></svg></a>
+              <a href="#" class="nav-link"><span class="nav-link-text">New Arrivals</span> <svg class="dropdown-arrow" width="8" height="5" viewBox="0 0 8 5" fill="none"><path d="M1 1L4 4L7 1" stroke="currentColor" stroke-width="1.2"/></svg></a>
               <div class="mega-menu mega-menu-new-arrivals">
                 <div class="mega-menu-content new-arrivals-content">
                   <!-- Left side: Category Links -->
@@ -158,7 +161,7 @@
               </div>
             </li>
                     <li class="nav-item has-dropdown">
-                        <a href="#" class="nav-link">Collection <svg class="dropdown-arrow" width="8" height="5" viewBox="0 0 8 5" fill="none"><path d="M1 1L4 4L7 1" stroke="currentColor" stroke-width="1.2"/></svg></a>
+                        <a href="#" class="nav-link"><span class="nav-link-text">Collection</span> <svg class="dropdown-arrow" width="8" height="5" viewBox="0 0 8 5" fill="none"><path d="M1 1L4 4L7 1" stroke="currentColor" stroke-width="1.2"/></svg></a>
                         <div class="mega-menu mega-menu-collection">
                             <div class="mega-menu-content collection-menu-content">
                                 <div class="mega-menu-links">
@@ -188,7 +191,7 @@
                         </div>
                     </li>
                     <li class="nav-item has-dropdown">
-                        <a href="./silk-sarees.html" class="nav-link">Sarees <svg class="dropdown-arrow" width="8" height="5" viewBox="0 0 8 5" fill="none"><path d="M1 1L4 4L7 1" stroke="currentColor" stroke-width="1.2"/></svg></a>
+                        <a href="./silk-sarees.html" class="nav-link"><span class="nav-link-text">Sarees</span> <svg class="dropdown-arrow" width="8" height="5" viewBox="0 0 8 5" fill="none"><path d="M1 1L4 4L7 1" stroke="currentColor" stroke-width="1.2"/></svg></a>
                         <div class="mega-menu mega-menu-sarees">
                             <div class="mega-menu-content sarees-menu-content">
                                 <div class="mega-menu-links">
@@ -241,7 +244,7 @@
                         </div>
                     </li>
                     <li class="nav-item has-dropdown">
-                        <a href="#" class="nav-link">Crafts <svg class="dropdown-arrow" width="8" height="5" viewBox="0 0 8 5" fill="none"><path d="M1 1L4 4L7 1" stroke="currentColor" stroke-width="1.2"/></svg></a>
+                        <a href="#" class="nav-link"><span class="nav-link-text">Crafts</span> <svg class="dropdown-arrow" width="8" height="5" viewBox="0 0 8 5" fill="none"><path d="M1 1L4 4L7 1" stroke="currentColor" stroke-width="1.2"/></svg></a>
                         <div class="mega-menu mega-menu-crafts">
                             <div class="mega-menu-content crafts-menu-content">
                                 <div class="mega-menu-links">
@@ -277,7 +280,7 @@
                         </div>
                     </li>
                     <li class="nav-item has-dropdown">
-                        <a href="#" class="nav-link">About Us <svg class="dropdown-arrow" width="8" height="5" viewBox="0 0 8 5" fill="none"><path d="M1 1L4 4L7 1" stroke="currentColor" stroke-width="1.2"/></svg></a>
+                        <a href="#" class="nav-link"><span class="nav-link-text">About Us</span> <svg class="dropdown-arrow" width="8" height="5" viewBox="0 0 8 5" fill="none"><path d="M1 1L4 4L7 1" stroke="currentColor" stroke-width="1.2"/></svg></a>
                         <div class="mega-menu mega-menu-about">
                             <div class="mega-menu-content about-us-content">
                                 <div class="mega-menu-links">
@@ -291,12 +294,11 @@
                                 </ul>
                                 </div>
                                 <div class="mega-menu-images">
-                                    <!-- About Us has special card layout -->
                                     <a href="#" class="mega-menu-img-wrapper">
-                                        <!-- Brand story link/img -->
+                                       <img src="assets/images/Yellow Saree.jpg" alt="About Us 1" loading="lazy">
                                     </a>
                                     <a href="#" class="mega-menu-img-wrapper">
-                                       <img src="assets/images/Golden Beauty.jpg" alt="About Us" loading="lazy">
+                                       <img src="assets/images/Golden Beauty.jpg" alt="About Us 2" loading="lazy">
                                     </a>
                                 </div>
                             </div>
@@ -356,7 +358,7 @@
       <section class="hero" id="hero">
         <div class="hero-image-container">
           <img
-            src="assets/images/hero-bg.jpg"
+            src="assets/images/optimized/hero-bg.webp"
             alt="Elegant woman wearing a beautiful green silk saree with floral patterns"
             class="hero-image"
             loading="eager"
@@ -383,62 +385,55 @@
       </section>
 
       <!-- ==================== DISCOVER + VIDEO TWO-COLUMN SECTION ==================== -->
-      <section class="discover-video-section" id="discover-video">
-        <div class="two-column-grid">
-          <!-- Left Column - Discover Cards -->
-          <div class="discover-column">
-            <h3 class="discover-label">Discover</h3>
-            <div class="discover-cards">
-              <!-- Collection Card 1 - Sage Green -->
-              <article class="collection-card">
-                <div class="collection-image-wrapper">
-                  <img 
-                    src="https://placehold.co/600x750/a8c8b0/333333?text=Sage+Collection" 
-                    alt="Model wearing elegant sage green traditional saree" 
-                    class="collection-image"
-                    loading="lazy"
-                  >
-                  <div class="collection-overlay">
-                    <span class="collection-name">Sage Collection</span>
-                  </div>
-                </div>
-              </article>
-
-              <!-- Collection Card 2 - Mustard Yellow -->
-              <article class="collection-card">
-                <div class="collection-image-wrapper">
-                  <img 
-                    src="./assets/images/Yellow Saree.jpg" 
-                    alt="Model wearing vibrant mustard yellow traditional saree" 
-                    class="collection-image"
-                    loading="lazy"
-                  >
-                  <div class="collection-overlay">
-                    <span class="collection-name">Festive Line</span>
-                  </div>
-                </div>
-              </article>
-            </div>
-          </div>
-
-          <!-- Right Column - Video -->
-          <div class="video-column">
-            <div class="video-wrapper">
-              <!-- Video Thumbnail -->
+      <!-- ==================== DISCOVER SECTION ==================== -->
+      <section class="discover-section" id="discover">
+        <div class="discover-grid">
+          <!-- Card 1 -->
+          <a href="./collection-sage.html" class="discover-card">
+            <div class="discover-image-wrapper">
               <img 
-                src="./assets/images/run way.jpg" 
-                alt="Fashion runway show featuring Loom Saga sarees" 
-                class="video-thumbnail"
+                src="assets/images/optimized/hero-bg.webp" 
+                alt="Model wearing elegant sage green traditional saree" 
+                class="discover-image"
                 loading="lazy"
               >
-              <!-- Play Button - Triangle Only -->
-              <button class="play-btn" id="playBtn" aria-label="Play video">
-                <svg width="60" height="60" viewBox="0 0 24 24" fill="white">
-                  <path d="M8 5v14l11-7z"/>
-                </svg>
-              </button>
+              <div class="discover-overlay">
+                <span class="discover-text">Discover</span>
+              </div>
             </div>
-          </div>
+          </a>
+
+          <!-- Card 2 -->
+          <a href="./collection-festive.html" class="discover-card">
+            <div class="discover-image-wrapper">
+              <img 
+                src="./assets/images/optimized/Yellow Saree.webp" 
+                alt="Model wearing vibrant mustard yellow traditional saree" 
+                class="discover-image"
+                loading="lazy"
+              >
+              <div class="discover-overlay">
+                <span class="discover-text">Discover</span>
+              </div>
+            </div>
+          </a>
+        </div>
+      </section>
+
+      <!-- ==================== VIDEO SECTION ==================== -->
+      <section class="video-section-full" id="video-section">
+        <div class="video-wrapper-full">
+          <img 
+            src="./assets/images/optimized/run way.webp" 
+            alt="Fashion runway show featuring Loom Saga sarees" 
+            class="video-thumbnail-full"
+            loading="lazy"
+          >
+          <button class="play-btn" id="playBtn" aria-label="Play video">
+            <svg width="60" height="60" viewBox="0 0 24 24" fill="white">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+          </button>
         </div>
       </section>
 
@@ -448,73 +443,78 @@
           <h2 class="explore-title">EXPLORE OUR COLLECTION</h2>
         </div>
         
-        <div class="carousel-container" id="exploreCarouselContainer">
-          <button class="carousel-arrow carousel-arrow-left" aria-label="Previous" data-carousel="exploreCarousel">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="15 18 9 12 15 6"></polyline>
-            </svg>
-          </button>
-          <div class="carousel-track" id="exploreCarousel">
-            <!-- Product 1 -->
-            <a href="#" class="product-card" aria-label="View Red & Black Print Saree">
-              <img 
-                src="https://placehold.co/350x500/e8e0d8/333333?text=Red+Print+Saree" 
-                alt="Model wearing elegant red and black printed saree in urban setting" 
-                loading="lazy"
-              >
-            </a>
+        <!-- Swiper -->
+        <div class="swiper explore-swiper">
+          <div class="swiper-wrapper">
+             <!-- Product 1 -->
+             <div class="swiper-slide">
+              <a href="#" class="product-card" aria-label="View Red & Black Print Saree">
+                <img 
+                  src="https://placehold.co/350x500/e8e0d8/333333?text=Red+Print+Saree" 
+                  alt="Model wearing elegant red and black printed saree in urban setting" 
+                  loading="lazy"
+                >
+              </a>
+             </div>
             
             <!-- Product 2 -->
-            <a href="#" class="product-card" aria-label="View Blue Border Saree">
-              <img 
-                src="https://placehold.co/350x500/d4e4e8/333333?text=Blue+Border+Saree" 
-                alt="Model wearing light blue bordered saree with vintage car" 
-                loading="lazy"
-              >
-            </a>
+             <div class="swiper-slide">
+              <a href="#" class="product-card" aria-label="View Blue Border Saree">
+                <img 
+                  src="https://placehold.co/350x500/d4e4e8/333333?text=Blue+Border+Saree" 
+                  alt="Model wearing light blue bordered saree with vintage car" 
+                  loading="lazy"
+                >
+              </a>
+             </div>
             
             <!-- Product 3 -->
-            <a href="#" class="product-card" aria-label="View White Print Saree">
-              <img 
-                src="https://placehold.co/350x500/f0ebe5/333333?text=White+Print+Saree" 
-                alt="Model wearing elegant white printed saree in cafe setting" 
-                loading="lazy"
-              >
-            </a>
+             <div class="swiper-slide">
+              <a href="#" class="product-card" aria-label="View White Print Saree">
+                <img 
+                  src="https://placehold.co/350x500/f0ebe5/333333?text=White+Print+Saree" 
+                  alt="Model wearing elegant white printed saree in cafe setting" 
+                  loading="lazy"
+                >
+              </a>
+             </div>
             
             <!-- Product 4 -->
-            <a href="#" class="product-card" aria-label="View Lime Green Saree">
-              <img 
-                src="https://placehold.co/350x500/d4e8c8/333333?text=Lime+Saree" 
-                alt="Model wearing vibrant lime green floral saree" 
-                loading="lazy"
-              >
-            </a>
+            <div class="swiper-slide">
+              <a href="#" class="product-card" aria-label="View Lime Green Saree">
+                <img 
+                  src="https://placehold.co/350x500/d4e8c8/333333?text=Lime+Saree" 
+                  alt="Model wearing vibrant lime green floral saree" 
+                  loading="lazy"
+                >
+              </a>
+            </div>
             
-            <!-- Additional products can be added here -->
             <!-- Product 5 -->
-            <a href="#" class="product-card" aria-label="View Pink Silk Saree">
-              <img 
-                src="https://placehold.co/350x500/f0d4d8/333333?text=Pink+Silk+Saree" 
-                alt="Model wearing elegant pink silk saree" 
-                loading="lazy"
-              >
-            </a>
+            <div class="swiper-slide">
+              <a href="#" class="product-card" aria-label="View Pink Silk Saree">
+                <img 
+                  src="https://placehold.co/350x500/f0d4d8/333333?text=Pink+Silk+Saree" 
+                  alt="Model wearing elegant pink silk saree" 
+                  loading="lazy"
+                >
+              </a>
+            </div>
             
             <!-- Product 6 -->
-            <a href="#" class="product-card" aria-label="View Gold Embroidered Saree">
-              <img 
-                src="https://placehold.co/350x500/e8d4a0/333333?text=Gold+Embroidered" 
-                alt="Model wearing gold embroidered traditional saree" 
-                loading="lazy"
-              >
-            </a>
+            <div class="swiper-slide">
+              <a href="#" class="product-card" aria-label="View Gold Embroidered Saree">
+                <img 
+                  src="https://placehold.co/350x500/e8d4a0/333333?text=Gold+Embroidered" 
+                  alt="Model wearing gold embroidered traditional saree" 
+                  loading="lazy"
+                >
+              </a>
+            </div>
           </div>
-          <button class="carousel-arrow carousel-arrow-right" aria-label="Next" data-carousel="exploreCarousel">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="9 18 15 12 9 6"></polyline>
-            </svg>
-          </button>
+          <!-- Arrows -->
+          <div class="swiper-button-next"></div>
+          <div class="swiper-button-prev"></div>
         </div>
       </section>
 
@@ -524,7 +524,7 @@
         <div class="story-block">
           <div class="story-image">
             <img 
-              src="https://placehold.co/700x550/e8dcd0/333333?text=Artisan+Block+Printing" 
+              src="./assets/images/optimized/pexels-rachel-fernandes-407276623-14953193.webp" 
               alt="Master artisan hand block printing traditional patterns on fabric" 
               loading="lazy"
             >
@@ -557,7 +557,7 @@
           </div>
           <div class="story-image">
             <img 
-              src="https://placehold.co/700x550/d4c4b8/333333?text=Craftswoman+With+Saree" 
+              src="./assets/images/optimized/pexels-rachel-fernandes-407276623-14953193.webp" 
               alt="Skilled craftswoman carefully inspecting handwoven saree fabric" 
               loading="lazy"
             >
@@ -565,125 +565,83 @@
         </div>
       </section>
 
-      <!-- ==================== FASHION INSIGHTS CAROUSEL ==================== -->
-      <section class="insights-section" id="fashion-insights">
+      <!-- ==================== FASHION INSIGHTS GRID ==================== -->
+      <section class="fashion-insights-section" id="fashion-insights">
         <div class="container">
-          <h2 class="insights-title">FASHION INSIGHTS</h2>
+          <h2 class="fashion-insights-title">FASHION INSIGHTS</h2>
         </div>
         
-        <div class="insights-carousel-container" id="insightsCarouselContainer">
-          <button class="carousel-arrow carousel-arrow-left" aria-label="Previous" data-carousel="insightsCarousel">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="15 18 9 12 15 6"></polyline>
-            </svg>
-          </button>
-          <div class="insights-carousel" id="insightsCarousel">
+        <div class="fashion-insights-grid-container">
+          <div class="fashion-insights-grid">
             <!-- Article 1 -->
-            <article class="insight-card">
-              <a href="./fashion-insights.html" class="insight-image-link">
-                <div class="insight-image-wrapper">
+            <article class="fashion-insight-card">
+              <a href="./fashion-insights.html" class="fashion-insight-image-link">
+                <div class="fashion-insight-image-wrapper">
                   <img 
-                    src="./assets/images/Golden Beauty.jpg" 
+                    src="./assets/images/optimized/Yellow Saree.webp" 
                     alt="Fashion editorial featuring gold saree styling" 
                     loading="lazy"
                   >
-                  <div class="insight-overlay">
-                    <span class="insight-tag">GOLD</span>
-                    <span class="insight-headline">BEAUTY</span>
-                    <span class="insight-tagline">FIT CHECK = FLAWLESS.</span>
-                  </div>
                 </div>
               </a>
-              <div class="insight-content">
-                <h3 class="insight-article-title">Draped for the Day: Saree Looks for Low-Key Fes...</h3>
-                <p class="insight-excerpt">
+              <div class="fashion-insight-content">
+                <h3 class="fashion-insight-article-title">Draped for the Day: Saree Looks for Low-Key Fes...</h3>
+                <p class="fashion-insight-excerpt">
                   There's something about the time between Diwali and the wedding season - when the celebrations slow down, yet the air still carries a quiet sparkle. The dinners get smaller, the...
                 </p>
               </div>
             </article>
 
             <!-- Article 2 -->
-            <article class="insight-card">
-              <a href="./fashion-insights.html" class="insight-image-link">
-                <div class="insight-image-wrapper">
+            <article class="fashion-insight-card">
+              <a href="./fashion-insights.html" class="fashion-insight-image-link">
+                <div class="fashion-insight-image-wrapper">
                   <img 
                     src="https://placehold.co/400x500/7cb342/ffffff?text=Discover+Vibe" 
                     alt="Fashion editorial featuring vibrant green saree" 
                     loading="lazy"
                   >
-                  <div class="insight-overlay">
-                    <span class="insight-tag">DISCOVER YOUR</span>
-                    <span class="insight-headline">VIBE</span>
-                    <span class="insight-tagline">ADD TO CART. ADD TO CHARM</span>
-                  </div>
                 </div>
               </a>
-              <div class="insight-content">
-                <h3 class="insight-article-title">Draped for the Day: Saree Looks for Low-Key Fes...</h3>
-                <p class="insight-excerpt">
+              <div class="fashion-insight-content">
+                <h3 class="fashion-insight-article-title">Draped for the Day: Saree Looks for Low-Key Fes...</h3>
+                <p class="fashion-insight-excerpt">
                   Diwali isn't just about dressing up - it's about creating moments you'll want to relive every year. The sparkle of diyas, the laughter of family dinners, the first sound of...
                 </p>
               </div>
             </article>
 
             <!-- Article 3 -->
-            <article class="insight-card">
-              <a href="./fashion-insights.html" class="insight-image-link">
-                <div class="insight-image-wrapper">
+            <article class="fashion-insight-card">
+              <a href="./fashion-insights.html" class="fashion-insight-image-link">
+                <div class="fashion-insight-image-wrapper">
                   <img 
                     src="https://placehold.co/400x500/2d3436/ffffff?text=New+Era" 
                     alt="Fashion editorial featuring modern saree styling" 
                     loading="lazy"
                   >
-                  <div class="insight-overlay">
-                    <span class="insight-tag">The</span>
-                    <span class="insight-headline">NEW ERA</span>
-                    <span class="insight-tagline">DRAPED IN LUXURY</span>
-                  </div>
                 </div>
               </a>
-              <div class="insight-content">
-                <h3 class="insight-article-title">Draped for the Day: Saree Looks for Low-Key Fes...</h3>
-                <p class="insight-excerpt">
+              <div class="fashion-insight-content">
+                <h3 class="fashion-insight-article-title">Draped for the Day: Saree Looks for Low-Key Fes...</h3>
+                <p class="fashion-insight-excerpt">
                   Karwa Chauth is more than just a ritual - it's a celebration of love, tradition, and radiance. And what better way to mark the day than by adorning yourself in...
                 </p>
               </div>
             </article>
-
-            <!-- Article 4 (extra for carousel) -->
-            <article class="insight-card">
-              <a href="./fashion-insights.html" class="insight-image-link">
-                <div class="insight-image-wrapper">
-                  <img 
-                    src="https://placehold.co/400x500/c0392b/ffffff?text=Festive+Glam" 
-                    alt="Fashion editorial featuring festive saree collection" 
-                    loading="lazy"
-                  >
-                  <div class="insight-overlay">
-                    <span class="insight-tag">FESTIVE</span>
-                    <span class="insight-headline">GLAM</span>
-                    <span class="insight-tagline">CELEBRATE IN STYLE</span>
-                  </div>
-                </div>
-              </a>
-              <div class="insight-content">
-                <h3 class="insight-article-title">Wedding Season Essentials: Curating Your Saree...</h3>
-                <p class="insight-excerpt">
-                  As wedding invitations start pouring in, the excitement of dressing up takes center stage. From sangeet nights to reception dinners, every occasion calls for...
-                </p>
-              </div>
-            </article>
           </div>
-          <button class="carousel-arrow carousel-arrow-right" aria-label="Next" data-carousel="insightsCarousel">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="9 18 15 12 9 6"></polyline>
-            </svg>
-          </button>
+          </div>
+        </div>
+        
+        <div class="fashion-insights-view-more">
+          <a href="./fashion-insights.html" class="view-more-link">View All</a>
         </div>
       </section>
     </main>
 
     <!-- JavaScript -->
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="js/main.js"></script>
 
     <!-- ==================== FOOTER ==================== -->

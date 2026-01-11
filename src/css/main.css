@@ -1,0 +1,47 @@
+/* ==========================================================================
+   LOOM SAGA - Main CSS Entry Point
+   A modular CSS architecture for luxury e-commerce
+   ========================================================================== */
+
+/* 1. Base Styles */
+@import './base/_variables.css';
+@import './base/_reset.css';
+@import './base/_animations.css';
+
+/* 2. Components */
+@import './components/_buttons.css';
+@import './components/_images.css';
+
+/* 3. Legacy Styles (to be gradually migrated)
+   Import the original stylesheet for components not yet modularized */
+@import '../../css/styles.css';
+
+/*
+ * ========================================================================
+ * MODULARIZATION PROGRESS
+ * ========================================================================
+ * 
+ * ✅ COMPLETED:
+ *   - base/_variables.css   (Design tokens, colors, spacing, motion)
+ *   - base/_reset.css       (CSS reset, base styles)
+ *   - base/_animations.css  (Scroll reveal, page load, shimmer)
+ *   - components/_buttons.css (Magnetic buttons, premium links)
+ *   - components/_images.css  (Premium image hover effects)
+ *
+ * ⏳ TODO (Import order when ready):
+ *   - components/_header.css
+ *   - components/_footer.css
+ *   - components/_cards.css
+ *   - components/_modals.css
+ *   - components/_forms.css
+ *   - layouts/_grid.css
+ *   - layouts/_containers.css
+ *   - pages/_home.css
+ *   - pages/_product.css
+ *   - pages/_cart.css
+ *   - pages/_checkout.css
+ *   - pages/_auth.css
+ *
+ * The legacy styles.css import will be removed as components are migrated.
+ * ========================================================================
+ */

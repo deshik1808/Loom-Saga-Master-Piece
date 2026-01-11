@@ -27,6 +27,11 @@ function handleHeaderScroll() {
     const footerTop = footer ? footer.offsetTop : Infinity;
     const windowHeight = window.innerHeight;
     
+    // If mega menu is active, do nothing - let the absolute positioning handle it
+    if (typeof DesktopMegaMenuController !== 'undefined' && DesktopMegaMenuController.activeDropdown) {
+        return;
+    }
+    
     // Add/remove scrolled class for background
     if (currentScrollY > 50) {
         header.classList.add('scrolled');
@@ -71,6 +76,38 @@ window.addEventListener('scroll', function() {
         ticking = true;
     }
 });
+
+// ==================== HEADER INITIALIZATION ====================
+/**
+ * Ensure header is always visible on page load
+ * This fixes the issue where browser restores scroll position on refresh
+ * and the header remains hidden
+ */
+function initializeHeader() {
+    if (header) {
+        // Always ensure header is visible on page load
+        header.classList.remove('header-hidden');
+        headerVisible = true;
+        
+        // Set the scrolled class if page is already scrolled
+        if (window.scrollY > 50) {
+            header.classList.add('scrolled');
+        }
+        
+        // Reset lastScrollY to current position
+        lastScrollY = window.scrollY;
+    }
+}
+
+// Initialize header on DOM ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeHeader);
+} else {
+    initializeHeader();
+}
+
+// Also initialize on window load (fallback for cached pages)
+window.addEventListener('load', initializeHeader);
 
 // ==================== MOBILE NAVIGATION ====================
 /**
@@ -278,6 +315,150 @@ dropdowns.forEach(dropdown => {
     });
 });
 
+// ==================== DESKTOP MEGA MENU HOVER ====================
+/**
+ * Desktop Mega Menu Controller
+ * Uses JavaScript to explicitly control which mega menu is visible,
+ * preventing z-index stacking issues where multiple menus overlap.
+ */
+const DesktopMegaMenuController = {
+    activeDropdown: null,
+    hideTimeout: null,
+    headerLocked: false,
+    
+    init() {
+        // Only apply on desktop
+        if (window.innerWidth < 768) return;
+        
+        const dropdownItems = document.querySelectorAll('.nav-item.has-dropdown');
+        
+        dropdownItems.forEach(item => {
+            const megaMenu = item.querySelector('.mega-menu');
+            
+            // Mouse enters nav item - show its mega menu
+            item.addEventListener('mouseenter', () => {
+                if (window.innerWidth < 768) return;
+                this.showMenu(item, megaMenu);
+            });
+            
+            // Mouse leaves nav item
+            item.addEventListener('mouseleave', () => {
+                if (window.innerWidth < 768) return;
+                this.scheduleHide(item, megaMenu);
+            });
+            
+            // Mouse enters mega menu - keep it visible
+            if (megaMenu) {
+                megaMenu.addEventListener('mouseenter', () => {
+                    if (window.innerWidth < 768) return;
+                    this.cancelHide();
+                });
+                
+                // Mouse leaves mega menu - hide it
+                megaMenu.addEventListener('mouseleave', () => {
+                    if (window.innerWidth < 768) return;
+                    this.hideMenu(item, megaMenu);
+                });
+            }
+        });
+        
+        // Reinitialize on window resize
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768) {
+                this.hideAllMenus();
+            }
+        });
+    },
+    
+    showMenu(item, megaMenu) {
+        this.cancelHide();
+        
+        // Hide any other active menus first
+        if (this.activeDropdown && this.activeDropdown !== item) {
+            const activeMegaMenu = this.activeDropdown.querySelector('.mega-menu');
+            if (activeMegaMenu) {
+                this.activeDropdown.classList.remove('mega-menu-active');
+                activeMegaMenu.classList.remove('mega-menu-visible');
+            }
+        }
+        
+        // Lock header to background
+        this.lockHeader();
+        
+        // Show this menu
+        if (megaMenu) {
+            item.classList.add('mega-menu-active');
+            megaMenu.classList.add('mega-menu-visible');
+            this.activeDropdown = item;
+        }
+    },
+    
+    lockHeader() {
+        if (this.headerLocked) return;
+        
+        const scrollY = window.scrollY;
+        
+        // Only lock if we are scrolled down a bit (to avoid jumping at very top)
+        // or effectively, just always lock it to current position so it moves up when scrolling
+        header.style.position = 'absolute';
+        header.style.top = `${scrollY}px`;
+        header.style.width = '100%';
+        this.headerLocked = true;
+    },
+    
+    unlockHeader() {
+        if (!this.headerLocked) return;
+        
+        header.style.position = '';
+        header.style.top = '';
+        header.style.width = '';
+        this.headerLocked = false;
+        
+        // Re-run checking for scroll state to ensure correct class
+        handleHeaderScroll();
+    },
+    
+    scheduleHide(item, megaMenu) {
+        // Small delay to allow moving to mega menu
+        this.hideTimeout = setTimeout(() => {
+            this.hideMenu(item, megaMenu);
+        }, 50);
+    },
+    
+    hideMenu(item, megaMenu) {
+        if (megaMenu) {
+            item.classList.remove('mega-menu-active');
+            megaMenu.classList.remove('mega-menu-visible');
+        }
+        if (this.activeDropdown === item) {
+            this.activeDropdown = null;
+            this.unlockHeader();
+        }
+    },
+    
+    cancelHide() {
+        if (this.hideTimeout) {
+            clearTimeout(this.hideTimeout);
+            this.hideTimeout = null;
+        }
+    },
+    
+    hideAllMenus() {
+        document.querySelectorAll('.nav-item.has-dropdown').forEach(item => {
+            item.classList.remove('mega-menu-active');
+            const megaMenu = item.querySelector('.mega-menu');
+            if (megaMenu) {
+                megaMenu.classList.remove('mega-menu-visible');
+            }
+        });
+        this.activeDropdown = null;
+        this.unlockHeader();
+    }
+};
+
+// Initialize desktop mega menu controller
+DesktopMegaMenuController.init();
+
 // ==================== CART MANAGER ====================
 /**
  * Cart Manager - Handles all cart operations with localStorage persistence
@@ -461,26 +642,29 @@ const CartManager = {
                     <h3 class="cart-item-name">${item.name}</h3>
                     <p class="cart-item-price">${this.formatPrice(item.price)}</p>
                     <div class="cart-item-meta">
-                        ${item.color ? `<span>Color: ${item.color}</span>` : ''}
-                        ${item.style ? `<span>Style: ${item.style}</span>` : ''}
+                        <span>Color: ${item.color || 'Not specified'}</span>
+                        <span>Style: ${item.style || 'None'}</span>
                     </div>
-                    <div class="cart-item-actions">
-                        <div class="quantity-control">
-                            <button class="quantity-btn quantity-minus" data-id="${item.id}" aria-label="Decrease quantity">−</button>
-                            <span class="quantity-value">${item.quantity}</span>
-                            <button class="quantity-btn quantity-plus" data-id="${item.id}" aria-label="Increase quantity">+</button>
-                        </div>
-                        <button class="remove-btn" data-id="${item.id}" aria-label="Remove item">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polyline points="3 6 5 6 21 6"></polyline>
-                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                            </svg>
-                        </button>
-                        <span class="cart-item-total">${this.formatPrice(item.price * item.quantity)}</span>
+                </div>
+                <div class="cart-item-quantity">
+                    <div class="quantity-control">
+                        <button class="quantity-btn quantity-minus" data-id="${item.id}" aria-label="Decrease quantity">−</button>
+                        <span class="quantity-value">${item.quantity}</span>
+                        <button class="quantity-btn quantity-plus" data-id="${item.id}" aria-label="Increase quantity">+</button>
                     </div>
+                    <button class="remove-btn" data-id="${item.id}" aria-label="Remove item">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="cart-item-total-wrapper">
+                    <span class="cart-item-total">${this.formatPrice(item.price * item.quantity)}</span>
                 </div>
             </div>
         `).join('');
+
         
         // Update total
         const totalEl = document.getElementById('cartTotalAmount');
@@ -1545,7 +1729,10 @@ function initProductDetail() {
 document.addEventListener('DOMContentLoaded', () => {
     init();
     initProductDetail();
-    initCarouselArrows();
+    // initCarouselArrows(); // Disable old arrows for Explore section if needed, but safe to leave
+    if (document.querySelector('.explore-swiper')) {
+        initExploreSwiper();
+    }
 });
 
 // ==================== CAROUSEL ARROW NAVIGATION ====================
@@ -1670,3 +1857,34 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize scroll reveal animations
     initScrollReveal();
 });
+
+// ==================== EXPLORE SWIPER ====================
+function initExploreSwiper() {
+    const swiper = new Swiper('.explore-swiper', {
+        slidesPerView: 1, // Mobile default
+        spaceBetween: 20,
+        autoplay: {
+            delay: 3500,
+            disableOnInteraction: false,
+        },
+        speed: 800, // Slightly slower for more elegant scroll
+        rewind: true, // "Move to 1st card again" behavior
+        loop: false, // Explicitly disable loop to use rewind
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        breakpoints: {
+            640: {
+                slidesPerView: 2,
+            },
+            768: {
+                slidesPerView: 3,
+            },
+            1024: {
+                slidesPerView: 4, // Desktop
+            },
+        },
+    });
+}
+

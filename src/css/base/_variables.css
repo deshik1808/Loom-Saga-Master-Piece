@@ -1,0 +1,87 @@
+/* ==========================================================================
+   CSS Variables - Design Tokens
+   ========================================================================== */
+
+:root {
+  /* Colors - Premium Palette (Background: #fffff5 - Client Specified) */
+  --color-black: #1a1a1a;
+  --color-white: #fffff5;
+  --color-bg: #fffff5;
+  --color-cream: #fffff5;
+  --color-gold: #c9a962;
+  --color-gold-dark: #a88a4a;
+  --color-gold-light: #ddb96f;
+  --color-coral: #e8b4a0;
+  --color-text: #2a2a2a;
+  --color-text-light: #5a5a5a;
+  --color-text-muted: #8a8a8a;
+  
+  /* Premium Gradients */
+  --gradient-gold: linear-gradient(135deg, #c9a962 0%, #ddb96f 50%, #c9a962 100%);
+  --gradient-dark: linear-gradient(180deg, rgba(26, 26, 26, 0.95) 0%, rgba(26, 26, 26, 0.85) 100%);
+  --gradient-overlay: linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, transparent 60%);
+
+  /* Typography - Refined Weights for Luxury */
+  --font-heading: "Helvetica Neue", Helvetica, Roboto, sans-serif;
+  --font-body: "Helvetica Neue", Helvetica, Roboto, sans-serif;
+  --font-script: "Pinyon Script", cursive;
+  
+  /* Font Weights - Lighter = More Elegant */
+  --font-weight-thin: 200;
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  
+  /* Letter Spacing - Wider = More Premium */
+  --letter-spacing-tight: 0.02em;
+  --letter-spacing-normal: 0.05em;
+  --letter-spacing-wide: 0.15em;
+  --letter-spacing-xwide: 0.25em;
+  --letter-spacing-display: 0.35em;
+  
+  /* Line Heights - Taller = More Breathing Room */
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.6;
+  --line-height-relaxed: 1.85;
+  --line-height-loose: 2.2;
+
+  /* Spacing - LUXURY SCALE (More Generous) */
+  --spacing-2xs: 0.25rem;
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 2rem;
+  --spacing-lg: 4rem;
+  --spacing-xl: 6rem;
+  --spacing-2xl: 10rem;
+  --spacing-3xl: 14rem;
+
+  /* Motion - Premium Easing Curves */
+  --transition-instant: 0.1s ease;
+  --transition-fast: 0.2s ease;
+  --transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-luxury: 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+  --transition-elegant: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-elastic: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  --transition-slow: 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  
+  /* Motion Durations */
+  --motion-duration-fast: 0.15s;
+  --motion-duration-medium: 0.3s;
+  --motion-duration-slow: 0.6s;
+  --motion-duration-slower: 1s;
+  
+  /* Motion Easing */
+  --motion-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --motion-ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --motion-ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  /* Container */
+  --max-width: 1400px;
+
+  /* Header height for offset calculations */
+  --header-height: 80px;
+  
+  /* STRICT Header Transition Variable for Perfect Sync */
+  --header-transition-timing: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}

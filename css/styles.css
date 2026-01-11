@@ -1,40 +1,88 @@
 /* ==================== CSS VARIABLES ==================== */
 :root {
-  /* Colors - Premium Palette */
+  /* Colors - Premium Palette (Background: #fffff5 - Client Specified) */
   --color-black: #1a1a1a;
   --color-white: #fffff5;
   --color-bg: #fffff5;
   --color-cream: #fffff5;
   --color-gold: #c9a962;
   --color-gold-dark: #a88a4a;
+  --color-gold-light: #ddb96f;
   --color-coral: #e8b4a0;
-  --color-text: #333333;
-  --color-text-light: #666666;
+  --color-text: #2a2a2a;
+  --color-text-light: #5a5a5a;
+  --color-text-muted: #8a8a8a;
+  
+  /* Premium Gradients */
+  --gradient-gold: linear-gradient(135deg, #c9a962 0%, #ddb96f 50%, #c9a962 100%);
+  --gradient-dark: linear-gradient(180deg, rgba(26, 26, 26, 0.95) 0%, rgba(26, 26, 26, 0.85) 100%);
+  --gradient-overlay: linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, transparent 60%);
 
-  /* Typography - Helvetica Neue (Client Specified) */
+  /* Typography - Refined Weights for Luxury */
   --font-heading: "Helvetica Neue", Helvetica, Roboto, sans-serif;
   --font-body: "Helvetica Neue", Helvetica, Roboto, sans-serif;
   --font-script: "Pinyon Script", cursive;
+  
+  /* Font Weights - Lighter = More Elegant */
+  --font-weight-thin: 200;
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  
+  /* Letter Spacing - Wider = More Premium */
+  --letter-spacing-tight: 0.02em;
+  --letter-spacing-normal: 0.05em;
+  --letter-spacing-wide: 0.15em;
+  --letter-spacing-xwide: 0.25em;
+  --letter-spacing-display: 0.35em;
+  
+  /* Line Heights - Taller = More Breathing Room */
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.6;
+  --line-height-relaxed: 1.85;
+  --line-height-loose: 2.2;
 
-  /* Spacing - Mobile First Values */
-  --spacing-xs: 0.5rem;
-  --spacing-sm: 1rem;
-  --spacing-md: 1.25rem;
-  --spacing-lg: 2rem;
-  --spacing-xl: 3rem;
+  /* Spacing - LUXURY SCALE (More Generous) */
+  --spacing-2xs: 0.25rem;  /* 4px */
+  --spacing-xs: 0.5rem;    /* 8px */
+  --spacing-sm: 1rem;      /* 16px */
+  --spacing-md: 2rem;      /* 32px - INCREASED from 1.25rem */
+  --spacing-lg: 4rem;      /* 64px - INCREASED from 2rem */
+  --spacing-xl: 6rem;      /* 96px - INCREASED from 3rem */
+  --spacing-2xl: 10rem;    /* 160px - NEW for hero sections */
+  --spacing-3xl: 14rem;    /* 224px - NEW for major section breaks */
 
-  /* Transitions - Luxury Easing */
+  /* Motion - Premium Easing Curves */
+  --transition-instant: 0.1s ease;
   --transition-fast: 0.2s ease;
   --transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-luxury: 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
   --transition-elegant: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-elastic: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  --transition-slow: 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  
+  /* Motion Durations */
+  --motion-duration-fast: 0.15s;
+  --motion-duration-medium: 0.3s;
+  --motion-duration-slow: 0.6s;
+  --motion-duration-slower: 1s;
+  
+  /* Motion Easing */
+  --motion-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --motion-ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --motion-ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
   /* Container */
   --max-width: 1400px;
 
   /* Header height for offset calculations */
   --header-height: 80px;
+  
+  /* STRICT Header Transition Variable for Perfect Sync */
+  --header-transition-timing: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
 
 /* ==================== RESET & BASE ==================== */
 *,
@@ -65,6 +113,11 @@ a {
   text-decoration: none;
   color: inherit;
   transition: var(--transition-fast);
+}
+
+/* Explicitly override generic link transition for logo to verify inheritance/sync */
+.logo {
+  transition: transform 0.4s ease; /* No color transition */
 }
 
 img {
@@ -158,6 +211,209 @@ ul {
   transform: scale(1);
 }
 
+/* ==================== PREMIUM MICRO-INTERACTIONS ==================== */
+
+/* Magnetic Button Effect - Luxury Float */
+.magnetic-btn {
+  display: inline-block;
+  position: relative;
+  padding: 1rem 2.5rem;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--letter-spacing-xwide);
+  text-transform: uppercase;
+  color: var(--color-white);
+  background-color: var(--color-black);
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform var(--transition-elastic),
+              box-shadow var(--transition-smooth);
+}
+
+.magnetic-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 40px rgba(26, 26, 26, 0.2);
+}
+
+.magnetic-btn:active {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 20px rgba(26, 26, 26, 0.15);
+}
+
+/* Inner shine effect on hover */
+.magnetic-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  transition: left var(--transition-slow);
+}
+
+.magnetic-btn:hover::before {
+  left: 100%;
+}
+
+/* Outline variant */
+.magnetic-btn--outline {
+  color: var(--color-black);
+  background-color: transparent;
+  border: 1px solid var(--color-black);
+}
+
+.magnetic-btn--outline:hover {
+  background-color: var(--color-black);
+  color: var(--color-white);
+}
+
+/* Gold variant */
+.magnetic-btn--gold {
+  background: var(--gradient-gold);
+  color: var(--color-black);
+}
+
+/* Premium Image Hover - Smooth Zoom */
+.premium-image-container {
+  overflow: hidden;
+  position: relative;
+}
+
+.premium-image-container img {
+  transition: transform var(--transition-slow);
+  will-change: transform;
+}
+
+.premium-image-container:hover img {
+  transform: scale(1.05);
+}
+
+/* Premium Image with Overlay Reveal */
+.premium-image-overlay {
+  position: relative;
+  overflow: hidden;
+}
+
+.premium-image-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--gradient-overlay);
+  opacity: 0;
+  transition: opacity var(--transition-smooth);
+  pointer-events: none;
+}
+
+.premium-image-overlay:hover::after {
+  opacity: 1;
+}
+
+/* Premium Text Link - Elegant Underline */
+.premium-link {
+  position: relative;
+  display: inline-block;
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-light);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+  color: var(--color-black);
+  transition: color var(--transition-smooth);
+}
+
+.premium-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: var(--color-gold);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform var(--transition-elegant);
+}
+
+.premium-link:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.premium-link:hover {
+  color: var(--color-gold-dark);
+}
+
+/* Page Load Stagger Animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Product Grid Page Load Animation */
+.product-grid-animated .product-card {
+  opacity: 0;
+  animation: fadeInUp var(--motion-duration-slow) var(--motion-ease-out) forwards;
+}
+
+.product-grid-animated .product-card:nth-child(1) { animation-delay: 0s; }
+.product-grid-animated .product-card:nth-child(2) { animation-delay: 0.08s; }
+.product-grid-animated .product-card:nth-child(3) { animation-delay: 0.16s; }
+.product-grid-animated .product-card:nth-child(4) { animation-delay: 0.24s; }
+.product-grid-animated .product-card:nth-child(5) { animation-delay: 0.32s; }
+.product-grid-animated .product-card:nth-child(6) { animation-delay: 0.4s; }
+.product-grid-animated .product-card:nth-child(7) { animation-delay: 0.48s; }
+.product-grid-animated .product-card:nth-child(8) { animation-delay: 0.56s; }
+
+/* Subtle Parallax Utility */
+.parallax-subtle {
+  will-change: transform;
+  transition: transform 0.1s linear;
+}
+
+/* Focus States - Accessibility with Style */
+.magnetic-btn:focus-visible,
+.premium-link:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
+}
+
+/* Smooth Scroll Anchor Offset */
+:target {
+  scroll-margin-top: calc(var(--header-height) + var(--spacing-md));
+}
+
+/* Loading Skeleton Animation */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+
 /* ==================== HEADER (Mobile First) ==================== */
 .header {
   position: fixed;
@@ -166,10 +422,11 @@ ul {
   right: 0;
   z-index: 1000;
   background: transparent;
-  transition: background-color var(--transition-luxury),
-    color var(--transition-luxury),
+  /* Premium unified transitions - STRICTLY SYNCED using variable */
+  transition: background-color var(--header-transition-timing),
+    color var(--header-transition-timing),
     transform var(--transition-luxury),
-    box-shadow var(--transition-luxury);
+    box-shadow var(--header-transition-timing);
   color: var(--color-white);
 }
 
@@ -181,13 +438,13 @@ ul {
 .header:hover .tagline,
 .header:hover .logo-text,
 .header:hover .nav-link,
-.header:hover .icon-btn,
-.header:hover .dropdown-arrow {
+.header:hover .icon-btn {
   color: var(--color-black);
 }
 
 .header:hover .logo-image,
-.header:hover .icon-btn img {
+.header:hover .icon-btn img,
+.header:hover .icon-btn svg {
   filter: none;
 }
 
@@ -203,7 +460,8 @@ ul {
 }
 
 .header.scrolled .logo-image,
-.header.scrolled .icon-btn img {
+.header.scrolled .icon-btn img,
+.header.scrolled .icon-btn svg {
   filter: none;
 }
 
@@ -226,10 +484,12 @@ ul {
 /* Header Dark Variant (for pages with light background like Cart) */
 .header.header-dark {
   color: var(--color-black);
+  background-color: var(--color-cream);
 }
 
 .header.header-dark .logo-image,
-.header.header-dark .icon-btn img {
+.header.header-dark .icon-btn img,
+.header.header-dark .icon-btn svg {
   filter: none;
 }
 
@@ -240,8 +500,7 @@ ul {
 .header.header-dark .tagline,
 .header.header-dark .logo-text,
 .header.header-dark .nav-link,
-.header.header-dark .icon-btn,
-.header.header-dark .dropdown-arrow {
+.header.header-dark .icon-btn {
   color: var(--color-black);
 }
 
@@ -286,7 +545,8 @@ ul {
   width: auto;
   object-fit: contain;
   filter: brightness(0) invert(1);
-  transition: filter var(--transition-smooth);
+  /* Premium unified transition - synced with variable */
+  transition: filter var(--header-transition-timing);
 }
 
 .logo-text {
@@ -294,6 +554,7 @@ ul {
   font-size: 0.9rem;
   letter-spacing: 0.05em;
   color: inherit;
+  /* NO color transition - inherits from parent's transition to avoid double-smoothing */
 }
 
 /* Header Icons - Mobile First */
@@ -311,7 +572,8 @@ ul {
   width: 40px;
   height: 40px;
   color: inherit;
-  transition: var(--transition-fast);
+  /* Transition only opacity. Color/Filter handled on child elements */
+  transition: opacity var(--header-transition-timing);
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -324,9 +586,24 @@ ul {
   width: 18px;
   height: 18px;
   object-fit: contain;
+  /* Default State: Inverted (White) */
   filter: brightness(0) invert(1);
-  transition: filter var(--transition-smooth);
+  /* Premium unified transition - synced with variable */
+  transition: filter var(--header-transition-timing);
 }
+
+/* FIX: Standardize SVG icon (Login) to use EXACT same filter logic as images 
+   Instead of relying on 'currentColor', we force it Black and use Invert filter. */
+.icon-btn svg {
+  stroke: var(--color-black) !important; /* Force native color to Black */
+  /* Default State: Inverted (White) */
+  /* Default State: Inverted (White) */
+  filter: brightness(0) invert(1);
+  transition: filter var(--header-transition-timing);
+}
+
+
+
 
 .icon-badge {
   position: absolute;
@@ -429,13 +706,42 @@ ul {
   font-weight: 500;
   letter-spacing: 0.1em;
   color: var(--color-black);
-  text-transform: uppercase;
+  text-transform: capitalize;
   padding: var(--spacing-sm) 0;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  /* FIX: Explicitly disable transition to override global 'a' tag rule (0.2s).
+     This ensures color inherits instantly from .header (0.4s) without "double smoothing". */
+  transition: none;
+
+}
+
+/* Wrapper span for nav link text - for precise underline animation */
+.nav-link-text {
+  position: relative;
+  display: inline-block;
+}
+
+/* Elegant underline animation - Applied to the text span only */
+.nav-link-text::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: var(--color-gold);
+  transition: width var(--transition-elegant), left var(--transition-elegant);
+  z-index: 99999;
+}
+
+.nav-link:hover .nav-link-text::after,
+.nav-item.mega-menu-active .nav-link .nav-link-text::after {
+  width: 100%;
+  left: 0;
 }
 
 .nav-link:hover,
@@ -443,27 +749,11 @@ ul {
   color: var(--color-gold);
 }
 
-/* Elegant underline animation - Desktop only, added via media query */
-.nav-link::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  width: 0;
-  height: 1px;
-  background-color: var(--color-gold);
-  transition: width var(--transition-elegant), left var(--transition-elegant);
-}
-
-.nav-link:hover::after {
-  width: 100%;
-  left: 0;
-}
-
 .dropdown-arrow {
   opacity: 0.8;
-  transition: transform var(--transition-fast);
-  stroke: var(--color-black);
+  /* Only transform transitions - color/stroke inherit from parent to avoid double-smoothing */
+  transition: transform var(--header-transition-timing);
+  color: inherit;
 }
 
 /* Mobile Dropdown & Mega Menu Logic */
@@ -626,15 +916,17 @@ ul {
 
 /* ==================== INTRO SECTION (Mobile First) ==================== */
 .intro-section {
-  padding: var(--spacing-xl) var(--spacing-sm);
+  padding: var(--spacing-xl) var(--spacing-md); /* Consistent horizontal padding */
   background-color: transparent;
   text-align: center;
+  max-width: var(--max-width);
+  margin: 0 auto;
 }
 
 .intro-title {
   font-family: var(--font-heading);
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 450;
   letter-spacing: 0.2em;
   color: var(--color-black);
   margin-bottom: var(--spacing-md);
@@ -644,135 +936,101 @@ ul {
 .intro-text {
   font-family: var(--font-heading);
   font-size: 0.9rem;
-  font-weight: 400;
-  line-height: 1.6;
+  font-weight: var(--font-weight-light);
+  line-height: var(--line-height-relaxed);
+  letter-spacing: var(--letter-spacing-normal);
   color: var(--color-text);
   max-width: 700px;
   margin: 0 auto;
 }
 
-/* ==================== DISCOVER + VIDEO TWO-COLUMN SECTION ==================== */
-.discover-video-section {
-  padding: var(--spacing-md);
-  background-color: transparent;
-}
-
-.two-column-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--spacing-sm);
+/* ==================== DISCOVER SECTION ==================== */
+.discover-section {
+  padding: 0 var(--spacing-md) var(--spacing-lg); /* Increased bottom padding for gap */
   max-width: var(--max-width);
   margin: 0 auto;
 }
 
-/* Discover Column */
-.discover-column {
-  display: flex;
-  flex-direction: column;
-}
-
-.discover-label {
-  font-family: var(--font-body);
-  font-size: 0.9rem;
-  font-weight: 400;
-  letter-spacing: 0.1em;
-  color: var(--color-black);
-  margin-bottom: var(--spacing-sm);
-  text-decoration: underline;
-  text-underline-offset: 4px;
-}
-
-.discover-cards {
+.discover-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--spacing-sm);
-  flex: 1;
+  width: 100%;
 }
 
-.collection-card {
+.discover-card {
   position: relative;
+  display: block;
   overflow: hidden;
+  text-decoration: none;
 }
 
-.collection-image-wrapper {
+.discover-image-wrapper {
   position: relative;
   width: 100%;
-  height: 100%;
-  min-height: 300px;
+  aspect-ratio: 3 / 4; /* Portrait aspect ratio for elegance */
   overflow: hidden;
 }
 
-.collection-image {
+.discover-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.6s ease;
 }
 
-.collection-card:hover .collection-image {
+.discover-card:hover .discover-image {
   transform: scale(1.03);
 }
 
-.collection-overlay {
+.discover-overlay {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  padding: var(--spacing-sm);
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent);
+  padding: var(--spacing-md);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.4), transparent);
+  display: flex;
+  align-items: flex-end;
 }
 
-.collection-name {
+.discover-text {
   font-family: var(--font-body);
-  font-size: 0.85rem;
-  font-weight: 400;
-  letter-spacing: 0.08em;
+  font-size: 1.1rem;
+  font-weight: 300;
+  letter-spacing: 0.05em;
   color: var(--color-white);
 }
 
-/* Video Column */
-.video-column {
-  position: relative;
+/* ==================== VIDEO SECTION ==================== */
+.video-section-full {
+  padding: 0 var(--spacing-md) var(--spacing-md); /* Reduced bottom padding */
+  max-width: var(--max-width);
+  margin: 0 auto;
 }
 
-.video-wrapper {
+.video-wrapper-full {
   position: relative;
   width: 100%;
-  height: 100%;
-  min-height: 300px;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
+  cursor: pointer;
 }
 
-.video-thumbnail {
+.video-thumbnail-full {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.6s ease;
 }
 
-.play-btn {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(0, 0, 0, 0.3);
-  border: none;
-  border-radius: 50%;
-  width: 70px;
-  height: 70px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.3s ease;
+.video-wrapper-full:hover .video-thumbnail-full {
+  transform: scale(1.02);
 }
 
-.play-btn:hover {
-  background: rgba(0, 0, 0, 0.5);
-  transform: translate(-50%, -50%) scale(1.1);
-}
-
-.play-btn svg {
-  margin-left: 4px;
+/* Re-use play-btn styles, just positioning adjustments if needed */
+.video-wrapper-full .play-btn {
+  /* Inherits correctly from global/previous play-btn styles */
 }
 
 /* ==================== SEARCH MODAL ==================== */
@@ -887,7 +1145,7 @@ ul {
 .search-popular-title {
   font-family: var(--font-body);
   font-size: 0.75rem;
-  font-weight: 500;
+  font-weight: 450;
   color: var(--color-text-light);
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -971,6 +1229,91 @@ ul {
 }
 
 /* ==================== VIDEO SECTION (Mobile First) ==================== */
+/* ==================== DISCOVER SECTION (Mobile First) ==================== */
+.discover-section {
+  padding: 0 var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.discover-grid {
+  display: grid;
+  grid-template-columns: 1fr; /* Mobile: Stacked */
+  gap: var(--spacing-sm);
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .discover-grid {
+    grid-template-columns: 1fr 1fr; /* Desktop: Two columns */
+  }
+}
+
+.discover-card {
+  position: relative;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  text-decoration: none;
+}
+
+.discover-image-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1; /* Square aspect ratio */
+  overflow: hidden;
+}
+
+.discover-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.discover-card:hover .discover-image {
+  transform: scale(1.05);
+}
+
+.discover-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: var(--spacing-md);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.4), transparent);
+  pointer-events: none; /* Let clicks pass through */
+}
+
+.discover-text {
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  font-weight: 450;
+  color: var(--color-white);
+  letter-spacing: 0.05em;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 2px;
+}
+
+/* Golden Underline Animation - Same as View More & Navbar */
+.discover-text::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: var(--color-gold);
+  transition: width var(--transition-elegant), left var(--transition-elegant);
+}
+
+/* Trigger animation on Card Hover */
+.discover-card:hover .discover-text::after {
+  width: 100%;
+  left: 0;
+}
+
 .video-section {
   padding: 0 var(--spacing-sm) var(--spacing-lg);
   background-color: transparent;
@@ -1028,7 +1371,7 @@ ul {
 
 /* ==================== EXPLORE COLLECTION CAROUSEL (Mobile First) ==================== */
 .explore-section {
-  padding: var(--spacing-xl) 0;
+  padding: var(--spacing-md) 0; /* Reduced top padding */
   background-color: transparent;
   position: relative;
 }
@@ -1036,7 +1379,7 @@ ul {
 .explore-title {
   font-family: var(--font-heading);
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 450;
   letter-spacing: 0.2em;
   color: var(--color-black);
   text-align: center;
@@ -1200,7 +1543,7 @@ ul {
 .story-title {
   font-family: var(--font-heading);
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 450;
   letter-spacing: 0.12em;
   color: var(--color-black);
   margin-bottom: var(--spacing-sm);
@@ -1217,83 +1560,120 @@ ul {
 }
 
 .story-link {
+  position: relative;
   font-family: var(--font-body);
-  font-size: 0.85rem;
-  font-weight: 400;
-  letter-spacing: 0.1em;
+  font-size: 0.8rem;
+  font-weight: var(--font-weight-light);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
   color: var(--color-black);
-  text-decoration: underline;
-  text-underline-offset: 4px;
-  transition: var(--transition-fast);
+  text-decoration: none;
   display: inline-block;
-  padding: var(--spacing-xs);
+  padding: var(--spacing-xs) 0;
+  transition: color var(--transition-smooth);
+}
+
+.story-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: var(--color-gold);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform var(--transition-elegant);
+}
+
+.story-link:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
 }
 
 .story-link:hover,
 .story-link:active {
-  color: var(--color-gold);
+  color: var(--color-gold-dark);
 }
 
-/* ==================== FASHION INSIGHTS CAROUSEL (Mobile First) ==================== */
-.insights-section {
-  padding: var(--spacing-xl) 0;
-  background-color: transparent;
+/* ==================== FASHION INSIGHTS GRID (Renamed) ==================== */
+/* Using strict selectors to ensure application */
+section.fashion-insights-section {
+  /* Vertical Spacing: Reduced from 10rem to 5rem (Balanced) */
+  padding: 5rem var(--spacing-md) var(--spacing-xl) !important;
+  max-width: var(--max-width);
+  margin: 0 auto;
   position: relative;
+  width: 100%;
 }
 
-.insights-title {
+.fashion-insights-title {
   font-family: var(--font-heading);
-  font-size: 1rem;
-  font-weight: 500;
+  /* Increased to 1.5rem !important to strictly enforce visual weight */
+  font-size: 1.5rem !important; 
+  font-weight: 450;
   letter-spacing: 0.2em;
   color: var(--color-black);
   text-align: center;
-  margin-bottom: var(--spacing-lg);
+  /* Margin Bottom: Reduced from 8rem to 3rem (Consistent with other sections) */
+  margin-bottom: 3rem !important; 
   text-transform: uppercase;
   padding: 0 var(--spacing-sm);
+  display: block;
 }
 
-.insights-carousel-container {
+.fashion-insights-grid-container {
   width: 100%;
-  overflow: hidden;
   position: relative;
 }
 
-.insights-carousel {
-  display: flex;
-  gap: var(--spacing-md);
-  padding: 0 var(--spacing-lg);
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  -webkit-overflow-scrolling: touch;
+.fashion-insights-grid {
+  display: grid;
+  grid-template-columns: 1fr; /* Mobile First: Stacked */
+  /* Gap matches Discover/Video gap logic (approx 16px) */
+  gap: var(--spacing-sm) !important; 
+  padding: 0;
+  width: 100%;
 }
 
-.insights-carousel::-webkit-scrollbar {
-  display: none;
+/* Requirement: 3 blogs exactly - using Grid for 3 columns on larger screens */
+@media (min-width: 768px) {
+  .fashion-insights-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
 }
 
-/* 3-part layout - each card takes 1/3 of container */
-.insight-card {
-  flex: 0 0 auto;
-  width: calc(33.333% - 1rem);
-  min-width: 300px;
-  transition: transform var(--transition-smooth), box-shadow var(--transition-smooth);
+.fashion-insight-card {
+  width: 100%;
+  /* Removed lift/shadow to match Binal Patel reference */
+  transition: transform var(--transition-smooth);
+  position: relative; /* For clickable overlay */
+  cursor: pointer;
 }
 
-/* Binal Patel style hover effect with drop shadow */
-.insight-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+/* Reference: No lift or shadow change on hover */
+.fashion-insight-card:hover {
+  transform: none;
+  box-shadow: none;
 }
 
-.insight-image-link {
+.fashion-insight-image-link {
   display: block;
   text-decoration: none;
 }
 
-.insight-image-wrapper {
+/* Make entire card clickable using pseudo-element technique from reference */
+.fashion-insight-image-link::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 5;
+}
+
+.fashion-insight-image-wrapper {
   position: relative;
   width: 100%;
   aspect-ratio: 4 / 5;
@@ -1301,18 +1681,20 @@ ul {
   border-radius: 0;
 }
 
-.insight-image-wrapper img {
+.fashion-insight-image-wrapper img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.6s ease;
+  /* Reference: 0.5s ease transition */
+  transition: transform 0.5s ease;
 }
 
-.insight-card:hover .insight-image-wrapper img {
-  transform: scale(1.05);
+/* Reference: Subtle zoom to 1.03 */
+.fashion-insight-card:hover .fashion-insight-image-wrapper img {
+  transform: scale(1.03);
 }
 
-.insight-overlay {
+.fashion-insight-overlay {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -1324,7 +1706,7 @@ ul {
   gap: 0.2rem;
 }
 
-.insight-tag {
+.fashion-insight-tag {
   font-family: var(--font-body);
   font-size: 0.65rem;
   font-weight: 500;
@@ -1333,7 +1715,7 @@ ul {
   text-transform: uppercase;
 }
 
-.insight-headline {
+.fashion-insight-headline {
   font-family: var(--font-heading);
   font-size: 1.8rem;
   font-weight: 400;
@@ -1343,7 +1725,7 @@ ul {
   line-height: 1;
 }
 
-.insight-tagline {
+.fashion-insight-tagline {
   font-family: var(--font-body);
   font-size: 0.6rem;
   font-weight: 400;
@@ -1353,20 +1735,29 @@ ul {
   margin-top: 0.4rem;
 }
 
-.insight-content {
+.fashion-insight-content {
   padding: var(--spacing-sm) 0;
 }
 
-.insight-article-title {
+.fashion-insight-article-title {
   font-family: var(--font-heading);
-  font-size: 1rem;
-  font-weight: 500;
+  /* Slight increase from 1rem to 1.2rem as requested */
+  font-size: 1.2rem;
+  font-weight: 450;
   color: var(--color-black);
   margin-bottom: var(--spacing-xs);
   line-height: 1.4;
+  /* Reference: Underline offset setup */
+  text-underline-offset: 0.3rem; 
+  text-decoration-thickness: 1px;
 }
 
-.insight-excerpt {
+/* Reference: Underline title on card hover */
+.fashion-insight-card:hover .fashion-insight-article-title {
+  text-decoration: underline;
+}
+
+.fashion-insight-excerpt {
   font-family: var(--font-body);
   font-size: 0.75rem;
   font-weight: 400;
@@ -1377,6 +1768,46 @@ ul {
   line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* View More Link Styles */
+.fashion-insights-view-more {
+  text-align: center;
+  margin-top: 4rem; /* Spacing from grid */
+}
+
+.view-more-link {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  color: var(--color-black);
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  transition: color var(--transition-fast);
+  position: relative;
+  display: inline-block;
+  padding-bottom: 2px;
+}
+
+/* Elegant underline animation - Matches Navbar Style */
+.view-more-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: var(--color-gold);
+  transition: width var(--transition-elegant), left var(--transition-elegant);
+}
+
+.view-more-link:hover::after {
+  width: 100%;
+  left: 0;
+}
+
+.view-more-link:hover {
+  /* Text remains black as requested, only underline animates */
+  color: var(--color-black);
 }
 
 /* ==================== FOOTER (Mobile First) ==================== */
@@ -1392,11 +1823,13 @@ ul {
   right: 0;
   bottom: 0;
   background-image: url("../assets/images/footer-pattern.png");
+  background-attachment: fixed; /* Key to the floating effect */
   background-repeat: repeat;
-  background-size: 350px auto;
-  opacity: 1;
-  filter: contrast(1.5) saturate(1.2);
+  background-size: 950px auto;
+  opacity: 0.08;
+  filter: invert(1);
   pointer-events: none;
+  z-index: 0;
 }
 
 .footer-content {
@@ -1419,7 +1852,7 @@ ul {
 .footer-heading {
   font-family: var(--font-body);
   font-size: 0.85rem;
-  font-weight: 600;
+  font-weight: 450;
   letter-spacing: 0.1em;
   color: var(--color-black);
   margin-bottom: var(--spacing-sm);
@@ -1430,7 +1863,7 @@ ul {
   font-family: var(--font-body);
   font-size: 0.8rem;
   font-weight: 400;
-  color: var(--color-text);
+  color: var(--color-text-light);
   line-height: 1.7;
   margin-bottom: var(--spacing-sm);
 }
@@ -1487,7 +1920,7 @@ ul {
 .footer-subheading {
   font-family: var(--font-body);
   font-size: 0.85rem;
-  font-weight: 500;
+  font-weight: 450;
   color: var(--color-black);
   margin-bottom: var(--spacing-sm);
 }
@@ -1530,7 +1963,7 @@ ul {
   font-family: var(--font-body);
   font-size: 0.85rem;
   font-weight: 400;
-  color: var(--color-text);
+  color: var(--color-text-light);
   transition: var(--transition-fast);
   padding: 0.25rem 0;
   display: inline-block;
@@ -1665,7 +2098,7 @@ ul {
 .contact-info-title {
   font-family: var(--font-heading);
   font-size: clamp(1.2rem, 3vw, 1.6rem);
-  font-weight: 500;
+  font-weight: 450;
   color: var(--color-black);
   letter-spacing: 0.1em;
   margin-bottom: var(--spacing-md);
@@ -1843,7 +2276,7 @@ ul {
 .craft-heading {
   font-family: var(--font-heading);
   font-size: clamp(1.3rem, 3vw, 1.8rem);
-  font-weight: 500;
+  font-weight: 450;
   color: var(--color-black);
   margin-bottom: var(--spacing-sm);
   letter-spacing: 0.05em;
@@ -1871,7 +2304,7 @@ ul {
 .promise-title {
   font-family: var(--font-heading);
   font-size: clamp(1.1rem, 2.5vw, 1.4rem);
-  font-weight: 500;
+  font-weight: 450;
   color: var(--color-black);
   letter-spacing: 0.08em;
   margin-bottom: var(--spacing-lg);
@@ -2064,7 +2497,7 @@ ul {
 .insight-card-title {
   font-family: var(--font-heading);
   font-size: 1.1rem;
-  font-weight: 500;
+  font-weight: 450;
   color: var(--color-black);
   margin-bottom: var(--spacing-xs);
   line-height: 1.4;
@@ -4163,13 +4596,35 @@ ul {
   color: var(--color-black);
 }
 
-/* Cart Table */
+/* Cart Table Header - Hidden on mobile by default */
 .cart-table-header {
   display: none;
+  padding: var(--spacing-sm) 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  margin-bottom: 0;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--color-text-light);
 }
 
+.cart-table-header .col-product {
+  flex: 1;
+  text-align: left;
+}
+
+.cart-table-header .col-quantity {
+  width: 180px;
+  text-align: center;
+}
+
+.cart-table-header .col-total {
+  width: 120px;
+  text-align: right;
+}
+
+
 .cart-items {
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  display: block;
 }
 
 /* Cart Item Row */
@@ -4225,6 +4680,22 @@ ul {
   justify-content: space-between;
   margin-top: auto;
   padding-top: var(--spacing-sm);
+}
+
+/* New quantity column for desktop alignment */
+.cart-item-quantity {
+  margin-top: var(--spacing-sm);
+  grid-column: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Spread controls on mobile or keep left? Standard is usually left or spread. */
+  gap: var(--spacing-sm);
+}
+
+/* New total wrapper for desktop alignment */
+.cart-item-total-wrapper {
+  margin-top: var(--spacing-sm);
+  grid-column: 2;
 }
 
 .quantity-control {
@@ -4319,8 +4790,6 @@ ul {
   font-size: 1.2rem;
   font-weight: 600;
   color: var(--color-black);
-  text-decoration: underline;
-  text-underline-offset: 3px;
 }
 
 .cart-note {
@@ -4426,7 +4895,71 @@ ul {
   flex-shrink: 0;
 }
 
+/* Cart Page Desktop Responsive Styles */
+@media (min-width: 768px) {
+  .cart-table-header {
+    display: flex;
+    align-items: center;
+  }
+
+  /* Cart item uses flex layout on desktop to align with headers */
+  .cart-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+    position: relative;
+    padding-right: 40px;
+  }
+
+  .cart-item-image {
+    width: 120px;
+    height: 155px;
+    flex-shrink: 0;
+  }
+
+  .cart-item-details {
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* New column for quantity - holds control and delete button */
+  .cart-item-quantity {
+    width: 180px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-sm);
+    flex-shrink: 0;
+  }
+
+  .quantity-control {
+    justify-content: center;
+  }
+
+  /* New column for total */
+  .cart-item-total-wrapper {
+    width: 120px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* Remove button - static position next to quantity control */
+  .cart-item .remove-btn {
+    position: static;
+    margin-left: 0;
+    margin-top: 0;
+    /* Visual adjustment to align with input height */
+    height: 36px;
+    width: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0; /* Match design square look if needed, or keep generic */
+  }
+}
+
 /* ==================== RESPONSIVE DESIGN - PROGRESSIVE ENHANCEMENT ==================== */
+
 
 /* Small Phones (375px+) */
 @media (min-width: 375px) {
@@ -4558,6 +5091,7 @@ ul {
 
   .dropdown-arrow {
     stroke: currentColor;
+    /* Only transform transitions - color/stroke inherit from parent to avoid double-smoothing */
     transition: transform var(--transition-fast);
   }
 
@@ -4688,46 +5222,49 @@ ul {
     grid-template-columns: 1fr 1fr;
     gap: 0;
     align-items: center;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
   }
 
+  /* Artist Legacy: Image Left, Text Right */
   #artist-legacy .story-block {
-    align-items: end;
+    align-items: center;
   }
 
   #artist-legacy .story-image {
-    display: flex;
-    justify-content: flex-end;
     order: 1;
+    width: 100%;
   }
 
   #artist-legacy .story-image img {
-    width: 85%;
+    width: 100%;
+    display: block;
   }
 
   #artist-legacy .story-content {
     order: 2;
-    padding-bottom: 0;
-    align-self: center;
+    padding: var(--spacing-xl) var(--spacing-lg);
   }
 
+  /* Craft Matters: Text Left, Image Right */
   #craft-matters .story-block {
-    align-items: start;
+    align-items: center;
   }
 
   #craft-matters .story-image {
-    display: flex;
-    justify-content: flex-start;
     order: 2;
+    width: 100%;
   }
 
   #craft-matters .story-image img {
-    width: 85%;
+    width: 100%;
+    display: block;
   }
 
   #craft-matters .story-content {
     order: 1;
-    padding-top: 0;
-    align-self: center;
+    padding: var(--spacing-xl) var(--spacing-lg);
   }
 
   .story-content {
@@ -4976,6 +5513,11 @@ ul {
     position: static;
   }
 
+  /* Give hovered nav item higher z-index to ensure its mega menu appears on top */
+  .nav-item.has-dropdown:hover {
+    z-index: 1200;
+  }
+
   .mega-menu {
     position: absolute;
     top: 100%;
@@ -4984,21 +5526,56 @@ ul {
     height: auto;
     background-color: var(--color-white);
     padding: var(--spacing-lg) 0;
+    display: none;
     opacity: 0;
-    visibility: hidden;
-    transform: translateY(10px);
-    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    transform: translateY(0);
+    /* Completely remove all shadow effects */
+    box-shadow: none;
+    border: none;
+    outline: none;
     z-index: 9999;
-    /* Ensure solid background covers content */
     isolation: isolate;
+    pointer-events: none;
+  }
+  
+  /* Pseudo-element to extend background upward and cover any gap */
+  .mega-menu::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: 0;
+    right: 0;
+    height: 25px;
+    background-color: var(--color-white);
+    z-index: -1;
   }
 
-  .nav-item:hover .mega-menu {
+  /* JavaScript-controlled mega menu visibility */
+  .mega-menu.mega-menu-visible {
+    display: block;
     opacity: 1;
-    visibility: visible;
     transform: translateY(0);
+    pointer-events: auto;
+    animation: megaMenuFadeIn 0.25s ease forwards;
+  }
+  
+  /* Fallback for JavaScript-controlled nav-item class */
+  .nav-item.mega-menu-active .mega-menu {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  
+  @keyframes megaMenuFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .mega-menu-content {
@@ -5022,7 +5599,7 @@ ul {
   .mega-menu-heading {
     font-family: var(--font-heading);
     font-size: 1.1rem;
-    font-weight: 500;
+    font-weight: 450;
     letter-spacing: 0.05em;
     text-transform: uppercase;
     color: var(--color-black);
@@ -5201,24 +5778,26 @@ ul {
   /* ====== SAREES MEGA MENU ====== */
   .sarees-menu-content {
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: flex-start;
     padding: 1.5rem 3rem;
-    gap: 3rem;
+    gap: 2rem;
     max-width: var(--max-width);
     margin: 0 auto;
   }
 
+  /* Wrapper for the three text columns to control their spacing separately */
   .sarees-menu-content .mega-menu-links {
     flex: 0 0 auto;
-    min-width: 140px;
+    min-width: 120px;
+    max-width: 150px;
     padding-top: 0;
   }
 
   .sarees-menu-content .mega-menu-heading {
     font-family: var(--font-body);
     font-size: 0.9rem !important;
-    font-weight: 600 !important;
+    font-weight: 550 !important;
     margin-bottom: 0.75rem;
     text-transform: none !important;
     letter-spacing: 0;
@@ -5243,12 +5822,15 @@ ul {
   }
 
   .sarees-menu-content .mega-menu-images {
-    flex: 1;
+    flex: 1 1 auto;
     display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
     justify-content: flex-end;
     align-items: flex-start;
-    gap: 1.5rem;
+    gap: 1rem;
     padding: 0 !important;
+    min-width: 420px;
   }
 
   .sarees-menu-content .mega-menu-img-wrapper {
@@ -5256,7 +5838,8 @@ ul {
     height: 280px;
     flex-shrink: 0;
     overflow: hidden;
-    background-color: #f0f0f0;
+    background-color: #f5f0eb;
+    display: block !important;
   }
 
   .sarees-menu-content .mega-menu-img-wrapper img {
@@ -5274,33 +5857,34 @@ ul {
   /* ====== CRAFTS MEGA MENU ====== */
   .crafts-menu-content {
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: flex-start;
     padding: 1.5rem 3rem;
-    gap: 3rem;
+    gap: 2rem;
     max-width: var(--max-width);
     margin: 0 auto;
   }
 
   .crafts-menu-content .mega-menu-links {
     flex: 0 0 auto;
-    min-width: 160px;
     padding-top: 0;
   }
 
   .crafts-menu-content .mega-menu-links:first-of-type {
-    min-width: 150px;
+    min-width: 130px;
+    max-width: 160px;
   }
 
-  .crafts-menu-content .mega-menu-links:last-of-type {
-    min-width: 280px;
+  .crafts-menu-content .mega-menu-links:nth-of-type(2) {
+    min-width: 220px;
+    max-width: 280px;
   }
 
   /* "Handloom" & "Fashion Insights" headings */
   .crafts-menu-content .mega-menu-heading {
     font-family: var(--font-body);
     font-size: 0.9rem !important;
-    font-weight: 600 !important;
+    font-weight: 550 !important;
     margin-bottom: 0.75rem;
     text-transform: none !important;
     letter-spacing: 0;
@@ -5325,12 +5909,15 @@ ul {
   }
 
   .crafts-menu-content .mega-menu-images {
-    flex: 1;
+    flex: 1 1 auto;
     display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
     justify-content: flex-end;
     align-items: flex-start;
-    gap: 1.5rem;
+    gap: 1rem;
     padding: 0 !important;
+    min-width: 420px;
   }
 
   .crafts-menu-content .mega-menu-img-wrapper {
@@ -5338,7 +5925,8 @@ ul {
     height: 280px;
     flex-shrink: 0;
     overflow: hidden;
-    background-color: #f0f0f0;
+    background-color: #f5f0eb;
+    display: block !important;
   }
 
   .crafts-menu-content .mega-menu-img-wrapper img {
@@ -5356,7 +5944,7 @@ ul {
   /* ====== ABOUT US MEGA MENU ====== */
   .about-us-content {
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: flex-start;
     padding: 1.5rem 3rem;
     gap: 2rem;
@@ -5365,14 +5953,16 @@ ul {
   }
 
   .about-us-content .mega-menu-links {
-    flex: 0 0 200px;
+    flex: 0 0 auto;
+    min-width: 130px;
+    max-width: 180px;
     padding-top: 0;
   }
 
   .about-us-content .mega-menu-heading {
     font-family: var(--font-body);
     font-size: 0.9rem !important;
-    font-weight: 600 !important;
+    font-weight: 550 !important;
     margin-bottom: 0.75rem;
     text-transform: none !important;
     letter-spacing: 0;
@@ -5398,39 +5988,71 @@ ul {
   }
 
   .about-us-content .mega-menu-images {
-    flex: 1;
+    flex: 1 1 auto;
     display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
     justify-content: flex-end;
     align-items: flex-start;
-    gap: 0;
+    gap: 1rem;
     padding: 0 !important;
-    position: relative;
-    min-height: 300px;
+    min-width: 420px;
   }
 
-  /* Specific About Us Image Overrides */
+  /* Simple two-image layout matching approved design */
+  .about-us-content .mega-menu-img-wrapper {
+    width: 200px;
+    height: 280px;
+    flex-shrink: 0;
+    overflow: hidden;
+    background-color: #f5f0eb;
+    display: block !important;
+    position: static;
+    z-index: auto;
+    margin-right: 0;
+    padding: 0;
+    box-shadow: none;
+  }
+
   .about-us-content .mega-menu-img-wrapper:first-child {
-    background-color: #e6dccd;
-    width: 260px;
-    height: 320px;
-    position: relative; /* Overlap setup */
-    z-index: 10;
-    margin-right: -60px;
-    display: flex;
-    align-items: flex-end;
-    padding: 2rem;
-    box-shadow: 10px 10px 30px rgba(0,0,0,0.1);
+    background-color: #f5f0eb;
+    width: 200px;
+    height: 280px;
+    position: static;
+    z-index: auto;
+    margin-right: 0;
+    display: block !important;
+    align-items: initial;
+    padding: 0;
+    box-shadow: none;
   }
 
   .about-us-content .mega-menu-img-wrapper:last-child {
-    width: 320px;
-    height: 380px;
-    z-index: 5;
+    width: 200px;
+    height: 280px;
+    z-index: auto;
   }
 
-  /* Mega Menu - Desktop Styles */
+  .about-us-content .mega-menu-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+  }
+
+  .about-us-content .mega-menu-img-wrapper:hover img {
+    transform: scale(1.05);
+  }
+
+  /* Mega Menu - Desktop Styles (duplicate for legacy compatibility) */
   .has-dropdown {
     position: static;
+  }
+
+  /* Give hovered nav item higher z-index to ensure its mega menu appears on top */
+  .nav-item.has-dropdown:hover {
+    z-index: 1200;
   }
 
   .mega-menu {
@@ -5440,7 +6062,7 @@ ul {
     width: 100%;
     height: auto;
     background-color: var(--color-white);
-    /* Default padding remains for legacy/unrefinded menus, but overridden by specific classes above */
+    /* Default padding remains for legacy/unrefined menus, but overridden by specific classes above */
     padding: var(--spacing-lg) 0;
     opacity: 0;
     visibility: hidden;
@@ -5449,6 +6071,7 @@ ul {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     border-top: 1px solid rgba(0, 0, 0, 0.05);
     z-index: 1100;
+    pointer-events: auto;
   }
 
   /* Show mega menu on hover (Desktop) */
@@ -5477,7 +6100,7 @@ ul {
   .mega-menu-heading {
     font-family: var(--font-heading);
     font-size: 1.2rem;
-    font-weight: 500;
+    font-weight: 450;
     letter-spacing: 0.05em;
     text-transform: uppercase;
     color: var(--color-black);
@@ -5528,49 +6151,8 @@ ul {
     flex-shrink: 0;
   }
 
-  /* ====== ABOUT US MENU SPECIFIC STYLES ====== */
-  /* These styles ONLY apply to the About Us mega menu */
-  /* Beigey card for Brand Story - SCOPED to About Us only */
-  .about-us-content .mega-menu-img-wrapper:first-child {
-    background-color: #e6dccd;
-    width: 280px;
-    height: 350px;
-    position: relative;
-    z-index: 10;
-    display: flex;
-    align-items: flex-end;
-    padding: 2rem;
-    box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.1);
-    margin-right: -80px; /* Overlap the next image */
-  }
-
-  .about-us-content .mega-menu-img-wrapper:first-child::after {
-    content: "Brand Story";
-    font-family: var(--font-heading);
-    font-size: 2rem;
-    color: var(--color-black);
-    line-height: 1;
-  }
-
-  .about-us-content .mega-menu-img-wrapper:first-child img {
-    display: none;
-  }
-
-  /* Founders Image - SCOPED to About Us only */
-  .about-us-content .mega-menu-img-wrapper:last-child {
-    width: 380px;
-    height: 400px;
-    position: relative;
-    z-index: 5;
-    background: #d4c4b0; /* Beige fallback matching the design */
-    overflow: hidden;
-  }
-
-  .about-us-content .mega-menu-img-wrapper:last-child img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+  /* NOTE: About Us menu specific Brand Story card styles REMOVED */
+  /* Now using simple two-image layout matching approved design */
 }
 
 /* Mobile Dropdown Visibility */
@@ -5643,7 +6225,9 @@ ul {
   /* Story */
   #artist-legacy .story-image img,
   #craft-matters .story-image img {
-    width: 80%;
+    width: 100%;
+    height: 700px;
+    object-fit: cover;
   }
 
   .story-title {
@@ -6644,6 +7228,54 @@ ul {
 .help-text a {
   color: var(--color-gold);
   text-decoration: underline;
+}
+
+/* ==================== EXPLORE SWIPER ==================== */
+.explore-swiper {
+  width: 100%;
+  padding-bottom: 50px; /* Space for pagination */
+  overflow: hidden;
+}
+
+.explore-swiper .swiper-slide {
+  width: auto;
+  height: auto;
+}
+
+.explore-swiper .product-card {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.explore-swiper .product-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Custom Navigation Arrows */
+.explore-swiper .swiper-button-next,
+.explore-swiper .swiper-button-prev {
+  background-color: var(--color-white);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle premium shadow */
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  color: var(--color-black); /* Arrow icon color */
+}
+
+.explore-swiper .swiper-button-next::after,
+.explore-swiper .swiper-button-prev::after {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.explore-swiper .swiper-button-next:hover,
+.explore-swiper .swiper-button-prev:hover {
+  transform: scale(1.1);
+  background-color: var(--color-white); /* Ensure it stays white on hover */
 }
 
 

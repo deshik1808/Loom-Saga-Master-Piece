@@ -1,0 +1,127 @@
+/* ==========================================================================
+   Animation Utilities
+   ========================================================================== */
+
+/* Scroll Reveal Animations */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity var(--transition-elegant), transform var(--transition-elegant);
+}
+
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered reveal for multiple items */
+.reveal-stagger > * {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity var(--transition-elegant), transform var(--transition-elegant);
+}
+
+.reveal-stagger.revealed > *:nth-child(1) { transition-delay: 0s; }
+.reveal-stagger.revealed > *:nth-child(2) { transition-delay: 0.1s; }
+.reveal-stagger.revealed > *:nth-child(3) { transition-delay: 0.2s; }
+.reveal-stagger.revealed > *:nth-child(4) { transition-delay: 0.3s; }
+.reveal-stagger.revealed > *:nth-child(5) { transition-delay: 0.4s; }
+.reveal-stagger.revealed > *:nth-child(6) { transition-delay: 0.5s; }
+
+.reveal-stagger.revealed > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Fade in from left */
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: opacity var(--transition-elegant), transform var(--transition-elegant);
+}
+
+.reveal-left.revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Fade in from right */
+.reveal-right {
+  opacity: 0;
+  transform: translateX(30px);
+  transition: opacity var(--transition-elegant), transform var(--transition-elegant);
+}
+
+.reveal-right.revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Scale reveal for images */
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity var(--transition-elegant), transform var(--transition-elegant);
+}
+
+.reveal-scale.revealed {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Page Load Stagger Animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Product Grid Page Load Animation */
+.product-grid-animated .product-card {
+  opacity: 0;
+  animation: fadeInUp var(--motion-duration-slow) var(--motion-ease-out) forwards;
+}
+
+.product-grid-animated .product-card:nth-child(1) { animation-delay: 0s; }
+.product-grid-animated .product-card:nth-child(2) { animation-delay: 0.08s; }
+.product-grid-animated .product-card:nth-child(3) { animation-delay: 0.16s; }
+.product-grid-animated .product-card:nth-child(4) { animation-delay: 0.24s; }
+.product-grid-animated .product-card:nth-child(5) { animation-delay: 0.32s; }
+.product-grid-animated .product-card:nth-child(6) { animation-delay: 0.4s; }
+.product-grid-animated .product-card:nth-child(7) { animation-delay: 0.48s; }
+.product-grid-animated .product-card:nth-child(8) { animation-delay: 0.56s; }
+
+/* Subtle Parallax Utility */
+.parallax-subtle {
+  will-change: transform;
+  transition: transform 0.1s linear;
+}
+
+/* Loading Skeleton Animation */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+}

@@ -1,0 +1,38 @@
+/* ==========================================================================
+   Premium Image Components
+   ========================================================================== */
+
+/* Premium Image Hover - Smooth Zoom */
+.premium-image-container {
+  overflow: hidden;
+  position: relative;
+}
+
+.premium-image-container img {
+  transition: transform var(--transition-slow);
+  will-change: transform;
+}
+
+.premium-image-container:hover img {
+  transform: scale(1.05);
+}
+
+/* Premium Image with Overlay Reveal */
+.premium-image-overlay {
+  position: relative;
+  overflow: hidden;
+}
+
+.premium-image-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--gradient-overlay);
+  opacity: 0;
+  transition: opacity var(--transition-smooth);
+  pointer-events: none;
+}
+
+.premium-image-overlay:hover::after {
+  opacity: 1;
+}

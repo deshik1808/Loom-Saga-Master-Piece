@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Order Confirmed - Thank you for your purchase at Loom Saga." />
+    <meta name="author" content="Loom Saga" />
+
+    <title>Order Confirmed | Loom Saga - Weaving Indian Culture</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Montserrat:wght@300;400;500;600&family=Pinyon+Script&display=swap" rel="stylesheet" />
+
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" crossorigin href="/assets/styles-SdGtp1Jj.css">
+  </head>
+  <body>
+    <!-- ==================== HEADER ==================== -->
+    <header class="header header-dark" id="header">
+      <div class="header-container">
+        <div class="header-top">
+          <button class="hamburger" id="hamburger" aria-label="Toggle Menu" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+
+          <p class="tagline">Weaving Indian Culture</p>
+
+          <a href="index.html" class="logo" aria-label="Loom Saga Home">
+            <img src="/assets/logo-BTfJIL6q.png" alt="Loom Saga Logo" class="logo-image" />
+            <span class="logo-text">Loom Saga</span>
+          </a>
+
+          <div class="header-icons">
+            <button class="icon-btn" id="searchBtn" aria-label="Search">
+              <img src="/assets/search-CTirtJuf.png" alt="Search" width="20" height="20" />
+            </button>
+            <a href="wishlist.html" class="icon-btn" aria-label="Wishlist">
+              <img src="/assets/heart-SSPBcZ82.png" alt="Wishlist" width="20" height="20" />
+              <span class="icon-badge" id="wishlistCount">0</span>
+            </a>
+            <a href="login.html" class="icon-btn" id="accountBtn" aria-label="Account">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </a>
+            <a href="cart.html" class="icon-btn" aria-label="Shopping Cart">
+              <img src="/assets/cart-CU_5Odt_.png" alt="Cart" width="20" height="20" />
+              <span class="icon-badge" id="cartCount">0</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Mobile Navigation Overlay -->
+    <div class="nav-overlay" id="navOverlay"></div>
+
+    <!-- ==================== ORDER CONFIRMATION ==================== -->
+    <main class="confirmation-page">
+      <div class="container">
+        <div class="confirmation-container">
+          
+          <!-- Success Icon -->
+          <div class="confirmation-icon">
+            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+          </div>
+
+          <!-- Success Message -->
+          <h1 class="confirmation-title">Thank You for Your Order!</h1>
+          <p class="confirmation-subtitle">Your order has been placed successfully.</p>
+
+          <!-- Order Number -->
+          <div class="order-number-box">
+            <span class="order-label">Order Number</span>
+            <span class="order-id" id="orderId">LS-XXXXXXXX</span>
+          </div>
+
+          <!-- Order Details Card -->
+          <div class="order-details-card">
+            <h2 class="details-heading">Order Details</h2>
+
+            <!-- Order Items -->
+            <div class="order-items" id="orderItems">
+              <!-- Items will be rendered by JavaScript -->
+            </div>
+
+            <!-- Order Summary -->
+            <div class="order-summary-section">
+              <div class="summary-line">
+                <span>Subtotal</span>
+                <span id="confirmSubtotal">₹0</span>
+              </div>
+              <div class="summary-line">
+                <span>Shipping</span>
+                <span>FREE</span>
+              </div>
+              <div class="summary-line">
+                <span>Tax (GST 5%)</span>
+                <span id="confirmTax">₹0</span>
+              </div>
+              <div class="summary-line total">
+                <span>Total</span>
+                <span id="confirmTotal">₹0</span>
+              </div>
+            </div>
+
+            <!-- Shipping Address -->
+            <div class="shipping-details">
+              <h3>Shipping To</h3>
+              <div class="address-block" id="shippingAddress">
+                <!-- Address will be rendered by JavaScript -->
+              </div>
+            </div>
+
+            <!-- Payment Method -->
+            <div class="payment-details">
+              <h3>Payment Method</h3>
+              <p id="paymentMethod">Cash on Delivery</p>
+            </div>
+
+            <!-- Delivery Estimate -->
+            <div class="delivery-details">
+              <h3>Estimated Delivery</h3>
+              <p class="delivery-date" id="deliveryDate">7-10 business days</p>
+            </div>
+          </div>
+
+          <!-- What's Next Section -->
+          <div class="whats-next">
+            <h2>What's Next?</h2>
+            <ul class="next-steps">
+              <li>
+                <span class="step-icon">📧</span>
+                <span>You'll receive an order confirmation email shortly</span>
+              </li>
+              <li>
+                <span class="step-icon">📦</span>
+                <span>We'll notify you when your order ships</span>
+              </li>
+              <li>
+                <span class="step-icon">🚚</span>
+                <span>Track your order anytime in your account</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="confirmation-actions">
+            <a href="index.html" class="primary-btn">Continue Shopping</a>
+            <a href="#" class="secondary-btn">Track Order</a>
+          </div>
+
+          <!-- Need Help -->
+          <p class="help-text">
+            Need help? <a href="contact.html">Contact Us</a>
+          </p>
+
+        </div>
+      </div>
+    </main>
+
+    <!-- ==================== FOOTER ==================== -->
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="footer" id="footer">
+      <div class="footer-pattern"></div>
+      <div class="footer-content">
+        <div class="container">
+          <div class="footer-grid">
+            <!-- Newsletter Column -->
+            <div class="footer-column footer-newsletter">
+              <h3 class="footer-heading">NEWSLETTER</h3>
+              <p class="footer-text">Subscribe to receive updates, access to exclusive deals, and more.</p>
+              <form class="newsletter-form" id="newsletterForm">
+                <input 
+                  type="email" 
+                  placeholder="Email" 
+                  class="newsletter-input" 
+                  required
+                  aria-label="Email address"
+                >
+                <button type="submit" class="newsletter-btn">Subscribe</button>
+              </form>
+              
+              <h4 class="footer-subheading">Find our store</h4>
+              <div class="social-icons">
+                <a href="#" class="social-icon" aria-label="Instagram">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                  </svg>
+                </a>
+                <a href="#" class="social-icon" aria-label="Facebook">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                  </svg>
+                </a>
+                <a href="#" class="social-icon" aria-label="WhatsApp">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326z"/>
+                  </svg>
+                </a>
+                <a href="#" class="social-icon" aria-label="YouTube">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/>
+                    <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
+
+            <!-- The Company Column -->
+            <div class="footer-column">
+              <h3 class="footer-heading">THE COMPANY</h3>
+              <ul class="footer-links">
+                <li><a href="#">New Arrivals</a></li>
+                <li><a href="collections.html">Collection</a></li>
+                <li><a href="silk-sarees.html">Sarees</a></li>
+                <li><a href="handloom.html">Crafts</a></li>
+                <li><a href="about.html">About Us</a></li>
+              </ul>
+            </div>
+
+            <!-- Need Help Column -->
+            <div class="footer-column">
+              <h3 class="footer-heading">NEED HELP</h3>
+              <ul class="footer-links">
+                <li><a href="contact.html">Contact Us</a></li>
+                <li><a href="#">Book an Appointment</a></li>
+                <li><a href="#">Shipping</a></li>
+                <li><a href="#">FAQ's</a></li>
+                <li><a href="#">Track Order</a></li>
+              </ul>
+            </div>
+
+            <!-- Legal Column -->
+            <div class="footer-column">
+              <h3 class="footer-heading">LEGAL</h3>
+              <ul class="footer-links">
+                <li><a href="#">Privacy & Cookies</a></li>
+                <li><a href="#">Fees And Payment</a></li>
+                <li><a href="#">Term And Condition</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer Bottom -->
+        <div class="footer-bottom">
+          <div class="footer-separator"></div>
+          <p class="footer-copyright">© 2026, Loom Saga</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/main.js"></script>
+
+    <!-- Order Confirmation Script -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Get last order from localStorage
+        const orderData = JSON.parse(localStorage.getItem('loomSaga_lastOrder'));
+        
+        // If no order data, redirect to home
+        if (!orderData) {
+          window.location.href = 'index.html';
+          return;
+        }
+
+        // Display order ID
+        document.getElementById('orderId').textContent = orderData.orderId;
+
+        // Display order items
+        const orderItemsContainer = document.getElementById('orderItems');
+        let itemsHtml = '';
+        
+        orderData.items.forEach(item => {
+          itemsHtml += `
+            <div class="order-item">
+              <img src="${item.image}" alt="${item.name}" class="order-item-image">
+              <div class="order-item-info">
+                <p class="order-item-name">${item.name}</p>
+                <p class="order-item-qty">Qty: ${item.quantity}</p>
+              </div>
+              <p class="order-item-price">₹${formatPrice(item.price * item.quantity)}</p>
+            </div>
+          `;
+        });
+        orderItemsContainer.innerHTML = itemsHtml;
+
+        // Display totals
+        document.getElementById('confirmSubtotal').textContent = `₹${formatPrice(orderData.subtotal)}`;
+        document.getElementById('confirmTax').textContent = `₹${formatPrice(orderData.tax)}`;
+        document.getElementById('confirmTotal').textContent = `₹${formatPrice(orderData.total)}`;
+
+        // Display shipping address
+        const shipping = orderData.shipping;
+        document.getElementById('shippingAddress').innerHTML = `
+          <p><strong>${shipping.fullName}</strong></p>
+          <p>${shipping.address1}</p>
+          ${shipping.address2 ? `<p>${shipping.address2}</p>` : ''}
+          <p>${shipping.city}, ${shipping.state} - ${shipping.pincode}</p>
+          <p>Phone: ${shipping.phone}</p>
+        `;
+
+        // Display payment method
+        const paymentMethod = orderData.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online Payment';
+        document.getElementById('paymentMethod').textContent = paymentMethod;
+
+        // Calculate estimated delivery date
+        const orderDate = new Date(orderData.orderDate);
+        const minDelivery = new Date(orderDate);
+        const maxDelivery = new Date(orderDate);
+        minDelivery.setDate(minDelivery.getDate() + 7);
+        maxDelivery.setDate(maxDelivery.getDate() + 10);
+        
+        const options = { month: 'short', day: 'numeric' };
+        const deliveryText = `${minDelivery.toLocaleDateString('en-IN', options)} - ${maxDelivery.toLocaleDateString('en-IN', options)}, ${maxDelivery.getFullYear()}`;
+        document.getElementById('deliveryDate').textContent = deliveryText;
+
+        // Helper function
+        function formatPrice(amount) {
+          return amount.toLocaleString('en-IN');
+        }
+      });
+    </script>
+  </body>
+</html>
