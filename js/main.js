@@ -138,40 +138,61 @@ function closeMobileNav() {
     document.body.style.overflow = '';
 }
 
-// ==================== SEARCH FUNCTIONALITY ====================
+// ==================== PREMIUM SEARCH OVERLAY (Manish Malhotra Style) ====================
 /**
- * Search Manager - Handles search modal and live search
+ * Search Overlay Manager - Premium top-bar search with two-column results
+ * Features: slide-down overlay, suggestions + products layout, horizontal cards
  */
-const SearchManager = {
-    modal: null,
-    input: null,
-    results: null,
-    closeBtn: null,
+const SearchOverlayManager = {
     overlay: null,
+    panel: null,
+    input: null,
+    clearBtn: null,
+    closeBtn: null,
+    backdrop: null,
+    resultsContainer: null,
+    suggestionList: null,
+    productList: null,
+    popularSection: null,
+    noResults: null,
     debounceTimer: null,
     
-    // Sample product data for search (in production, this would come from API/database)
+    // Sample product data (placeholder images)
     products: [
-        { id: 'LS-VSK-001', name: 'Lime green Hand-printed Vishnupuri Silk', price: 5199, image: 'https://placehold.co/100x120/9acd32/333?text=Green', url: 'product-detail.html' },
-        { id: 'LS-VSK-002', name: 'Mustard Yellow Vishnupuri Silk', price: 5199, image: 'https://placehold.co/100x120/d4a017/333?text=Yellow', url: 'product-detail.html' },
-        { id: 'LS-VSK-003', name: 'Red Vishnupuri Silk Saree', price: 5499, image: 'https://placehold.co/100x120/dc143c/fff?text=Red', url: 'product-detail.html' },
-        { id: 'LS-VSK-004', name: 'Jet Black Printed Vishnupuri Silk', price: 5199, image: 'https://placehold.co/100x120/333/fff?text=Black', url: 'product-detail.html' },
-        { id: 'LS-MSL-001', name: 'White Muslin Jamdani Saree', price: 4599, image: 'https://placehold.co/100x120/f5f5dc/333?text=White', url: 'product-detail.html' },
-        { id: 'LS-MSL-002', name: 'Blue Muslin Cotton Saree', price: 4299, image: 'https://placehold.co/100x120/4169e1/fff?text=Blue', url: 'product-detail.html' },
-        { id: 'LS-TSR-001', name: 'Tussar Silk Wedding Saree', price: 6999, image: 'https://placehold.co/100x120/8b4513/fff?text=Tussar', url: 'product-detail.html' },
-        { id: 'LS-MDL-001', name: 'Modal Silk Lightweight Saree', price: 3999, image: 'https://placehold.co/100x120/deb887/333?text=Modal', url: 'product-detail.html' },
+        { id: 'LS-VSK-001', name: 'Lime Green Hand-printed Vishnupuri Silk Saree', price: 5199, image: 'https://placehold.co/140x180/9acd32/333', url: 'product-detail.html', category: 'Vishnupuri' },
+        { id: 'LS-VSK-002', name: 'Mustard Yellow Vishnupuri Silk Saree', price: 5199, image: 'https://placehold.co/140x180/d4a017/333', url: 'product-detail.html', category: 'Vishnupuri' },
+        { id: 'LS-VSK-003', name: 'Red Vishnupuri Silk Saree with Zari Border', price: 5499, image: 'https://placehold.co/140x180/c41e3a/fff', url: 'product-detail.html', category: 'Vishnupuri' },
+        { id: 'LS-SLK-001', name: 'Royal Blue Tussar Silk Saree', price: 6499, image: 'https://placehold.co/140x180/4169e1/fff', url: 'product-detail.html', category: 'Silk Sarees' },
+        { id: 'LS-SLK-002', name: 'Ivory White Modal Silk Saree', price: 4599, image: 'https://placehold.co/140x180/fffff0/333', url: 'product-detail.html', category: 'Silk Sarees' },
+        { id: 'LS-HLM-001', name: 'Traditional Handloom Cotton Saree', price: 3999, image: 'https://placehold.co/140x180/f5deb3/333', url: 'product-detail.html', category: 'Handloom' },
+        { id: 'LS-HLM-002', name: 'Hand-woven Jamdani Saree', price: 4299, image: 'https://placehold.co/140x180/dda0dd/333', url: 'product-detail.html', category: 'Handloom' },
+        { id: 'LS-WED-001', name: 'Bridal Red Banarasi Silk Saree', price: 12999, image: 'https://placehold.co/140x180/8b0000/fff', url: 'product-detail.html', category: 'Wedding' },
+    ],
+    
+    // Category suggestions mapping
+    categories: [
+        { name: 'Silk Sarees', url: 'silk-sarees.html' },
+        { name: 'Vishnupuri Collection', url: 'vishnupuri-silk.html' },
+        { name: 'Handloom Sarees', url: 'handloom.html' },
+        { name: 'Wedding Collection', url: 'collections.html' },
+        { name: 'New Arrivals', url: 'collections.html' },
     ],
     
     init() {
-        this.modal = document.getElementById('searchModal');
-        this.input = document.getElementById('searchInput');
-        this.results = document.getElementById('searchResults');
-        this.closeBtn = document.getElementById('searchClose');
-        this.overlay = this.modal?.querySelector('.search-modal-overlay');
+        this.overlay = document.getElementById('searchOverlay');
+        this.panel = this.overlay?.querySelector('.search-overlay__panel');
+        this.input = document.getElementById('searchOverlayInput');
+        this.clearBtn = document.getElementById('searchOverlayClear');
+        this.closeBtn = document.getElementById('searchOverlayClose');
+        this.backdrop = document.getElementById('searchBackdrop');
+        this.resultsContainer = document.getElementById('searchOverlayResults');
+        this.suggestionList = document.getElementById('suggestionList');
+        this.productList = document.getElementById('productList');
+        this.popularSection = this.overlay?.querySelector('.search-overlay__popular');
+        this.noResults = document.getElementById('searchNoResults');
         
-        if (!this.modal) return;
+        if (!this.overlay) return;
         
-        // Bind events
         this.bindEvents();
     },
     
@@ -186,14 +207,14 @@ const SearchManager = {
             this.closeBtn.addEventListener('click', () => this.close());
         }
         
-        // Close on overlay click
-        if (this.overlay) {
-            this.overlay.addEventListener('click', () => this.close());
+        // Close on backdrop click
+        if (this.backdrop) {
+            this.backdrop.addEventListener('click', () => this.close());
         }
         
         // Close on Escape key
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && this.modal.classList.contains('active')) {
+            if (e.key === 'Escape' && this.overlay?.classList.contains('active')) {
                 this.close();
             }
         });
@@ -201,68 +222,141 @@ const SearchManager = {
         // Live search on input
         if (this.input) {
             this.input.addEventListener('input', (e) => {
+                const value = e.target.value;
+                
+                // Toggle clear button visibility
+                if (this.clearBtn) {
+                    this.clearBtn.style.display = value.length > 0 ? 'flex' : 'none';
+                }
+                
                 clearTimeout(this.debounceTimer);
                 this.debounceTimer = setTimeout(() => {
-                    this.search(e.target.value);
-                }, 300); // Debounce 300ms
+                    this.search(value);
+                }, 250);
+            });
+        }
+        
+        // Clear button
+        if (this.clearBtn) {
+            this.clearBtn.addEventListener('click', () => {
+                this.input.value = '';
+                this.clearBtn.style.display = 'none';
+                this.showInitialState();
+                this.input.focus();
             });
         }
     },
     
     open() {
-        this.modal.classList.add('active');
-        this.modal.setAttribute('aria-hidden', 'false');
+        this.overlay.classList.add('active');
+        this.overlay.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
         
         // Focus input after animation
         setTimeout(() => {
             this.input?.focus();
-        }, 100);
+        }, 300);
     },
     
     close() {
-        this.modal.classList.remove('active');
-        this.modal.setAttribute('aria-hidden', 'true');
+        this.overlay.classList.remove('active');
+        this.overlay.setAttribute('aria-hidden', 'true');
         document.body.style.overflow = '';
         
-        // Clear search
+        // Reset state
         if (this.input) this.input.value = '';
-        if (this.results) this.results.innerHTML = '';
+        if (this.clearBtn) this.clearBtn.style.display = 'none';
+        this.showInitialState();
+    },
+    
+    showInitialState() {
+        if (this.resultsContainer) this.resultsContainer.style.display = 'none';
+        if (this.popularSection) this.popularSection.style.display = 'block';
+        if (this.noResults) this.noResults.style.display = 'none';
+    },
+    
+    showResults() {
+        if (this.resultsContainer) this.resultsContainer.style.display = 'grid';
+        if (this.popularSection) this.popularSection.style.display = 'none';
+        if (this.noResults) this.noResults.style.display = 'none';
+    },
+    
+    showNoResults() {
+        if (this.resultsContainer) this.resultsContainer.style.display = 'none';
+        if (this.popularSection) this.popularSection.style.display = 'none';
+        if (this.noResults) this.noResults.style.display = 'block';
     },
     
     search(query) {
-        if (!this.results) return;
-        
         const trimmedQuery = query.trim().toLowerCase();
         
         if (trimmedQuery.length < 2) {
-            this.results.innerHTML = '';
+            this.showInitialState();
             return;
         }
         
         // Filter products
-        const matches = this.products.filter(product => 
-            product.name.toLowerCase().includes(trimmedQuery)
+        const matchedProducts = this.products.filter(product => 
+            product.name.toLowerCase().includes(trimmedQuery) ||
+            product.category.toLowerCase().includes(trimmedQuery)
         );
         
-        // Render results
-        if (matches.length > 0) {
-            this.results.innerHTML = matches.map(product => `
-                <a href="${product.url}" class="search-result-item">
-                    <img src="${product.image}" alt="${product.name}" class="search-result-image">
-                    <div class="search-result-info">
-                        <div class="search-result-name">${this.highlightMatch(product.name, trimmedQuery)}</div>
-                        <div class="search-result-price">Rs.${product.price.toLocaleString('en-IN')}/-</div>
-                    </div>
-                </a>
-            `).join('');
+        // Filter matching categories for suggestions
+        const matchedCategories = this.categories.filter(cat =>
+            cat.name.toLowerCase().includes(trimmedQuery)
+        );
+        
+        if (matchedProducts.length > 0 || matchedCategories.length > 0) {
+            this.showResults();
+            this.renderSuggestions(matchedCategories, trimmedQuery);
+            this.renderProducts(matchedProducts, trimmedQuery);
         } else {
-            this.results.innerHTML = `
-                <div class="search-no-results">
-                    No products found for "${query}"
-                </div>
-            `;
+            this.showNoResults();
         }
+    },
+    
+    renderSuggestions(categories, query) {
+        if (!this.suggestionList) return;
+        
+        // If no category matches, show generic suggestion
+        if (categories.length === 0) {
+            this.suggestionList.innerHTML = `
+                <li class="search-overlay__suggestion-item">
+                    <a href="silk-sarees.html?q=${encodeURIComponent(query)}" class="search-overlay__suggestion-link">
+                        Search for "${query}"
+                    </a>
+                </li>
+            `;
+            return;
+        }
+        
+        this.suggestionList.innerHTML = categories.map(cat => `
+            <li class="search-overlay__suggestion-item">
+                <a href="${cat.url}" class="search-overlay__suggestion-link">${cat.name}</a>
+            </li>
+        `).join('');
+    },
+    
+    renderProducts(products, query) {
+        if (!this.productList) return;
+        
+        if (products.length === 0) {
+            this.productList.innerHTML = '<p class="search-overlay__no-products">No products found</p>';
+            return;
+        }
+        
+        // Show max 5 products in dropdown
+        const displayProducts = products.slice(0, 5);
+        
+        this.productList.innerHTML = displayProducts.map(product => `
+            <a href="${product.url}" class="search-overlay__product-card">
+                <img src="${product.image}" alt="${product.name}" class="search-overlay__product-image" loading="lazy">
+                <div class="search-overlay__product-info">
+                    <div class="search-overlay__product-name">${this.highlightMatch(product.name, query)}</div>
+                    <div class="search-overlay__product-price">Rs.${product.price.toLocaleString('en-IN')}/-</div>
+                </div>
+            </a>
+        `).join('');
     },
     
     highlightMatch(text, query) {
@@ -270,6 +364,10 @@ const SearchManager = {
         return text.replace(regex, '<strong>$1</strong>');
     }
 };
+
+// Legacy aliases for backwards compatibility
+const AtelierSearchManager = SearchOverlayManager;
+const SearchManager = SearchOverlayManager;
 
 // Hamburger menu click handler
 if (hamburger) {
@@ -394,6 +492,7 @@ const DesktopMegaMenuController = {
     },
     
     lockHeader() {
+        // Disabled to prevent layout jumping/z-index issues on cart page
         if (this.headerLocked) return;
         
         const scrollY = window.scrollY;
@@ -407,6 +506,7 @@ const DesktopMegaMenuController = {
     },
     
     unlockHeader() {
+        // Disabled
         if (!this.headerLocked) return;
         
         header.style.position = '';
@@ -482,6 +582,7 @@ const CartManager = {
     saveItems(items) {
         localStorage.setItem(this.storageKey, JSON.stringify(items));
         this.updateBadge();
+        this.renderDrawer();
     },
     
     /**
@@ -637,13 +738,15 @@ const CartManager = {
         // Render items
         cartItemsEl.innerHTML = items.map(item => `
             <div class="cart-item" data-id="${item.id}">
-                <img src="${item.image}" alt="${item.name}" class="cart-item-image">
-                <div class="cart-item-details">
-                    <h3 class="cart-item-name">${item.name}</h3>
-                    <p class="cart-item-price">${this.formatPrice(item.price)}</p>
-                    <div class="cart-item-meta">
-                        <span>Color: ${item.color || 'Not specified'}</span>
-                        <span>Style: ${item.style || 'None'}</span>
+                <div class="cart-item-product">
+                    <img src="${item.image}" alt="${item.name}" class="cart-item-image">
+                    <div class="cart-item-details">
+                        <h3 class="cart-item-name">${item.name}</h3>
+                        <p class="cart-item-price">${this.formatPrice(item.price)}</p>
+                        <div class="cart-item-meta">
+                            <span>Color: ${item.color || 'Not specified'}</span>
+                            <span>Style: ${item.style || 'None'}</span>
+                        </div>
                     </div>
                 </div>
                 <div class="cart-item-quantity">
@@ -716,9 +819,155 @@ const CartManager = {
     /**
      * Clear entire cart
      */
+    /**
+     * Initialize Drawer
+     */
+    initDrawer() {
+        const trigger = document.getElementById('cartTriggerBtn');
+        const drawer = document.getElementById('cartDrawer');
+        const closeBtn = document.getElementById('drawerClose');
+        const overlay = document.getElementById('cartOverlay');
+
+        if (trigger) {
+            trigger.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.openDrawer();
+            });
+        }
+
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => this.closeDrawer());
+        }
+
+        if (overlay) {
+            overlay.addEventListener('click', () => this.closeDrawer());
+        }
+    },
+
+    openDrawer() {
+        document.getElementById('cartDrawer')?.classList.add('active');
+        document.getElementById('cartOverlay')?.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Prevent scrolling
+        this.renderDrawer();
+    },
+
+    closeDrawer() {
+        document.getElementById('cartDrawer')?.classList.remove('active');
+        document.getElementById('cartOverlay')?.classList.remove('active');
+        document.body.style.overflow = '';
+    },
+
+    /**
+     * Render Drawer Items
+     */
+    renderDrawer() {
+        const drawerItemsEl = document.getElementById('cartDrawerItems');
+        const drawerTotalEl = document.getElementById('drawerTotalAmount');
+        if (!drawerItemsEl) return;
+
+        const items = this.getItems();
+
+        // Elements to toggle
+        const drawerSubheader = document.querySelector('.cart-drawer-subheader');
+        const drawerFooter = document.getElementById('cartDrawerFooter');
+        const drawerEmpty = document.getElementById('cartDrawerEmpty');
+
+        if (items.length === 0) {
+            // Show new Empty State
+            if (drawerItemsEl) drawerItemsEl.style.display = 'none';
+            if (drawerSubheader) drawerSubheader.style.display = 'none';
+            if (drawerFooter) drawerFooter.style.display = 'none';
+            
+            if (drawerEmpty) {
+                drawerEmpty.style.display = 'flex';
+            } else {
+                // Fallback if empty state container is missing
+                drawerItemsEl.style.display = 'block';
+                drawerItemsEl.innerHTML = '<div class="search-no-results" style="padding: 20px; text-align: center;">Your cart is empty</div>';
+            }
+            
+            if (drawerTotalEl) drawerTotalEl.textContent = this.formatPrice(0);
+            return;
+        }
+
+        // Hide Empty State, Show Content
+        if (drawerItemsEl) drawerItemsEl.style.display = 'block';
+        if (drawerSubheader) drawerSubheader.style.display = 'flex';
+        if (drawerFooter) drawerFooter.style.display = 'block';
+        if (drawerEmpty) drawerEmpty.style.display = 'none';
+
+        drawerItemsEl.innerHTML = items.map(item => `
+            <div class="drawer-item">
+                <img src="${item.image}" alt="${item.name}" class="drawer-item-image">
+                <div class="drawer-item-details">
+                    <h4 class="drawer-item-name">${item.name}</h4>
+                    <p class="drawer-item-price">${this.formatPrice(item.price)}</p>
+                    <div class="drawer-item-meta">
+                        Size: ${item.style && item.style !== 'None' ? item.style : 'S'} <br>
+                        Color: ${item.color || 'Default'}
+                    </div>
+                    
+                    <div class="drawer-item-actions">
+                         <div class="drawer-quantity">
+                            <button class="drawer-qty-btn drawer-minus" data-id="${item.id}">−</button>
+                            <span class="drawer-qty-val">${item.quantity}</span>
+                            <button class="drawer-qty-btn drawer-plus" data-id="${item.id}">+</button>
+                        </div>
+                        <button class="drawer-remove-btn" data-id="${item.id}">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+
+        if (drawerTotalEl) {
+            drawerTotalEl.textContent = this.formatPrice(this.getTotal());
+        }
+
+        this.bindDrawerItemEvents();
+    },
+
+    bindDrawerItemEvents() {
+        document.querySelectorAll('.drawer-minus').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = e.target.dataset.id;
+                const items = this.getItems();
+                const item = items.find(i => i.id === id);
+                if (item) this.updateQuantity(id, item.quantity - 1);
+            });
+        });
+
+        document.querySelectorAll('.drawer-plus').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = e.target.dataset.id;
+                const item = this.getItems().find(i => i.id === id);
+                if (item) this.updateQuantity(id, item.quantity + 1);
+            });
+        });
+
+        document.querySelectorAll('.drawer-remove-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = e.currentTarget.dataset.id;
+                this.removeItem(id);
+            });
+        });
+    },
+
+    /**
+     * Clear entire cart
+     */
     clearCart() {
         this.saveItems([]);
         this.renderCart();
+    },
+
+    init() {
+        this.initDrawer();
+        this.updateBadge();
     }
 };
 
@@ -840,6 +1089,33 @@ const WishlistManager = {
      */
     clearWishlist() {
         this.saveItems([]);
+    },
+    
+    /**
+     * Remove duplicate items from wishlist based on product ID
+     * This cleans up any existing duplicates that may have been added before the fix
+     * Note: Uses ID, not name, because different products may have similar display names
+     */
+    removeDuplicates() {
+        const items = this.getItems();
+        const seenIds = new Set();
+        const uniqueItems = [];
+        
+        for (const item of items) {
+            // Use product ID for deduplication (not name, since different products can have similar names)
+            if (!seenIds.has(item.id)) {
+                seenIds.add(item.id);
+                uniqueItems.push(item);
+            }
+        }
+        
+        // Only save if duplicates were found
+        if (uniqueItems.length !== items.length) {
+            console.log(`Wishlist cleanup: Removed ${items.length - uniqueItems.length} duplicate(s)`);
+            this.saveItems(uniqueItems);
+        }
+        
+        return uniqueItems;
     }
 };
 
@@ -858,6 +1134,9 @@ const WishlistPageManager = {
     init() {
         const wishlistGrid = document.getElementById('wishlistGrid');
         if (!wishlistGrid) return; // Not on wishlist page
+        
+        // Clean up any duplicate items that may exist from before the fix
+        WishlistManager.removeDuplicates();
         
         this.render();
     },
@@ -1374,7 +1653,7 @@ const FilterSortManager = {
         this.filterClose = document.getElementById('filterClose');
         this.filterClear = document.getElementById('filterClear');
         this.filterApply = document.getElementById('filterApply');
-        this.productsGrid = document.querySelector('.products-grid');
+        this.productsGrid = document.querySelector('.products-grid') || document.querySelector('.collections-grid');
         
         if (!this.sortBtn && !this.filterBtn) return;
         
@@ -1487,11 +1766,11 @@ const FilterSortManager = {
     applySort(sortType) {
         if (!this.productsGrid) return;
         
-        const products = Array.from(this.productsGrid.querySelectorAll('.product-card'));
+        const products = Array.from(this.productsGrid.querySelectorAll('.product-card, .collection-card'));
         
         products.sort((a, b) => {
-            const nameA = a.querySelector('.product-card-name')?.textContent || '';
-            const nameB = b.querySelector('.product-card-name')?.textContent || '';
+            const nameA = a.querySelector('.product-card-name, .collection-card-name')?.textContent || '';
+            const nameB = b.querySelector('.product-card-name, .collection-card-name')?.textContent || '';
             const priceA = this.extractPrice(a.querySelector('.product-card-price')?.textContent);
             const priceB = this.extractPrice(b.querySelector('.product-card-price')?.textContent);
             
@@ -1623,9 +1902,19 @@ function initWishlistButtons() {
             const card = btn.closest('.product-card') || btn.closest('.wishlist-card') || btn.closest('.product-info');
             
             if (card) {
+                // Get product name first for stable ID generation
+                const productName = card.dataset.productName || card.querySelector('.product-card-name, .wishlist-card-name, .product-title')?.textContent || 'Product';
+                
+                // Generate stable ID from product name if data-product-id is missing
+                // This prevents duplicates by ensuring the same product always has the same ID
+                const generateStableId = (name) => {
+                    const cleanName = name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').substring(0, 50);
+                    return `product-${cleanName}`;
+                };
+                
                 const product = {
-                    id: card.dataset.productId || `product-${Date.now()}`,
-                    name: card.dataset.productName || card.querySelector('.product-card-name, .wishlist-card-name, .product-title')?.textContent || 'Product',
+                    id: card.dataset.productId || generateStableId(productName),
+                    name: productName,
                     price: parseFloat(card.dataset.productPrice) || 0,
                     image: card.dataset.productImage || card.querySelector('img')?.src || ''
                 };
@@ -1670,24 +1959,6 @@ function initProductDetail() {
         });
     });
 
-    // Thumbnail gallery
-    const thumbs = document.querySelectorAll('.product-thumb');
-    const mainImage = document.getElementById('mainImage');
-    
-    thumbs.forEach(thumb => {
-        thumb.addEventListener('click', () => {
-            // Update main image
-            const newImageSrc = thumb.dataset.image;
-            if (mainImage && newImageSrc) {
-                mainImage.src = newImageSrc;
-            }
-            
-            // Update active state
-            thumbs.forEach(t => t.classList.remove('active'));
-            thumb.classList.add('active');
-        });
-    });
-
     // Color swatch selection
     const colorSwatches = document.querySelectorAll('.color-swatch');
     
@@ -1723,6 +1994,154 @@ function initProductDetail() {
             CartManager.addItem(product);
         });
     }
+    
+    // ==================== STACKED GALLERY LIGHTBOX ====================
+    const lightbox = document.getElementById('productLightbox');
+    const lightboxImage = document.getElementById('lightboxImage');
+    const lightboxClose = document.getElementById('lightboxClose');
+    const lightboxBackdrop = document.getElementById('lightboxBackdrop');
+    const lightboxPrev = document.getElementById('lightboxPrev');
+    const lightboxNext = document.getElementById('lightboxNext');
+    const lightboxCounter = document.getElementById('lightboxCounter');
+    
+    // Get all gallery images (stacked layout)
+    const galleryImages = document.querySelectorAll('.gallery-image');
+    
+    if (!lightbox || galleryImages.length === 0) return;
+    
+    // Collect all image sources
+    const imageSources = Array.from(galleryImages).map(container => {
+        const img = container.querySelector('img');
+        return img ? img.src : '';
+    }).filter(src => src);
+    
+    let currentImageIndex = 0;
+    
+    // Open lightbox
+    function openLightbox(index = 0) {
+        currentImageIndex = index;
+        updateLightboxImage();
+        lightbox.classList.add('active');
+        lightbox.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+    }
+    
+    // Close lightbox
+    function closeLightbox() {
+        lightbox.classList.remove('active');
+        lightbox.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+    }
+    
+    // Update lightbox image and counter
+    function updateLightboxImage() {
+        if (lightboxImage && imageSources[currentImageIndex]) {
+            lightboxImage.src = imageSources[currentImageIndex];
+        }
+        if (lightboxCounter) {
+            lightboxCounter.textContent = `${currentImageIndex + 1} / ${imageSources.length}`;
+        }
+    }
+    
+    // Navigate to previous image
+    function prevImage() {
+        currentImageIndex = (currentImageIndex - 1 + imageSources.length) % imageSources.length;
+        updateLightboxImage();
+    }
+    
+    // Navigate to next image
+    function nextImage() {
+        currentImageIndex = (currentImageIndex + 1) % imageSources.length;
+        updateLightboxImage();
+    }
+    
+    // ==================== ZOOM + PAN FUNCTIONALITY (Binal Patel Style) ====================
+    // Click to zoom in, move mouse to pan, click again to exit
+    galleryImages.forEach((container, index) => {
+        const img = container.querySelector('img');
+        let isZoomed = false;
+        
+        // Click to toggle zoom
+        container.addEventListener('click', (e) => {
+            if (!isZoomed) {
+                // Activate zoom mode
+                isZoomed = true;
+                container.classList.add('zoom-active');
+                
+                // Calculate initial pan position based on click
+                updatePan(e, container, img);
+            } else {
+                // Deactivate zoom mode
+                isZoomed = false;
+                container.classList.remove('zoom-active');
+                img.style.transformOrigin = '';
+            }
+        });
+        
+        // Mouse move for panning when zoomed
+        container.addEventListener('mousemove', (e) => {
+            if (isZoomed) {
+                updatePan(e, container, img);
+            }
+        });
+        
+        // Reset zoom when mouse leaves
+        container.addEventListener('mouseleave', () => {
+            if (isZoomed) {
+                isZoomed = false;
+                container.classList.remove('zoom-active');
+                img.style.transformOrigin = '';
+            }
+        });
+    });
+    
+    // Helper function to update pan position
+    function updatePan(e, container, img) {
+        const rect = container.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        img.style.transformOrigin = `${x}% ${y}%`;
+    }
+    
+    // Lightbox controls
+    if (lightboxClose) {
+        lightboxClose.addEventListener('click', closeLightbox);
+    }
+    
+    if (lightboxBackdrop) {
+        lightboxBackdrop.addEventListener('click', closeLightbox);
+    }
+    
+    if (lightboxPrev) {
+        lightboxPrev.addEventListener('click', (e) => {
+            e.stopPropagation();
+            prevImage();
+        });
+    }
+    
+    if (lightboxNext) {
+        lightboxNext.addEventListener('click', (e) => {
+            e.stopPropagation();
+            nextImage();
+        });
+    }
+    
+    // Keyboard navigation for lightbox
+    document.addEventListener('keydown', (e) => {
+        if (!lightbox.classList.contains('active')) return;
+        
+        switch (e.key) {
+            case 'Escape':
+                closeLightbox();
+                break;
+            case 'ArrowLeft':
+                prevImage();
+                break;
+            case 'ArrowRight':
+                nextImage();
+                break;
+        }
+    });
 }
 
 // Run initialization when DOM is ready
@@ -1886,5 +2305,14 @@ function initExploreSwiper() {
             },
         },
     });
+}
+
+// Initialize Cart Manager (for Drawer)
+if (typeof CartManager !== 'undefined') {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => CartManager.init());
+    } else {
+        CartManager.init();
+    }
 }
 

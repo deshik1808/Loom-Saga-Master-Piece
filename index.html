@@ -83,7 +83,7 @@
           <!-- Logo - Center -->
           <a href="index.html" class="logo" aria-label="Loom Saga Home">
             <img
-              src="assets/images/logo.png"
+              src="assets/images/optimized/logo.webp"
               alt="Loom Saga Logo"
               class="logo-image"
             />
@@ -122,7 +122,7 @@
                 <circle cx="12" cy="7" r="4"/>
               </svg>
             </a>
-            <a href="cart.html" class="icon-btn" aria-label="Shopping Cart">
+            <a href="cart.html" class="icon-btn" id="cartTriggerBtn" aria-label="Shopping Cart">
               <img
                 src="assets/icons/cart.png"
                 alt="Cart"
@@ -151,10 +151,10 @@
                   <!-- Right side: Product Images -->
                   <div class="mega-menu-images">
                     <a href="product-detail.html" class="mega-menu-img-wrapper">
-                      <img src="assets/images/Yellow Saree.jpg" alt="Yellow Vishnupuri Silk Saree" loading="lazy">
+                      <img src="assets/images/optimized/Yellow Saree.webp" alt="Yellow Vishnupuri Silk Saree" loading="lazy">
                     </a>
                     <a href="product-detail.html" class="mega-menu-img-wrapper">
-                      <img src="assets/images/Golden Beauty.jpg" alt="Black Embroidered Saree" loading="lazy">
+                      <img src="assets/images/optimized/Golden Beauty.webp" alt="Black Embroidered Saree" loading="lazy">
                     </a>
                   </div>
                 </div>
@@ -181,10 +181,10 @@
                                 <div class="mega-menu-images">
                                    <!-- Re-using images based on design intent -->
                                     <a href="#" class="mega-menu-img-wrapper">
-                                       <img src="assets/images/Yellow Saree.jpg" alt="Collection 1" loading="lazy">
+                                       <img src="assets/images/optimized/Yellow Saree.webp" alt="Collection 1" loading="lazy">
                                     </a>
                                     <a href="#" class="mega-menu-img-wrapper">
-                                       <img src="assets/images/Golden Beauty.jpg" alt="Collection 2" loading="lazy">
+                                       <img src="assets/images/optimized/Golden Beauty.webp" alt="Collection 2" loading="lazy">
                                     </a>
                                 </div>
                             </div>
@@ -234,10 +234,10 @@
                                 </div>
                                 <div class="mega-menu-images">
                                     <a href="#" class="mega-menu-img-wrapper">
-                                       <img src="assets/images/Yellow Saree.jpg" alt="Sarees 1" loading="lazy">
+                                       <img src="assets/images/optimized/Yellow Saree.webp" alt="Sarees 1" loading="lazy">
                                     </a>
                                     <a href="#" class="mega-menu-img-wrapper">
-                                       <img src="assets/images/Golden Beauty.jpg" alt="Sarees 2" loading="lazy">
+                                       <img src="assets/images/optimized/Golden Beauty.webp" alt="Sarees 2" loading="lazy">
                                     </a>
                                 </div>
                             </div>
@@ -270,10 +270,10 @@
                                 </div>
                                 <div class="mega-menu-images">
                                     <a href="#" class="mega-menu-img-wrapper">
-                                       <img src="assets/images/Yellow Saree.jpg" alt="Crafts 1" loading="lazy">
+                                       <img src="assets/images/optimized/Yellow Saree.webp" alt="Crafts 1" loading="lazy">
                                     </a>
                                     <a href="#" class="mega-menu-img-wrapper">
-                                       <img src="assets/images/Golden Beauty.jpg" alt="Crafts 2" loading="lazy">
+                                       <img src="assets/images/optimized/Golden Beauty.webp" alt="Crafts 2" loading="lazy">
                                     </a>
                                 </div>
                             </div>
@@ -295,10 +295,10 @@
                                 </div>
                                 <div class="mega-menu-images">
                                     <a href="#" class="mega-menu-img-wrapper">
-                                       <img src="assets/images/Yellow Saree.jpg" alt="About Us 1" loading="lazy">
+                                       <img src="assets/images/optimized/Yellow Saree.webp" alt="About Us 1" loading="lazy">
                                     </a>
                                     <a href="#" class="mega-menu-img-wrapper">
-                                       <img src="assets/images/Golden Beauty.jpg" alt="About Us 2" loading="lazy">
+                                       <img src="assets/images/optimized/Golden Beauty.webp" alt="About Us 2" loading="lazy">
                                     </a>
                                 </div>
                             </div>
@@ -312,46 +312,80 @@
     <!-- Mobile Navigation Overlay -->
     <div class="nav-overlay" id="navOverlay"></div>
 
-    <!-- Search Modal -->
-    <div class="search-modal" id="searchModal" aria-hidden="true">
-      <div class="search-modal-overlay"></div>
-      <div class="search-modal-content">
-        <button class="search-modal-close" id="searchClose" aria-label="Close Search">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
-        <form class="search-form" id="searchForm" action="silk-sarees.html" method="get">
-          <div class="search-input-wrapper">
-            <img src="assets/icons/search.png" alt="" class="search-input-icon" width="20" height="20">
+    <!-- ==================== PREMIUM SEARCH OVERLAY (Manish Malhotra Style) ==================== -->
+    <div class="search-overlay" id="searchOverlay" aria-hidden="true">
+      <div class="search-overlay__backdrop" id="searchBackdrop"></div>
+      <div class="search-overlay__panel">
+        <!-- Search Input Row -->
+        <div class="search-overlay__input-row">
+          <div class="search-overlay__input-container">
             <input 
-              type="search" 
-              class="search-input" 
-              id="searchInput" 
-              name="q"
-              placeholder="Search for sarees, collections, articles..." 
+              type="text" 
+              class="search-overlay__input" 
+              id="searchOverlayInput"
+              placeholder="Search" 
               autocomplete="off"
               aria-label="Search"
             >
+            <button class="search-overlay__clear" id="searchOverlayClear" aria-label="Clear search" style="display: none;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+            <button class="search-overlay__submit" aria-label="Submit search">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </button>
           </div>
-        </form>
-        <div class="search-popular">
-          <h4 class="search-popular-title">Popular Searches</h4>
-          <div class="search-popular-tags">
-            <a href="silk-sarees.html" class="search-tag">Silk Sarees</a>
-            <a href="vishnupuri-silk.html" class="search-tag">Vishnupuri</a>
-            <a href="collections.html" class="search-tag">Collections</a>
-            <a href="fashion-insights.html" class="search-tag">Fashion Tips</a>
-            <a href="#" class="search-tag">Wedding Sarees</a>
-            <a href="#" class="search-tag">Handloom</a>
+          <button class="search-overlay__close" id="searchOverlayClose" aria-label="Close search">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        
+        <!-- Popular Search Links -->
+        <div class="search-overlay__popular">
+          <span class="search-overlay__popular-label">POPULAR SEARCH:</span>
+          <div class="search-overlay__popular-links">
+            <a href="silk-sarees.html" class="search-overlay__popular-link">Silk Sarees</a>
+            <a href="vishnupuri-silk.html" class="search-overlay__popular-link">Vishnupuri</a>
+            <a href="collections.html" class="search-overlay__popular-link">Collections</a>
+            <a href="handloom.html" class="search-overlay__popular-link">Handloom</a>
+            <a href="fashion-insights.html" class="search-overlay__popular-link">Fashion Tips</a>
           </div>
         </div>
-        <div class="search-results" id="searchResults">
-          <!-- Dynamic search results will appear here -->
+
+        <!-- Two-Column Results Container -->
+        <div class="search-overlay__results" id="searchOverlayResults" style="display: none;">
+          <!-- Suggestions Column -->
+          <div class="search-overlay__suggestions" id="searchSuggestions">
+            <h4 class="search-overlay__column-title">SUGGESTIONS</h4>
+            <ul class="search-overlay__suggestion-list" id="suggestionList">
+              <!-- Dynamic suggestions -->
+            </ul>
+          </div>
+          
+          <!-- Products Column -->
+          <div class="search-overlay__products" id="searchProducts">
+            <h4 class="search-overlay__column-title">PRODUCTS</h4>
+            <div class="search-overlay__product-list" id="productList">
+              <!-- Dynamic horizontal product cards -->
+            </div>
+          </div>
+        </div>
+
+        <!-- No Results State -->
+        <div class="search-overlay__no-results" id="searchNoResults" style="display: none;">
+          <p>No results found. Try a different search term.</p>
         </div>
       </div>
     </div>
+
 
     <!-- ==================== HERO SECTION ==================== -->
     <main>
@@ -519,9 +553,9 @@
       </section>
 
       <!-- ==================== STORY SECTIONS ==================== -->
-      <!-- Story 1: An Artist's Legacy (Image Left, Text Right) -->
-      <section class="story-section" id="artist-legacy">
-        <div class="story-block">
+      <div class="story-wrapper">
+        <!-- Story 1: An Artist's Legacy (Image Left, Text Right) -->
+        <div class="story-block" id="artist-legacy">
           <div class="story-image">
             <img 
               src="./assets/images/optimized/pexels-rachel-fernandes-407276623-14953193.webp" 
@@ -540,11 +574,9 @@
             <a href="#" class="story-link">Discover</a>
           </div>
         </div>
-      </section>
 
-      <!-- Story 2: Our Craft Matters (Text Left, Image Right) -->
-      <section class="story-section story-reverse" id="craft-matters">
-        <div class="story-block">
+        <!-- Story 2: Our Craft Matters (Text Left, Image Right) -->
+        <div class="story-block" id="craft-matters">
           <div class="story-content">
             <h2 class="story-title">OUR CRAFT MATTERS</h2>
             <p class="story-text">
@@ -563,7 +595,7 @@
             >
           </div>
         </div>
-      </section>
+      </div>
 
       <!-- ==================== FASHION INSIGHTS GRID ==================== -->
       <section class="fashion-insights-section" id="fashion-insights">
@@ -736,5 +768,50 @@
         </div>
       </div>
     </footer>
+
+    <!-- Off-Canvas Cart Drawer -->
+    <div class="cart-overlay" id="cartOverlay"></div>
+    <div class="cart-drawer" id="cartDrawer">
+      <div class="cart-drawer-header">
+        <h2 class="drawer-title">MAIN CART</h2>
+        <button class="drawer-close" id="drawerClose" aria-label="Close Cart">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="cart-drawer-subheader">
+        <span>PRODUCT</span>
+        <span>TOTAL</span>
+      </div>
+
+      <div class="cart-drawer-content" id="cartDrawerItems">
+        <!-- Cart items will be injected here -->
+      </div>
+
+      <div class="cart-drawer-footer" id="cartDrawerFooter">
+        <div class="drawer-total-row">
+          <span class="drawer-total-label">Estimated total</span>
+          <span class="drawer-total-amount" id="drawerTotalAmount">Rs. 0.00</span>
+        </div>
+        <p class="drawer-note">Taxes, Discounts and shipping calculated at checkout</p>
+        
+        <button class="drawer-checkout-btn" onclick="window.location.href='checkout.html'">CHECK OUT</button>
+        <button class="drawer-view-cart-btn" onclick="window.location.href='cart.html'">VIEW MY CART</button>
+      </div>
+
+      <!-- Empty Cart State -->
+      <div class="cart-drawer-empty" id="cartDrawerEmpty" style="display: none;">
+        <div class="empty-drawer-icon">
+          <img src="assets/icons/cart.png" alt="Empty Cart" width="60" height="60" style="opacity: 0.5;">
+        </div>
+        <h2 class="empty-drawer-title">Your bag is empty</h2>
+        <p class="empty-drawer-text">Looks like you haven't added anything to your cart yet.</p>
+        <button class="shop-now-btn" onclick="window.location.href='collections.html'">Shop Now</button>
+      </div>
+    </div>
   </body>
 </html>
+
