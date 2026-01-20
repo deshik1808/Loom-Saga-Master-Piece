@@ -4713,6 +4713,16 @@ section.fashion-insights-section {
   background-color: var(--color-cream);
 }
 
+.wishlist-page > .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 100%;
+  width: 100%;
+  padding-left: var(--spacing-md);
+  padding-right: var(--spacing-md);
+}
+
 .wishlist-title {
   font-family: var(--font-heading);
   font-size: clamp(1.5rem, 4vw, 2.2rem);
@@ -4720,6 +4730,7 @@ section.fashion-insights-section {
   color: var(--color-black);
   letter-spacing: 0.1em;
   margin-bottom: var(--spacing-xs);
+  text-align: center;
 }
 
 .wishlist-count {
@@ -4727,6 +4738,7 @@ section.fashion-insights-section {
   font-size: 0.85rem;
   color: var(--color-text-light);
   margin-bottom: var(--spacing-lg);
+  text-align: center;
 }
 
 /* Wishlist Grid */
@@ -4734,6 +4746,7 @@ section.fashion-insights-section {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--spacing-lg);
+  width: 100%;
 }
 
 /* Wishlist Card */
@@ -4833,12 +4846,14 @@ section.fashion-insights-section {
 
 /* Wishlist Empty State */
 .wishlist-empty {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 400px;
-  padding: var(--spacing-xl);
-  width: 100%;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  min-height: 30vh;
+  padding: var(--spacing-md) var(--spacing-md);
+  width: 100% !important;
+  box-sizing: border-box;
+  margin-top: calc(-1 * var(--spacing-md));
 }
 
 .wishlist-empty-content {
@@ -4851,7 +4866,7 @@ section.fashion-insights-section {
 
 .wishlist-empty-content svg {
   color: var(--color-text-light);
-  margin-bottom: var(--spacing-md);
+  margin-bottom: var(--spacing-sm);
 }
 
 .wishlist-empty-content h2 {
@@ -4866,19 +4881,19 @@ section.fashion-insights-section {
   font-family: var(--font-body);
   font-size: 0.95rem;
   color: var(--color-text-light);
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: var(--spacing-md);
 }
 
 .wishlist-empty-btn {
   display: inline-block;
-  padding: var(--spacing-sm) var(--spacing-lg);
+  padding: 0.6rem 1.8rem;
   background-color: var(--color-black);
   color: var(--color-white);
   font-family: var(--font-body);
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-weight: 400;
   text-decoration: none;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
   transition: background-color var(--transition-fast);
 }
 

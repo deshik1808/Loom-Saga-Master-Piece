@@ -39,26 +39,24 @@ function handleHeaderScroll() {
         header.classList.remove('scrolled');
     }
     
-    // Hide header when reaching footer
-    if (currentScrollY + windowHeight >= footerTop - 50) {
-        header.classList.add('header-hidden');
-        headerVisible = false;
-        lastScrollY = currentScrollY;
-        return;
-    }
+    // Check if we're near the footer
+    const nearFooter = currentScrollY + windowHeight >= footerTop - 50;
     
-    // Scrolling down - hide header (only after scrolling 100px)
-    if (currentScrollY > lastScrollY && currentScrollY > 100) {
-        if (headerVisible) {
-            header.classList.add('header-hidden');
-            headerVisible = false;
-        }
-    }
-    // Scrolling up - show header
-    else if (currentScrollY < lastScrollY) {
+    // Scrolling up - always show header (regardless of footer position)
+    if (currentScrollY < lastScrollY) {
         if (!headerVisible) {
             header.classList.remove('header-hidden');
             headerVisible = true;
+        }
+    }
+    // Scrolling down
+    else if (currentScrollY > lastScrollY) {
+        // Hide header when near footer OR after scrolling 100px
+        if (nearFooter || currentScrollY > 100) {
+            if (headerVisible) {
+                header.classList.add('header-hidden');
+                headerVisible = false;
+            }
         }
     }
     
