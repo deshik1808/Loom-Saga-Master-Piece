@@ -4838,11 +4838,15 @@ section.fashion-insights-section {
   align-items: center;
   min-height: 400px;
   padding: var(--spacing-xl);
+  width: 100%;
 }
 
 .wishlist-empty-content {
   text-align: center;
   max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .wishlist-empty-content svg {
