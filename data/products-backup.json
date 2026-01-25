@@ -20,23 +20,12 @@
       "quantity": 15,
       "category": "silk-sarees",
       "subcategory": "vishnupuri-silk",
-      "collections": [
-        "new-arrivals",
-        "festive-collection",
-        "silk-sarees"
-      ],
-      "tags": [
-        "silk",
-        "handloom",
-        "vishnupuri",
-        "floral",
-        "festive",
-        "green"
-      ],
+      "collections": ["new-arrivals", "festive-collection", "silk-sarees"],
+      "tags": ["silk", "handloom", "vishnupuri", "floral", "festive", "green"],
       "images": {
-        "primary": "/images/lime-green-cyber.jpg",
+        "primary": "/assets/images/products/lime-green-vishnupuri-1.jpg",
         "gallery": [
-          "/images/lime-green-cyber.jpg",
+          "/assets/images/products/lime-green-vishnupuri-1.jpg",
           "/assets/images/products/lime-green-vishnupuri-2.jpg",
           "/assets/images/products/lime-green-vishnupuri-3.jpg",
           "/assets/images/products/lime-green-vishnupuri-4.jpg",
@@ -55,11 +44,7 @@
         "fabricComposition": "60% Silk, 40% Cotton",
         "weaveType": "Handloom Jacquard",
         "craft": "Hand-printed",
-        "occasion": [
-          "Festive",
-          "Wedding",
-          "Party"
-        ],
+        "occasion": ["Festive", "Wedding", "Party"],
         "pattern": "Floral",
         "border": "Contrast Pink Lotus Border",
         "pallu": "Heightened Woven Detailing",
@@ -93,48 +78,30 @@
       "seo": {
         "title": "Lime green Hand-printed Vishnupuri Silk | Loom Saga",
         "description": "Shop Lime green Hand-printed Vishnupuri Silk Saree at Rs.5,199. Handcrafted luxury saree with floral motifs. Free shipping on orders above Rs.999.",
-        "keywords": [
-          "lime green saree",
-          "vishnupuri silk",
-          "handloom saree",
-          "silk saree",
-          "floral saree"
-        ]
+        "keywords": ["lime green saree", "vishnupuri silk", "handloom saree", "silk saree", "floral saree"]
       },
       "variants": [
         {
           "id": "LS-VSK-001-BROWN",
-          "color": {
-            "name": "Brown",
-            "hex": "#8b4513"
-          },
+          "color": { "name": "Brown", "hex": "#8b4513" },
           "inStock": true,
           "quantity": 8
         },
         {
           "id": "LS-VSK-001-YELLOW",
-          "color": {
-            "name": "Yellow",
-            "hex": "#ffd700"
-          },
+          "color": { "name": "Yellow", "hex": "#ffd700" },
           "inStock": true,
           "quantity": 5
         },
         {
           "id": "LS-VSK-001-BLUE",
-          "color": {
-            "name": "Blue",
-            "hex": "#0000cd"
-          },
+          "color": { "name": "Blue", "hex": "#0000cd" },
           "inStock": false,
           "quantity": 0
         },
         {
           "id": "LS-VSK-001-GREEN",
-          "color": {
-            "name": "Green",
-            "hex": "#228b22"
-          },
+          "color": { "name": "Green", "hex": "#228b22" },
           "inStock": true,
           "quantity": 12
         }
@@ -143,11 +110,7 @@
         "average": 4.8,
         "count": 24
       },
-      "relatedProducts": [
-        "LS-VSK-002",
-        "LS-VSK-003",
-        "LS-VSK-004"
-      ],
+      "relatedProducts": ["LS-VSK-002", "LS-VSK-003", "LS-VSK-004"],
       "createdAt": "2026-01-01T00:00:00Z",
       "updatedAt": "2026-01-19T00:00:00Z",
       "featured": true,
@@ -167,19 +130,8 @@
       "quantity": 10,
       "category": "silk-sarees",
       "subcategory": "vishnupuri-silk",
-      "collections": [
-        "silk-sarees",
-        "office-wear"
-      ],
-      "tags": [
-        "silk",
-        "handloom",
-        "vishnupuri",
-        "white",
-        "black",
-        "olive",
-        "contrast"
-      ],
+      "collections": ["silk-sarees", "office-wear"],
+      "tags": ["silk", "handloom", "vishnupuri", "white", "black", "olive", "contrast"],
       "images": {
         "primary": "/assets/images/products/white-olive-vishnupuri-1.jpg",
         "gallery": [
@@ -197,11 +149,7 @@
         "fabric": "Pure Vishnupuri Silk",
         "weaveType": "Handloom",
         "craft": "Traditional Weave",
-        "occasion": [
-          "Office",
-          "Casual",
-          "Daily"
-        ],
+        "occasion": ["Office", "Casual", "Daily"],
         "pattern": "Geometric",
         "blousePiece": {
           "included": true,
@@ -228,22 +176,14 @@
       "seo": {
         "title": "White Black Olive Green Vishnupuri Silk | Loom Saga",
         "description": "Shop elegant tri-color Vishnupuri Silk Saree. Perfect for office and casual wear.",
-        "keywords": [
-          "white saree",
-          "olive green saree",
-          "vishnupuri silk",
-          "office wear saree"
-        ]
+        "keywords": ["white saree", "olive green saree", "vishnupuri silk", "office wear saree"]
       },
       "variants": [],
       "ratings": {
         "average": 4.5,
         "count": 12
       },
-      "relatedProducts": [
-        "LS-VSK-001",
-        "LS-VSK-003"
-      ],
+      "relatedProducts": ["LS-VSK-001", "LS-VSK-003"],
       "createdAt": "2026-01-05T00:00:00Z",
       "updatedAt": "2026-01-19T00:00:00Z",
       "featured": false,
@@ -263,18 +203,8 @@
       "quantity": 20,
       "category": "silk-sarees",
       "subcategory": "vishnupuri-silk",
-      "collections": [
-        "silk-sarees",
-        "evening-wear"
-      ],
-      "tags": [
-        "silk",
-        "black",
-        "vishnupuri",
-        "printed",
-        "evening",
-        "formal"
-      ],
+      "collections": ["silk-sarees", "evening-wear"],
+      "tags": ["silk", "black", "vishnupuri", "printed", "evening", "formal"],
       "images": {
         "primary": "/assets/images/products/jet-black-vishnupuri-1.jpg",
         "gallery": [
@@ -292,11 +222,7 @@
         "fabric": "Pure Vishnupuri Silk",
         "weaveType": "Handloom",
         "craft": "Printed",
-        "occasion": [
-          "Evening",
-          "Formal",
-          "Party"
-        ],
+        "occasion": ["Evening", "Formal", "Party"],
         "pattern": "Abstract",
         "blousePiece": {
           "included": true,
@@ -322,23 +248,14 @@
       "seo": {
         "title": "Jet Black Printed Vishnupuri Silk | Loom Saga",
         "description": "Shop elegant Jet Black Vishnupuri Silk Saree. Perfect for evening and formal occasions.",
-        "keywords": [
-          "black saree",
-          "vishnupuri silk",
-          "evening wear",
-          "formal saree"
-        ]
+        "keywords": ["black saree", "vishnupuri silk", "evening wear", "formal saree"]
       },
       "variants": [],
       "ratings": {
         "average": 4.9,
         "count": 31
       },
-      "relatedProducts": [
-        "LS-VSK-001",
-        "LS-VSK-002",
-        "LS-VSK-004"
-      ],
+      "relatedProducts": ["LS-VSK-001", "LS-VSK-002", "LS-VSK-004"],
       "createdAt": "2026-01-03T00:00:00Z",
       "updatedAt": "2026-01-19T00:00:00Z",
       "featured": true,
@@ -358,17 +275,8 @@
       "quantity": 14,
       "category": "silk-sarees",
       "subcategory": "vishnupuri-silk",
-      "collections": [
-        "silk-sarees",
-        "festive-collection"
-      ],
-      "tags": [
-        "silk",
-        "yellow",
-        "mustard",
-        "vishnupuri",
-        "festive"
-      ],
+      "collections": ["silk-sarees", "festive-collection"],
+      "tags": ["silk", "yellow", "mustard", "vishnupuri", "festive"],
       "images": {
         "primary": "/assets/images/products/mustard-vishnupuri-1.jpg",
         "gallery": [
@@ -385,11 +293,7 @@
         "fabric": "Pure Vishnupuri Silk",
         "weaveType": "Handloom",
         "craft": "Traditional Weave",
-        "occasion": [
-          "Festive",
-          "Wedding",
-          "Pooja"
-        ],
+        "occasion": ["Festive", "Wedding", "Pooja"],
         "pattern": "Traditional",
         "blousePiece": {
           "included": true,
@@ -415,22 +319,14 @@
       "seo": {
         "title": "Mustard Yellow Vishnupuri Silk | Loom Saga",
         "description": "Shop vibrant Mustard Yellow Vishnupuri Silk Saree. Perfect for festive celebrations.",
-        "keywords": [
-          "yellow saree",
-          "mustard saree",
-          "vishnupuri silk",
-          "festive saree"
-        ]
+        "keywords": ["yellow saree", "mustard saree", "vishnupuri silk", "festive saree"]
       },
       "variants": [],
       "ratings": {
         "average": 4.7,
         "count": 18
       },
-      "relatedProducts": [
-        "LS-VSK-001",
-        "LS-VSK-005"
-      ],
+      "relatedProducts": ["LS-VSK-001", "LS-VSK-005"],
       "createdAt": "2026-01-07T00:00:00Z",
       "updatedAt": "2026-01-19T00:00:00Z",
       "featured": false,
@@ -450,19 +346,8 @@
       "quantity": 25,
       "category": "silk-sarees",
       "subcategory": "vishnupuri-silk",
-      "collections": [
-        "silk-sarees",
-        "wedding-collection",
-        "bridal"
-      ],
-      "tags": [
-        "silk",
-        "red",
-        "vishnupuri",
-        "printed",
-        "wedding",
-        "bridal"
-      ],
+      "collections": ["silk-sarees", "wedding-collection", "bridal"],
+      "tags": ["silk", "red", "vishnupuri", "printed", "wedding", "bridal"],
       "images": {
         "primary": "/assets/images/products/red-vishnupuri-1.jpg",
         "gallery": [
@@ -479,11 +364,7 @@
         "fabric": "Pure Vishnupuri Silk",
         "weaveType": "Handloom",
         "craft": "Printed",
-        "occasion": [
-          "Wedding",
-          "Bridal",
-          "Traditional"
-        ],
+        "occasion": ["Wedding", "Bridal", "Traditional"],
         "pattern": "Traditional",
         "blousePiece": {
           "included": true,
@@ -509,22 +390,14 @@
       "seo": {
         "title": "Red Printed Vishnupuri Silk | Loom Saga",
         "description": "Shop classic Red Vishnupuri Silk Saree. Perfect for weddings and traditional celebrations.",
-        "keywords": [
-          "red saree",
-          "bridal saree",
-          "vishnupuri silk",
-          "wedding saree"
-        ]
+        "keywords": ["red saree", "bridal saree", "vishnupuri silk", "wedding saree"]
       },
       "variants": [],
       "ratings": {
         "average": 4.9,
         "count": 42
       },
-      "relatedProducts": [
-        "LS-VSK-004",
-        "LS-VSK-006"
-      ],
+      "relatedProducts": ["LS-VSK-004", "LS-VSK-006"],
       "createdAt": "2026-01-02T00:00:00Z",
       "updatedAt": "2026-01-19T00:00:00Z",
       "featured": true,
@@ -544,18 +417,8 @@
       "quantity": 8,
       "category": "silk-sarees",
       "subcategory": "vishnupuri-silk",
-      "collections": [
-        "silk-sarees",
-        "contemporary"
-      ],
-      "tags": [
-        "silk",
-        "grey",
-        "yellow",
-        "vishnupuri",
-        "contemporary",
-        "modern"
-      ],
+      "collections": ["silk-sarees", "contemporary"],
+      "tags": ["silk", "grey", "yellow", "vishnupuri", "contemporary", "modern"],
       "images": {
         "primary": "/assets/images/products/grey-yellow-vishnupuri-1.jpg",
         "gallery": [
@@ -572,11 +435,7 @@
         "fabric": "Pure Vishnupuri Silk",
         "weaveType": "Handloom",
         "craft": "Contemporary Weave",
-        "occasion": [
-          "Casual",
-          "Office",
-          "Party"
-        ],
+        "occasion": ["Casual", "Office", "Party"],
         "pattern": "Modern",
         "blousePiece": {
           "included": true,
@@ -601,22 +460,14 @@
       "seo": {
         "title": "Grey Yellow Vishnupuri Silk | Loom Saga",
         "description": "Shop contemporary Grey Yellow Vishnupuri Silk Saree. Modern design meets traditional craft.",
-        "keywords": [
-          "grey saree",
-          "yellow saree",
-          "vishnupuri silk",
-          "contemporary saree"
-        ]
+        "keywords": ["grey saree", "yellow saree", "vishnupuri silk", "contemporary saree"]
       },
       "variants": [],
       "ratings": {
         "average": 4.6,
         "count": 15
       },
-      "relatedProducts": [
-        "LS-VSK-002",
-        "LS-VSK-007"
-      ],
+      "relatedProducts": ["LS-VSK-002", "LS-VSK-007"],
       "createdAt": "2026-01-10T00:00:00Z",
       "updatedAt": "2026-01-19T00:00:00Z",
       "featured": false,
@@ -636,19 +487,8 @@
       "quantity": 12,
       "category": "silk-sarees",
       "subcategory": "designer-silk",
-      "collections": [
-        "silk-sarees",
-        "designer",
-        "monochrome"
-      ],
-      "tags": [
-        "silk",
-        "white",
-        "black",
-        "designer",
-        "monochrome",
-        "minimalist"
-      ],
+      "collections": ["silk-sarees", "designer", "monochrome"],
+      "tags": ["silk", "white", "black", "designer", "monochrome", "minimalist"],
       "images": {
         "primary": "/assets/images/products/white-black-designer-1.jpg",
         "gallery": [
@@ -665,11 +505,7 @@
         "fabric": "Designer Silk",
         "weaveType": "Machine + Handwork",
         "craft": "Designer",
-        "occasion": [
-          "Party",
-          "Event",
-          "Photoshoot"
-        ],
+        "occasion": ["Party", "Event", "Photoshoot"],
         "pattern": "Geometric",
         "blousePiece": {
           "included": true,
@@ -694,22 +530,14 @@
       "seo": {
         "title": "White Black Designer Silk | Loom Saga",
         "description": "Shop chic White Black Designer Silk Saree. Minimalist elegance for modern women.",
-        "keywords": [
-          "monochrome saree",
-          "designer silk",
-          "white black saree",
-          "minimalist saree"
-        ]
+        "keywords": ["monochrome saree", "designer silk", "white black saree", "minimalist saree"]
       },
       "variants": [],
       "ratings": {
         "average": 4.8,
         "count": 22
       },
-      "relatedProducts": [
-        "LS-VSK-003",
-        "LS-VSK-006"
-      ],
+      "relatedProducts": ["LS-VSK-003", "LS-VSK-006"],
       "createdAt": "2026-01-08T00:00:00Z",
       "updatedAt": "2026-01-19T00:00:00Z",
       "featured": true,
@@ -729,18 +557,8 @@
       "quantity": 16,
       "category": "silk-sarees",
       "subcategory": "printed-silk",
-      "collections": [
-        "silk-sarees",
-        "spring-collection"
-      ],
-      "tags": [
-        "silk",
-        "green",
-        "light green",
-        "printed",
-        "spring",
-        "casual"
-      ],
+      "collections": ["silk-sarees", "spring-collection"],
+      "tags": ["silk", "green", "light green", "printed", "spring", "casual"],
       "images": {
         "primary": "/assets/images/products/light-green-silk-1.jpg",
         "gallery": [
@@ -757,11 +575,7 @@
         "fabric": "Printed Silk",
         "weaveType": "Handloom",
         "craft": "Printed",
-        "occasion": [
-          "Casual",
-          "Day Event",
-          "Garden Party"
-        ],
+        "occasion": ["Casual", "Day Event", "Garden Party"],
         "pattern": "Floral",
         "blousePiece": {
           "included": true,
@@ -787,22 +601,14 @@
       "seo": {
         "title": "Light Green Printed Silk | Loom Saga",
         "description": "Shop fresh Light Green Printed Silk Saree. Perfect for casual celebrations.",
-        "keywords": [
-          "light green saree",
-          "printed silk",
-          "casual saree",
-          "spring saree"
-        ]
+        "keywords": ["light green saree", "printed silk", "casual saree", "spring saree"]
       },
       "variants": [],
       "ratings": {
         "average": 4.5,
         "count": 19
       },
-      "relatedProducts": [
-        "LS-VSK-001",
-        "LS-VSK-004"
-      ],
+      "relatedProducts": ["LS-VSK-001", "LS-VSK-004"],
       "createdAt": "2026-01-12T00:00:00Z",
       "updatedAt": "2026-01-19T00:00:00Z",
       "featured": false,
@@ -822,19 +628,8 @@
       "quantity": 18,
       "category": "silk-sarees",
       "subcategory": "designer-silk",
-      "collections": [
-        "silk-sarees",
-        "designer",
-        "evening-wear"
-      ],
-      "tags": [
-        "silk",
-        "black",
-        "designer",
-        "formal",
-        "evening",
-        "elegant"
-      ],
+      "collections": ["silk-sarees", "designer", "evening-wear"],
+      "tags": ["silk", "black", "designer", "formal", "evening", "elegant"],
       "images": {
         "primary": "/assets/images/products/black-designer-1.jpg",
         "gallery": [
@@ -851,11 +646,7 @@
         "fabric": "Designer Silk",
         "weaveType": "Power Loom + Handwork",
         "craft": "Designer",
-        "occasion": [
-          "Evening",
-          "Formal",
-          "Cocktail"
-        ],
+        "occasion": ["Evening", "Formal", "Cocktail"],
         "pattern": "Solid with Border",
         "blousePiece": {
           "included": true,
@@ -881,22 +672,14 @@
       "seo": {
         "title": "Black Designer Silk | Loom Saga",
         "description": "Shop sophisticated Black Designer Silk Saree. Timeless elegance for formal occasions.",
-        "keywords": [
-          "black saree",
-          "designer silk",
-          "formal saree",
-          "evening wear saree"
-        ]
+        "keywords": ["black saree", "designer silk", "formal saree", "evening wear saree"]
       },
       "variants": [],
       "ratings": {
         "average": 4.9,
         "count": 35
       },
-      "relatedProducts": [
-        "LS-VSK-003",
-        "LS-VSK-007"
-      ],
+      "relatedProducts": ["LS-VSK-003", "LS-VSK-007"],
       "createdAt": "2026-01-04T00:00:00Z",
       "updatedAt": "2026-01-19T00:00:00Z",
       "featured": true,
@@ -916,18 +699,8 @@
       "quantity": 30,
       "category": "cotton-sarees",
       "subcategory": "handloom-cotton",
-      "collections": [
-        "handloom",
-        "daily-wear",
-        "cotton-sarees"
-      ],
-      "tags": [
-        "cotton",
-        "handloom",
-        "traditional",
-        "daily",
-        "breathable"
-      ],
+      "collections": ["handloom", "daily-wear", "cotton-sarees"],
+      "tags": ["cotton", "handloom", "traditional", "daily", "breathable"],
       "images": {
         "primary": "/assets/images/products/handloom-cotton-1.jpg",
         "gallery": [
@@ -944,11 +717,7 @@
         "fabric": "Pure Cotton",
         "weaveType": "Handloom",
         "craft": "Traditional Weave",
-        "occasion": [
-          "Daily",
-          "Casual",
-          "Office"
-        ],
+        "occasion": ["Daily", "Casual", "Office"],
         "pattern": "Striped",
         "blousePiece": {
           "included": true,
@@ -975,21 +744,14 @@
       "seo": {
         "title": "Traditional Handloom Cotton Saree | Loom Saga",
         "description": "Shop authentic Traditional Handloom Cotton Saree at Rs.3,499. Perfect for everyday elegance.",
-        "keywords": [
-          "cotton saree",
-          "handloom saree",
-          "daily wear saree",
-          "traditional saree"
-        ]
+        "keywords": ["cotton saree", "handloom saree", "daily wear saree", "traditional saree"]
       },
       "variants": [],
       "ratings": {
         "average": 4.4,
         "count": 28
       },
-      "relatedProducts": [
-        "LS-HLM-002"
-      ],
+      "relatedProducts": ["LS-HLM-002"],
       "createdAt": "2026-01-06T00:00:00Z",
       "updatedAt": "2026-01-19T00:00:00Z",
       "featured": false,
@@ -1009,18 +771,8 @@
       "quantity": 10,
       "category": "cotton-sarees",
       "subcategory": "jamdani",
-      "collections": [
-        "handloom",
-        "jamdani",
-        "heritage"
-      ],
-      "tags": [
-        "jamdani",
-        "handwoven",
-        "heritage",
-        "traditional",
-        "artisan"
-      ],
+      "collections": ["handloom", "jamdani", "heritage"],
+      "tags": ["jamdani", "handwoven", "heritage", "traditional", "artisan"],
       "images": {
         "primary": "/assets/images/products/jamdani-1.jpg",
         "gallery": [
@@ -1037,11 +789,7 @@
         "fabric": "Cotton-Muslin Blend",
         "weaveType": "Jamdani Weave",
         "craft": "Hand-woven",
-        "occasion": [
-          "Festive",
-          "Traditional",
-          "Cultural"
-        ],
+        "occasion": ["Festive", "Traditional", "Cultural"],
         "pattern": "Jamdani Motifs",
         "blousePiece": {
           "included": true,
@@ -1067,21 +815,14 @@
       "seo": {
         "title": "Hand-woven Jamdani Saree | Loom Saga",
         "description": "Shop exquisite Hand-woven Jamdani Saree at Rs.4,299. A masterpiece of Indian textile heritage.",
-        "keywords": [
-          "jamdani saree",
-          "hand woven saree",
-          "heritage saree",
-          "traditional saree"
-        ]
+        "keywords": ["jamdani saree", "hand woven saree", "heritage saree", "traditional saree"]
       },
       "variants": [],
       "ratings": {
         "average": 4.8,
         "count": 16
       },
-      "relatedProducts": [
-        "LS-HLM-001"
-      ],
+      "relatedProducts": ["LS-HLM-001"],
       "createdAt": "2026-01-09T00:00:00Z",
       "updatedAt": "2026-01-19T00:00:00Z",
       "featured": true,
@@ -1101,21 +842,8 @@
       "quantity": 5,
       "category": "silk-sarees",
       "subcategory": "banarasi",
-      "collections": [
-        "bridal",
-        "wedding-collection",
-        "silk-sarees",
-        "premium"
-      ],
-      "tags": [
-        "banarasi",
-        "bridal",
-        "wedding",
-        "red",
-        "zari",
-        "gold",
-        "premium"
-      ],
+      "collections": ["bridal", "wedding-collection", "silk-sarees", "premium"],
+      "tags": ["banarasi", "bridal", "wedding", "red", "zari", "gold", "premium"],
       "images": {
         "primary": "/assets/images/products/bridal-banarasi-1.jpg",
         "gallery": [
@@ -1134,11 +862,7 @@
         "fabric": "Pure Banarasi Silk",
         "weaveType": "Banarasi Weave",
         "craft": "Gold Zari Work",
-        "occasion": [
-          "Wedding",
-          "Bridal",
-          "Reception"
-        ],
+        "occasion": ["Wedding", "Bridal", "Reception"],
         "pattern": "Mughal Motifs",
         "zariType": "Real Gold Zari",
         "blousePiece": {
@@ -1168,22 +892,14 @@
       "seo": {
         "title": "Bridal Red Banarasi Silk Saree | Loom Saga",
         "description": "Shop luxurious Bridal Red Banarasi Silk Saree at Rs.12,999. Gold zari work for your special day.",
-        "keywords": [
-          "bridal saree",
-          "banarasi silk",
-          "wedding saree",
-          "red saree",
-          "zari saree"
-        ]
+        "keywords": ["bridal saree", "banarasi silk", "wedding saree", "red saree", "zari saree"]
       },
       "variants": [],
       "ratings": {
-        "average": 5,
+        "average": 5.0,
         "count": 8
       },
-      "relatedProducts": [
-        "LS-VSK-005"
-      ],
+      "relatedProducts": ["LS-VSK-005"],
       "createdAt": "2026-01-01T00:00:00Z",
       "updatedAt": "2026-01-19T00:00:00Z",
       "featured": true,

@@ -20,8 +20,14 @@ const navOverlay = document.getElementById('navOverlay');
  */
 let lastScrollY = window.scrollY;
 let headerVisible = true;
+let mobileMenuOpenFlag = false; // Flag to disable scroll-based header logic when mobile menu is open
 
 function handleHeaderScroll() {
+    // If mobile menu is open, do NOT update header visibility - it must stay fixed and visible
+    if (mobileMenuOpenFlag) {
+        return;
+    }
+    
     const currentScrollY = window.scrollY;
     const footer = document.getElementById('footer');
     const footerTop = footer ? footer.offsetTop : Infinity;
@@ -107,33 +113,391 @@ if (document.readyState === 'loading') {
 // Also initialize on window load (fallback for cached pages)
 window.addEventListener('load', initializeHeader);
 
-// ==================== MOBILE NAVIGATION ====================
+// ==================== FULLSCREEN MOBILE MENU (Manish Malhotra Style) ====================
 /**
- * Toggle mobile navigation menu
+ * Mobile Menu Controller - Fullscreen menu with panel-based navigation
+ * Now with dynamic HTML injection for global page support
  */
-function toggleMobileNav() {
-    const isOpen = hamburger.classList.contains('active');
-    
-    hamburger.classList.toggle('active');
-    mainNav.classList.toggle('active');
-    navOverlay.classList.toggle('active');
-    
-    // Update ARIA attribute
-    hamburger.setAttribute('aria-expanded', !isOpen);
-    
-    // Prevent body scroll when menu is open
-    document.body.style.overflow = !isOpen ? 'hidden' : '';
+const MobileMenuController = {
+    menu: null,
+    mainPanel: null,
+    hamburger: null,
+    navOverlay: null,
+    isOpen: false,
+    currentPanel: 'main',
+
+    // Mobile menu HTML template (injected dynamically on pages that don't have it)
+    menuHTML: `
+    <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+      <div class="mobile-menu__panel mobile-menu__panel--main active" id="mobileMenuMain">
+        <div class="mobile-menu__content">
+          <nav class="mobile-menu__nav" aria-label="Mobile Navigation">
+            <ul class="mobile-menu__list">
+              <li class="mobile-menu__item">
+                <button class="mobile-menu__link" data-submenu="new-arrivals">
+                  <span>NEW ARRIVALS</span>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M13 5l7 7-7 7"/></svg>
+                </button>
+              </li>
+              <li class="mobile-menu__item">
+                <button class="mobile-menu__link" data-submenu="collection">
+                  <span>COLLECTION</span>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M13 5l7 7-7 7"/></svg>
+                </button>
+              </li>
+              <li class="mobile-menu__item">
+                <button class="mobile-menu__link" data-submenu="sarees">
+                  <span>SAREES</span>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M13 5l7 7-7 7"/></svg>
+                </button>
+              </li>
+              <li class="mobile-menu__item">
+                <button class="mobile-menu__link" data-submenu="crafts">
+                  <span>CRAFTS</span>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M13 5l7 7-7 7"/></svg>
+                </button>
+              </li>
+              <li class="mobile-menu__item">
+                <button class="mobile-menu__link" data-submenu="about">
+                  <span>ABOUT US</span>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M13 5l7 7-7 7"/></svg>
+                </button>
+              </li>
+            </ul>
+          </nav>
+          <div class="mobile-menu__secondary">
+            <a href="wishlist.html" class="mobile-menu__secondary-link">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+              <span>WISHLIST</span>
+            </a>
+            <a href="login.html" class="mobile-menu__secondary-link">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <span>LOG IN</span>
+            </a>
+          </div>
+          <div class="mobile-menu__social">
+            <span class="mobile-menu__social-label">Find our store</span>
+            <div class="mobile-menu__social-icons">
+              <a href="#" aria-label="Instagram"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+              <a href="#" aria-label="Facebook"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+              <a href="#" aria-label="WhatsApp"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
+              <a href="#" aria-label="YouTube"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mobile-menu__panel mobile-menu__panel--sub" id="submenu-new-arrivals" data-panel="new-arrivals">
+        <div class="mobile-menu__subheader">
+          <button class="mobile-menu__back" data-back="main"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="M11 19l-7-7 7-7"/></svg><span>Back</span></button>
+          <h2 class="mobile-menu__subtitle">NEW ARRIVALS</h2>
+        </div>
+        <ul class="mobile-menu__sublist">
+          <li><a href="vishnupuri-silk.html">Vishnupuri Silk Sarees</a></li>
+          <li><a href="#">Muslin Sarees</a></li>
+        </ul>
+      </div>
+      <div class="mobile-menu__panel mobile-menu__panel--sub" id="submenu-collection" data-panel="collection">
+        <div class="mobile-menu__subheader">
+          <button class="mobile-menu__back" data-back="main"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="M11 19l-7-7 7-7"/></svg><span>Back</span></button>
+          <h2 class="mobile-menu__subtitle">COLLECTION</h2>
+        </div>
+        <ul class="mobile-menu__sublist">
+          <li><a href="vishnupuri-silk.html">Vishnupuri Silk Sarees</a></li>
+          <li><a href="#">Muslin Sarees</a></li>
+          <li><a href="silk-sarees.html">Modal Silk Sarees</a></li>
+          <li><a href="#">Matka Jamdani Sarees</a></li>
+          <li><a href="#">Tussar Jamdani Sarees</a></li>
+          <li><a href="collections.html">View All</a></li>
+        </ul>
+      </div>
+      <div class="mobile-menu__panel mobile-menu__panel--sub" id="submenu-sarees" data-panel="sarees">
+        <div class="mobile-menu__subheader">
+          <button class="mobile-menu__back" data-back="main"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="M11 19l-7-7 7-7"/></svg><span>Back</span></button>
+          <h2 class="mobile-menu__subtitle">SAREES</h2>
+        </div>
+        <div class="mobile-menu__subgroup">
+          <h3 class="mobile-menu__subgroup-title">Shop By Fabric</h3>
+          <ul class="mobile-menu__sublist">
+            <li><a href="silk-sarees.html">Silk</a></li>
+            <li><a href="#">Tissue Silk</a></li>
+            <li><a href="#">Lenin</a></li>
+            <li><a href="#">Cotton</a></li>
+          </ul>
+        </div>
+        <div class="mobile-menu__subgroup">
+          <h3 class="mobile-menu__subgroup-title">Shop By Craft</h3>
+          <ul class="mobile-menu__sublist">
+            <li><a href="#">Zari Weaving</a></li>
+            <li><a href="#">Ikat</a></li>
+            <li><a href="#">Handloom Weaving</a></li>
+            <li><a href="#">Kalamkari</a></li>
+          </ul>
+        </div>
+        <a href="collections.html" class="mobile-menu__view-all">View All Sarees</a>
+      </div>
+      <div class="mobile-menu__panel mobile-menu__panel--sub" id="submenu-crafts" data-panel="crafts">
+        <div class="mobile-menu__subheader">
+          <button class="mobile-menu__back" data-back="main"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="M11 19l-7-7 7-7"/></svg><span>Back</span></button>
+          <h2 class="mobile-menu__subtitle">CRAFTS</h2>
+        </div>
+        <div class="mobile-menu__subgroup">
+          <h3 class="mobile-menu__subgroup-title">Handloom</h3>
+          <ul class="mobile-menu__sublist">
+            <li><a href="handloom.html#fabrics">Fabrics</a></li>
+            <li><a href="handloom.html#weaving">Weaving Process</a></li>
+            <li><a href="handloom.html#techniques">Techniques & Patterns</a></li>
+          </ul>
+        </div>
+        <div class="mobile-menu__subgroup">
+          <h3 class="mobile-menu__subgroup-title">Fashion Insights</h3>
+          <ul class="mobile-menu__sublist">
+            <li><a href="fashion-insights.html">Indo-Western Style</a></li>
+            <li><a href="fashion-insights.html">Draped for the Day</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mobile-menu__panel mobile-menu__panel--sub" id="submenu-about" data-panel="about">
+        <div class="mobile-menu__subheader">
+          <button class="mobile-menu__back" data-back="main"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="M11 19l-7-7 7-7"/></svg><span>Back</span></button>
+          <h2 class="mobile-menu__subtitle">ABOUT US</h2>
+        </div>
+        <ul class="mobile-menu__sublist">
+          <li><a href="brand-story.html">Our Brand Story</a></li>
+          <li><a href="about.html">Our Founder's Story</a></li>
+          <li><a href="#">Our Store</a></li>
+          <li><a href="#">FAQ's</a></li>
+          <li><a href="contact.html">Contact Us</a></li>
+        </ul>
+      </div>
+    </div>`,
+
+    init() {
+        this.hamburger = document.getElementById('hamburger');
+        
+        // Exit early if hamburger doesn't exist (not a standard page)
+        if (!this.hamburger) {
+            console.debug('[MobileMenuController] No hamburger found, skipping init');
+            return;
+        }
+
+        // Ensure nav overlay exists, create if missing
+        this.navOverlay = document.getElementById('navOverlay');
+        if (!this.navOverlay) {
+            this.injectNavOverlay();
+            this.navOverlay = document.getElementById('navOverlay');
+        }
+
+        // Check if mobile menu exists, if not inject it
+        this.menu = document.getElementById('mobileMenu');
+        if (!this.menu) {
+            this.injectMobileMenu();
+            this.menu = document.getElementById('mobileMenu');
+        }
+
+        // Final safety check
+        if (!this.menu) {
+            console.warn('[MobileMenuController] Failed to initialize mobile menu');
+            return;
+        }
+
+        this.mainPanel = document.getElementById('mobileMenuMain');
+        this.bindEvents();
+        
+        console.debug('[MobileMenuController] Initialized successfully');
+    },
+
+    injectNavOverlay() {
+        // Create nav overlay if it doesn't exist
+        const header = document.getElementById('header') || document.querySelector('.header');
+        if (header) {
+            header.insertAdjacentHTML('afterend', '<div class="nav-overlay" id="navOverlay"></div>');
+        }
+    },
+
+    injectMobileMenu() {
+        // Find the best insertion point - after nav overlay if it exists, else after header
+        const navOverlay = document.getElementById('navOverlay');
+        const header = document.getElementById('header') || document.querySelector('.header');
+        
+        if (navOverlay) {
+            navOverlay.insertAdjacentHTML('afterend', this.menuHTML);
+        } else if (header) {
+            header.insertAdjacentHTML('afterend', this.menuHTML);
+        } else {
+            // Fallback: insert at beginning of body
+            document.body.insertAdjacentHTML('afterbegin', this.menuHTML);
+        }
+    },
+
+    bindEvents() {
+        // Hamburger toggle - safe event binding
+        if (this.hamburger) {
+            this.hamburger.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.toggle();
+            });
+        }
+
+        // Overlay click to close
+        if (this.navOverlay) {
+            this.navOverlay.addEventListener('click', () => this.close());
+        }
+
+        // Sub-menu navigation buttons (safely query within menu)
+        if (this.menu) {
+            this.menu.querySelectorAll('[data-submenu]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const submenuId = e.currentTarget.dataset.submenu;
+                    this.showSubPanel(submenuId);
+                });
+            });
+
+            // Back buttons
+            this.menu.querySelectorAll('[data-back]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.showMainPanel();
+                });
+            });
+        }
+
+        // Close on window resize to desktop
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768 && this.isOpen) {
+                this.close();
+            }
+        });
+
+        // Close on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && this.isOpen) {
+                this.close();
+            }
+        });
+    },
+
+    toggle() {
+        if (this.isOpen) {
+            this.close();
+        } else {
+            this.open();
+        }
+    },
+
+    open() {
+        if (!this.menu || !this.hamburger) return;
+        
+        this.isOpen = true;
+        
+        // CRITICAL FIX: Force header visible and lock scroll-based hide/show
+        mobileMenuOpenFlag = true;
+        const headerEl = document.getElementById('header');
+        if (headerEl) {
+            // Force header to be visible - remove any hide transforms
+            headerEl.classList.remove('header-hidden');
+            headerEl.classList.add('mobile-menu-active');
+            headerVisible = true;
+        }
+        
+        this.menu.classList.add('active');
+        this.menu.setAttribute('aria-hidden', 'false');
+        this.hamburger.classList.add('active');
+        this.hamburger.setAttribute('aria-expanded', 'true');
+        if (this.navOverlay) this.navOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+
+        // Ensure main panel is active
+        this.showMainPanel();
+    },
+
+    close() {
+        if (!this.menu || !this.hamburger) return;
+        
+        this.isOpen = false;
+        
+        // CRITICAL FIX: Unlock scroll-based header behavior
+        mobileMenuOpenFlag = false;
+        const headerEl = document.getElementById('header');
+        if (headerEl) {
+            headerEl.classList.remove('mobile-menu-active');
+            // Update lastScrollY to current position to prevent sudden hide on next scroll
+            lastScrollY = window.scrollY;
+        }
+        
+        this.menu.classList.remove('active');
+        this.menu.setAttribute('aria-hidden', 'true');
+        this.hamburger.classList.remove('active');
+        this.hamburger.setAttribute('aria-expanded', 'false');
+        if (this.navOverlay) this.navOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+
+        // Reset to main panel after close animation
+        setTimeout(() => {
+            if (!this.isOpen) {
+                this.resetPanels();
+            }
+        }, 350);
+    },
+
+    showMainPanel() {
+        if (!this.menu) return;
+        
+        this.currentPanel = 'main';
+        // Hide all sub-panels
+        this.menu.querySelectorAll('.mobile-menu__panel--sub').forEach(panel => {
+            panel.classList.remove('active');
+        });
+        // Show main panel
+        if (this.mainPanel) {
+            this.mainPanel.classList.add('active');
+        }
+    },
+
+    showSubPanel(submenuId) {
+        if (!this.menu) return;
+        
+        this.currentPanel = submenuId;
+        // Hide main panel
+        if (this.mainPanel) {
+            this.mainPanel.classList.remove('active');
+        }
+        // Show target sub-panel
+        const subPanel = document.getElementById(`submenu-${submenuId}`);
+        if (subPanel) {
+            subPanel.classList.add('active');
+        }
+    },
+
+    resetPanels() {
+        if (!this.menu) return;
+        
+        // Reset all panels to initial state
+        this.menu.querySelectorAll('.mobile-menu__panel').forEach(panel => {
+            panel.classList.remove('active');
+        });
+        if (this.mainPanel) {
+            this.mainPanel.classList.add('active');
+        }
+        this.currentPanel = 'main';
+    }
+};
+
+// Initialize mobile menu controller on DOM ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => MobileMenuController.init());
+} else {
+    MobileMenuController.init();
 }
 
-/**
- * Close mobile navigation menu
- */
+// Legacy function wrappers for backward compatibility
+function toggleMobileNav() {
+    MobileMenuController.toggle();
+}
+
 function closeMobileNav() {
-    hamburger.classList.remove('active');
-    mainNav.classList.remove('active');
-    navOverlay.classList.remove('active');
-    hamburger.setAttribute('aria-expanded', 'false');
-    document.body.style.overflow = '';
+    MobileMenuController.close();
 }
 
 // ==================== PREMIUM SEARCH OVERLAY (Manish Malhotra Style) ====================
@@ -367,15 +731,12 @@ const SearchOverlayManager = {
 const AtelierSearchManager = SearchOverlayManager;
 const SearchManager = SearchOverlayManager;
 
-// Hamburger menu click handler
-if (hamburger) {
-    hamburger.addEventListener('click', toggleMobileNav);
-}
+// Initialize search overlay manager
+SearchOverlayManager.init();
 
-// Close menu when clicking overlay
-if (navOverlay) {
-    navOverlay.addEventListener('click', closeMobileNav);
-}
+
+// Note: Hamburger and overlay events are handled by MobileMenuController
+// Legacy handlers removed to prevent duplicate listeners
 
 // Close menu when clicking on nav links
 document.querySelectorAll('.nav-link').forEach(link => {
@@ -1626,6 +1987,11 @@ function init() {
     // Initialize filter/sort functionality
     FilterSortManager.init();
     
+    // Initialize footer accordion
+    if (typeof MobileFooterAccordion !== 'undefined') {
+        MobileFooterAccordion.init();
+    }
+    
     console.log('Loom Saga initialized successfully');
 }
 
@@ -2212,7 +2578,7 @@ function initScrollReveal() {
     }, observerOptions);
     
     // Observe all reveal elements
-    const revealElements = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-stagger');
+    const revealElements = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-stagger, .reveal-card');
     revealElements.forEach(el => {
         revealObserver.observe(el);
     });
@@ -2253,11 +2619,17 @@ function autoAddRevealClasses() {
     if (craftImage) craftImage.classList.add('reveal-right');
     if (craftContent) craftContent.classList.add('reveal-left');
     
-    // Add reveal to insights section title
-    const insightsTitle = document.querySelector('.insights-title');
+    // Add reveal to insights section title (support both class variations)
+    const insightsTitle = document.querySelector('.insights-title, .fashion-insights-title');
     if (insightsTitle) {
         insightsTitle.classList.add('reveal');
     }
+    
+    // Add reveal-card to fashion insight cards for subtle staggered entrance
+    const insightCards = document.querySelectorAll('.fashion-insight-card');
+    insightCards.forEach(card => {
+        card.classList.add('reveal-card');
+    });
     
     // Add reveal to footer
     const footer = document.querySelector('.footer-content');
@@ -2313,4 +2685,56 @@ if (typeof CartManager !== 'undefined') {
         CartManager.init();
     }
 }
+
+/**
+ * Mobile Footer Accordion Logic
+ * Handles the expand/collapse behavior for footer sections on mobile
+ */
+const MobileFooterAccordion = {
+    init() {
+        const toggles = document.querySelectorAll('.footer-accordion-toggle');
+        
+        toggles.forEach(toggle => {
+            toggle.addEventListener('click', (e) => {
+                // Prevent default behavior
+                e.preventDefault();
+                
+                // Get the content element
+                const content = toggle.nextElementSibling;
+                const isOpen = toggle.classList.contains('active');
+                
+                // Close all other sections
+                toggles.forEach(otherToggle => {
+                    if (otherToggle !== toggle && otherToggle.classList.contains('active')) {
+                        otherToggle.classList.remove('active');
+                        otherToggle.setAttribute('aria-expanded', 'false');
+                        const otherContent = otherToggle.nextElementSibling;
+                        if (otherContent) {
+                            otherContent.classList.remove('active');
+                            otherContent.style.maxHeight = null;
+                        }
+                    }
+                });
+                
+                // Toggle current section
+                if (isOpen) {
+                    toggle.classList.remove('active');
+                    toggle.setAttribute('aria-expanded', 'false');
+                    if (content) {
+                        content.classList.remove('active');
+                        content.style.maxHeight = null;
+                    }
+                } else {
+                    toggle.classList.add('active');
+                    toggle.setAttribute('aria-expanded', 'true');
+                    if (content) {
+                        content.classList.add('active');
+                        // Set max-height to scrollHeight for transition
+                        content.style.maxHeight = content.scrollHeight + 'px';
+                    }
+                }
+            });
+        });
+    }
+};
 

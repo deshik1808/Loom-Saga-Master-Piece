@@ -583,6 +583,14 @@ ul {
   transform: translateY(-100%);
 }
 
+/* CRITICAL FIX: When mobile menu is open, header MUST stay visible
+   This overrides any scroll-based transforms and locks header in place */
+.header.mobile-menu-active {
+  transform: translateY(0) !important;
+  position: fixed !important;
+  top: 0 !important;
+}
+
 /* Header Dark Variant (for pages with light background like Cart) */
 .header.header-dark {
   color: var(--color-black);
@@ -907,11 +915,19 @@ ul {
 .hero {
   position: relative;
   width: 100%;
-  height: 100svh;
+  height: 100svh; /* Default/Base height */
   min-height: 550px;
   max-height: 1200px; /* Increased for large screens/zoom-out */
   aspect-ratio: 1920 / 1080;
   overflow: hidden;
+}
+
+/* Mobile Hero Height Fix (≤768px): Reduce height to visually reveal content below */
+@media (max-width: 768px) {
+  .hero {
+    height: 70svh;
+    min-height: 450px; /* adjusted for smaller screens */
+  }
 }
 
 .hero-image-container {
@@ -2157,27 +2173,69 @@ section.fashion-insights-section {
 .footer-content {
   position: relative;
   z-index: 1;
-  padding: var(--spacing-xl) var(--spacing-sm) var(--spacing-lg);
+  /* Reduced padding for compact mobile footer */
+  padding: var(--spacing-lg) var(--spacing-sm) var(--spacing-md);
 }
 
 .footer-grid {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-lg);
-  margin-bottom: var(--spacing-lg);
+  /* Reduced gap for compact mobile footer */
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
 }
 
 .footer-column {
   padding: 0;
 }
 
+/* Accordion Toggle (Mobile) */
+.footer-accordion-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  margin-bottom: var(--spacing-xs);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.footer-accordion-toggle svg {
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+  /* Ensure arrow color matches text */
+  stroke: var(--color-black); 
+}
+
+.footer-accordion-toggle.active svg {
+  transform: rotate(90deg);
+}
+
+/* Accordion Content (Mobile) */
+.footer-accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  /* Ultra-smooth, luxurious transition as requested */
+  transition: max-height 0.7s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+  opacity: 0;
+}
+
+.footer-accordion-content.active {
+  opacity: 1;
+}
+
 .footer-heading {
   font-family: var(--font-body);
-  font-size: 0.85rem;
-  font-weight: 450;
+  /* Typography strength matching mobile menu */
+  font-size: 0.875rem; /* Match mobile menu */
+  font-weight: 500; /* Match mobile menu */
   letter-spacing: 0.1em;
   color: var(--color-black);
-  margin-bottom: var(--spacing-sm);
+  margin-bottom: 0; /* Margin handled by toggle container or handled manually */
   text-transform: uppercase;
 }
 
@@ -2250,7 +2308,8 @@ section.fashion-insights-section {
 /* Social Icons - Touch Friendly */
 .social-icons {
   display: flex;
-  gap: var(--spacing-sm);
+  gap: 10px; /* Further reduced gap as requested */
+  align-items: center;
 }
 
 .social-icon {
@@ -2267,7 +2326,8 @@ section.fashion-insights-section {
 
 .social-icon:hover,
 .social-icon:active {
-  color: var(--color-gold);
+  /* Remove hover effect on mobile */
+  color: var(--color-black);
 }
 
 /* Footer Links */
@@ -2293,7 +2353,8 @@ section.fashion-insights-section {
 
 .footer-links a:hover,
 .footer-links a:active {
-  color: var(--color-black);
+  /* Remove hover effect on mobile */
+  color: var(--color-text-light);
 }
 
 /* Footer Bottom */
@@ -6196,6 +6257,7 @@ section.fashion-insights-section {
   }
 
   /* Footer */
+  /* Footer */
   .footer-content {
     padding: var(--spacing-xl) var(--spacing-md) var(--spacing-lg);
   }
@@ -6204,11 +6266,46 @@ section.fashion-insights-section {
     display: grid;
     grid-template-columns: 1.5fr 1fr 1fr 1fr;
     gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+  }
+
+  /* Disable Accordion on Desktop */
+  .footer-accordion-toggle {
+    display: block;
+    width: auto;
+    cursor: default;
+    pointer-events: none;
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .footer-accordion-toggle svg {
+    display: none;
+  }
+
+  .footer-accordion-content {
+    max-height: none !important;
+    overflow: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* Restore Hover Effects */
+  .social-icons {
+    gap: var(--spacing-sm);
   }
 
   .social-icon {
     width: 32px;
     height: 32px;
+  }
+
+  .social-icon:hover,
+  .social-icon:active {
+    color: var(--color-gold);
+  }
+
+  .footer-links a:hover,
+  .footer-links a:active {
+    color: var(--color-black);
   }
 
   /* Fashion Insights - Desktop */
@@ -8028,6 +8125,268 @@ section.fashion-insights-section {
   text-decoration: underline;
 }
 
+/* ==================== PREMIUM SEARCH OVERLAY (Manish Malhotra Style) ==================== */
+.search-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.search-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.search-overlay__backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+.search-overlay__panel {
+  position: relative;
+  background-color: var(--color-white);
+  padding: var(--spacing-md) var(--spacing-lg);
+  max-width: 100%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Search Input Row */
+.search-overlay__input-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.search-overlay__input-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  border: 1px solid #ddd;
+  padding: 0.5rem 1rem;
+  background-color: var(--color-white);
+}
+
+.search-overlay__input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  background: transparent;
+  color: var(--color-black);
+}
+
+.search-overlay__input::placeholder {
+  color: var(--color-text-light);
+}
+
+.search-overlay__clear,
+.search-overlay__submit {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: var(--color-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+}
+
+.search-overlay__clear:hover,
+.search-overlay__submit:hover {
+  color: var(--color-black);
+}
+
+.search-overlay__close {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  color: var(--color-black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.search-overlay__close:hover {
+  transform: scale(1.1);
+}
+
+/* Popular Search Links */
+.search-overlay__popular {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  max-width: 900px;
+  margin: var(--spacing-md) auto 0;
+  flex-wrap: wrap;
+}
+
+.search-overlay__popular-label {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.search-overlay__popular-links {
+  display: flex;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+.search-overlay__popular-link {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--color-text);
+  text-decoration: none;
+  padding: 0.25rem 0;
+  transition: color 0.2s ease;
+}
+
+.search-overlay__popular-link:hover {
+  color: var(--color-gold);
+}
+
+/* Two-Column Results */
+.search-overlay__results {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: var(--spacing-lg);
+  max-width: 900px;
+  margin: var(--spacing-lg) auto 0;
+  padding-top: var(--spacing-md);
+  border-top: 1px solid #eee;
+}
+
+.search-overlay__column-title {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: var(--spacing-sm);
+}
+
+.search-overlay__suggestion-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.search-overlay__suggestion-list li {
+  padding: 0.5rem 0;
+}
+
+.search-overlay__suggestion-list a {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--color-text);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.search-overlay__suggestion-list a:hover {
+  color: var(--color-gold);
+}
+
+/* Product Cards in Search */
+.search-overlay__product-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.search-product-card {
+  display: flex;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm);
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+
+.search-product-card:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.search-product-card__image {
+  width: 60px;
+  height: 80px;
+  object-fit: cover;
+}
+
+.search-product-card__info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.search-product-card__name {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--color-black);
+  margin-bottom: 0.25rem;
+}
+
+.search-product-card__price {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--color-text-light);
+}
+
+/* No Results State */
+.search-overlay__no-results {
+  text-align: center;
+  padding: var(--spacing-lg);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.search-overlay__no-results p {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--color-text-light);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .search-overlay__panel {
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+
+  .search-overlay__input-row {
+    flex-wrap: nowrap;
+  }
+
+  .search-overlay__results {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+
+  .search-overlay__popular {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
 /* ==================== EXPLORE SWIPER ==================== */
 .explore-swiper {
   width: 100%;
@@ -8448,3 +8807,683 @@ section.fashion-insights-section {
   background-color: transparent;
   color: var(--color-black);
 }
+/* ==================== MOBILE HEADER REFINEMENTS ==================== */
+/* 
+   Scopes: Mobile Only (max-width: 768px)
+   Purpose: Premium balanced layout - solid white bg, centered logo with brand name, curated icons
+*/
+
+@media screen and (max-width: 768px) {
+  /* 1. Structure & Background */
+  .header,
+  .header.scrolled,
+  .header:hover {
+    background-color: var(--color-white) !important;
+    backdrop-filter: none !important;
+    height: 76px; /* Premium breathing room for brand dominance */
+    box-shadow: 0 1px 0 rgba(0,0,0,0.04) !important; /* Subtle divider */
+    transition: transform var(--transition-luxury); /* Keep slide transition only */
+  }
+
+  /* Reset container padding for balanced layout */
+  .header-container {
+    padding: 0 16px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
+
+  .header-top {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    position: relative; /* For absolute logo centering */
+    justify-content: space-between; /* Hamburger Left, Icons Right */
+    align-items: center;
+  }
+
+  /* 2. Logo - Centered & Static with Brand Name (Dominant Hierarchy) */
+  .logo {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) !important;
+    margin: 0;
+    padding: 0;
+    z-index: 10;
+    width: auto;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px; /* Visible spacing between logo mark and brand name */
+  }
+
+  .logo-image {
+    height: 38px; /* Dominant visual anchor */
+    width: auto;
+    filter: none !important; /* Always black/original, never white/inverted */
+  }
+
+  .logo-text {
+    display: block; /* Show brand name on mobile */
+    font-family: var(--font-script);
+    font-size: 0.95rem; /* Elegant, legible brand presence */
+    letter-spacing: 0.03em;
+    color: var(--color-black);
+    opacity: 1; /* Full presence for brand identity */
+    line-height: 1;
+  }
+
+  /* 3. Hamburger - Original 3-line design (reverted) */
+  .hamburger {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    z-index: 20;
+    order: 1; /* Left side */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+
+  /* Show original spans - revert hide */
+  .hamburger span {
+    display: block;
+    width: 20px;
+    height: 1.5px;
+    background-color: var(--color-black);
+    margin: 3px 0;
+    transition: var(--transition-smooth);
+  }
+
+  /* Remove pseudo-element overrides */
+  .hamburger::before,
+  .hamburger::after {
+    content: none;
+    display: none;
+  }
+
+  /* Keep original active state animation */
+  .hamburger.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+  }
+
+  .hamburger.active span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .hamburger.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -5px);
+  }
+
+  /* 4. Icons - Curated Selection with Better Spacing */
+  .header-icons {
+    gap: 12px; /* Subtle, refined spacing */
+    order: 3; /* Right side */
+    z-index: 20;
+  }
+
+  .icon-btn {
+    width: 40px;
+    height: 40px;
+  }
+
+  .icon-btn img,
+  .icon-btn svg {
+    width: 20px;
+    height: 20px;
+    filter: none !important; /* Always black */
+    stroke: var(--color-black) !important;
+  }
+
+  /* Hide unwanted icons on mobile */
+  .icon-btn[aria-label="Wishlist"],
+  .icon-btn[aria-label="Account"] {
+    display: none !important;
+  }
+
+  /* Badge styling refinement for mobile */
+  .icon-badge {
+    top: 4px;
+    right: 4px;
+    width: 14px;
+    height: 14px;
+    background-color: var(--color-gold); /* Premium color accent */
+    color: var(--color-white);
+    font-size: 8px;
+  }
+
+  /* Hide old main-nav on mobile when new menu is used */
+  .main-nav {
+    display: none !important;
+  }
+
+  /* Hamburger transforms to clean X when menu is open */
+  .hamburger.active span {
+    background-color: var(--color-black);
+  }
+  .hamburger.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+  }
+  .hamburger.active span:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  .hamburger.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -5px);
+  }
+}
+
+/* ==================== FULLSCREEN MOBILE MENU (Manish Malhotra Style) ==================== */
+/* Only visible on mobile */
+.mobile-menu {
+  display: none;
+}
+
+@media screen and (max-width: 768px) {
+  .mobile-menu {
+    position: fixed;
+    top: 76px; /* Below header */
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--color-white);
+    z-index: 999; /* Above nav-overlay (998) */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    overflow: hidden;
+  }
+
+  .mobile-menu.active {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Panel System */
+  .mobile-menu__panel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--color-white);
+    overflow-y: auto;
+    padding: 0 24px 40px;
+    transform: translateX(100%);
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .mobile-menu__panel--main {
+    transform: translateX(-100%);
+  }
+
+  .mobile-menu__panel--main.active {
+    transform: translateX(0);
+  }
+
+  .mobile-menu__panel--sub.active {
+    transform: translateX(0);
+  }
+
+  .mobile-menu__content {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    padding-top: 20px;
+  }
+
+  /* Primary Navigation List */
+  .mobile-menu__nav {
+    flex: 1;
+  }
+
+  .mobile-menu__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .mobile-menu__item {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06); /* Lighter separation between items */
+  }
+
+  /* Remove border from last nav item to prevent duplicate divider before secondary section */
+  .mobile-menu__item:last-child {
+    border-bottom: none;
+  }
+
+  /* Remove highlight underline - all items have equal weight */
+  .mobile-menu__item--highlight .mobile-menu__link span::after {
+    display: none;
+  }
+
+  .mobile-menu__link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 18px 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    font-weight: 500; /* Normalized weight across all rows */
+    letter-spacing: 0.1em;
+    color: var(--color-black);
+    text-align: left;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Arrow icons - match exact text color */
+  .mobile-menu__link svg {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    color: var(--color-black);
+    stroke-width: 2;
+    transition: transform 0.2s ease;
+  }
+
+  .mobile-menu__link:active svg {
+    transform: translateX(3px);
+  }
+
+  /* Secondary Actions - Single CLEAR divider separating primary nav from secondary actions */
+  .mobile-menu__secondary {
+    padding: 24px 0 20px;
+    border-top: 1px solid rgba(0, 0, 0, 0.12); /* Balanced intentional divider - 1px with stronger opacity */
+    margin-top: auto;
+  }
+
+  .mobile-menu__secondary-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 500; /* Stronger text */
+    letter-spacing: 0.1em;
+    color: var(--color-black);
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobile-menu__secondary-link svg {
+    opacity: 0.85; /* Stronger icons */
+    stroke-width: 1.8;
+  }
+
+  /* Social Links - Reduced top spacing */
+  .mobile-menu__social {
+    padding: 12px 0 0; /* Reduced from 24px */
+    text-align: center;
+  }
+
+  .mobile-menu__social-label {
+    display: block;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+    margin-bottom: 16px;
+  }
+
+  .mobile-menu__social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 28px;
+  }
+
+  .mobile-menu__social-icons a {
+    color: var(--color-black);
+    opacity: 0.85; /* Stronger visibility */
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobile-menu__social-icons a svg {
+    stroke-width: 1.8; /* Consistent bold stroke */
+  }
+
+  .mobile-menu__social-icons a:active {
+    opacity: 1;
+  }
+
+  /* Sub-Panel Styles */
+  .mobile-menu__subheader {
+    display: flex;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    margin-bottom: 8px;
+    position: relative;
+  }
+
+  .mobile-menu__back {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    font-weight: 500; /* Match other menu rows */
+    letter-spacing: 0.05em;
+    color: var(--color-black);
+    padding: 12px 0;
+    min-height: 44px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobile-menu__back svg {
+    color: var(--color-black);
+    stroke-width: 2;
+  }
+
+  .mobile-menu__subtitle {
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    color: var(--color-black);
+    margin: 0;
+    flex: 1;
+    text-align: center;
+    padding-right: 80px; /* Balance wider back button */
+  }
+
+  .mobile-menu__sublist {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .mobile-menu__sublist li {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  .mobile-menu__sublist a {
+    display: block;
+    padding: 16px 0;
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    font-weight: 500; /* Match other menu rows */
+    letter-spacing: 0.05em;
+    color: var(--color-black);
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobile-menu__sublist--grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0 24px;
+  }
+
+  .mobile-menu__subgroup {
+    margin-bottom: 24px;
+  }
+
+  .mobile-menu__subgroup-title {
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--color-gold-dark);
+    margin: 20px 0 8px;
+  }
+
+  .mobile-menu__view-all {
+    display: block;
+    padding: 16px 0;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: var(--color-gold-dark);
+    text-decoration: none;
+    text-align: center;
+    margin-top: 16px;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  /* Disable ALL hover effects on mobile navigation - tap only */
+  .mobile-menu__link:hover,
+  .mobile-menu__secondary-link:hover,
+  .mobile-menu__back:hover,
+  .mobile-menu__sublist a:hover,
+  .mobile-menu__view-all:hover,
+  .mobile-menu__social-icons a:hover {
+    color: inherit;
+    background: transparent;
+    opacity: inherit;
+    transform: none;
+  }
+}
+
+/* ==================== PHASE 1: MOBILE CONTENT LAYOUT & DENSITY REFINEMENT ==================== */
+@media screen and (max-width: 768px) {
+  /* 1. DISCOVER SECTION - Horizontal Editorial Curation */
+  .discover-grid {
+    display: flex !important;
+    grid-template-columns: none !important;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: var(--spacing-sm);
+    padding-right: var(--spacing-md); /* Peek area */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+    /* Ensure cards take up enough width to show ~1.2 at a time */
+  }
+
+  .discover-grid::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+  }
+
+  .discover-card {
+    min-width: 85%; /* 1.2 cards visible */
+    scroll-snap-align: start;
+    flex-shrink: 0;
+  }
+  
+  .discover-section {
+    padding: 0 0 0 var(--spacing-sm); /* Flush left padding, right gap handled by grid */
+    margin-bottom: var(--spacing-md);
+    overflow: hidden; /* Prevent horizontal page scroll */
+  }
+
+  /* 2. SECTION SPACING & ALIGNMENT OPTIMIZATION */
+  
+  /* Hero -> Intro: Reduce vertical padding */
+  .intro-section {
+    padding-top: var(--spacing-lg); /* Reduced from XL */
+    padding-bottom: var(--spacing-lg);
+    padding-left: var(--spacing-sm); /* Consistent horizontal (16px) */
+    padding-right: var(--spacing-sm);
+  }
+
+  /* Video Section: Compact density */
+  .video-section-full {
+    padding: 0 var(--spacing-sm) var(--spacing-sm);
+  }
+
+  /* Story Sections: Alignment */
+  .story-content {
+    padding: var(--spacing-md) var(--spacing-sm);
+  }
+
+  /* Fashion Insights: Reduce heavy spacing */
+  section.fashion-insights-section {
+    padding-top: 3rem !important; /* Reduced from 5rem */
+    padding-bottom: var(--spacing-lg) !important; /* Reduced from XL/6rem */
+    padding-left: var(--spacing-sm) !important;
+    padding-right: var(--spacing-sm) !important;
+  }
+  
+  .fashion-insights-title {
+    margin-bottom: 2rem !important; /* Reduced from 3rem */
+  }
+
+  /* ==================== PHASE 2: VISUAL ELEVATION & SECTION EMPHASIS ==================== */
+  
+  /* 1. VIDEO SECTION - Subtle Elevation (Primary Focus) */
+  .video-wrapper-full {
+    /* Soft, premium shadow: Large blur, low opacity, no harsh edges */
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+    border-radius: 4px; /* Refined, intentional edges */
+    /* Ensure shadow doesn't get clipped */
+    overflow: visible; 
+    /* Fix for overflow:visible breaking border-radius clipping on image */
+  }
+
+  /* Clip the image inside specifically since wrapper needs overflow:visible for shadow? 
+     Actually, if I put shadow on wrapper, and it has overflow:hidden (from existing styles), 
+     the shadow might be clipped if it's outside. 
+     Existing style for .video-wrapper-full has overflow:hidden.
+     If I want shadow, I might need a container OR apply shadow to wrapper and remove overflow:hidden?
+     But overflow:hidden is needed for image zoom/scale effects if they existed (disabled on mobile).
+     Actually, play button is inside. 
+     Let's use a pseudo-element for shadow or adjust.
+     Simpler: remove overflow:hidden for mobile if no zoom needed?
+     Phase 1 said "Do not preservation existing hover... only if it does not affect mobile UX".
+     Phase 2 constraints: "No hover effects (mobile)".
+     So I can remove overflow:hidden on mobile to show shadow.
+     BUT I need to clip the corners of the image to the border-radius.
+  */
+  
+  .video-wrapper-full {
+    overflow: hidden; /* Keep hidden to clip image to border-radius */
+    /* Box shadow on an element with overflow:hidden DOES work for outer shadow in modern browsers. */
+    /* Let's double check. Yes, box-shadow is drawn outside the border box. overflow: hidden clips CONTENT, not shadow. */
+  }
+
+  /* 2. IMAGE CONSISTENCY - Editorial Sharpness */
+  /* Verify consistent zero-radius and no shadows for others */
+  .discover-image-wrapper,
+  .story-image,
+  .fashion-insight-image-wrapper {
+    border-radius: 0;
+    box-shadow: none !important;
+    filter: none; /* Ensure no erratic sharpness filters */
+  }
+
+  /* 3. VISUAL HIERARCHY - Depth Discipline */
+  /* Ensure no inadvertent shadows on constraints */
+  .hero-image-container,
+  .intro-section,
+  .discover-card {
+    box-shadow: none;
+  }
+
+  /* ==================== PHASE 3: ENGAGEMENT COMPONENTS & MOTION ==================== */
+  /* 1. FASHION INSIGHTS CAROUSEL (Mobile Swipe) */
+  .fashion-insights-grid {
+    display: flex !important;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory; /* Snap for clean browsing */
+    gap: var(--spacing-sm) !important;
+    padding-bottom: var(--spacing-md); /* Optical balance */
+    padding-right: var(--spacing-md); /* Peek separation */
+    -webkit-overflow-scrolling: touch; /* Momentum scrolling */
+    
+    /* Hide scrollbar for premium look */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+  }
+  
+  .fashion-insights-grid::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+  }
+  
+  .fashion-insight-card {
+    flex: 0 0 85%; /* Shows full card + 15% preview of next */
+    width: 85%;
+    max-width: 320px;
+    scroll-snap-align: start;
+    margin-right: 0; /* Reset margins if any */
+  }
+  
+  /* Ensure images fill correctly in flex layout */
+  .fashion-insight-image-wrapper {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+  }
+  
+  /* 2. MOTION DISCIPLINE - Subtle Entrance (8-12px lift) */
+  .reveal-card {
+    opacity: 0;
+    transform: translateY(12px);
+    transition: 
+      opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    will-change: opacity, transform;
+  }
+  
+  .reveal-card.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  /* Stagger delay for cards */
+  .fashion-insight-card:nth-child(1) { transition-delay: 0.1s; }
+  .fashion-insight-card:nth-child(2) { transition-delay: 0.2s; }
+  .fashion-insight-card:nth-child(3) { transition-delay: 0.3s; }
+
+  /* ==================== PHASE 4: MICRO-POLISH — CTA CLARITY ==================== */
+  
+  /* 1. DISCOVER SECTION — CTA UNDERLINE */
+  .discover-text {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    text-decoration-color: currentColor; /* Same as text color (white) */
+  }
+
+  /* 2. STORY SECTIONS — CTA UNDERLINE */
+  /* Override any animated underline pseudo-elements, use static underline */
+  .story-link {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    text-decoration-color: currentColor;
+  }
+  
+  /* Hide the animated ::after pseudo underline on mobile */
+  .story-link::after {
+    display: none !important;
+  }
+
+  /* 3. FASHION INSIGHTS — ARTICLE TITLE AFFORDANCE */
+  .fashion-insight-article-title {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+    text-decoration-color: currentColor;
+  }
+
+  /* 4. VIEW ALL — SPACING & CTA REFINEMENT */
+  .fashion-insights-view-more {
+    margin-top: 1.5rem; /* Reduced from 4rem default */
+    text-align: center;
+  }
+  
+  .view-more-link {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    text-decoration-color: currentColor;
+  }
+  
+  /* Hide the animated ::after pseudo underline on mobile */
+  .view-more-link::after {
+    display: none !important;
+  }
+}
+

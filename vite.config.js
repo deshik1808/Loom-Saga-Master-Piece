@@ -39,9 +39,9 @@ export default defineConfig({
   
   // Dev server options
   server: {
+    host: '0.0.0.0',
     port: 3000,
     open: true,
-    host: true,
   },
   
   // CSS options
