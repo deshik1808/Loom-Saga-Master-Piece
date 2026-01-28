@@ -48,7 +48,18 @@ function handleHeaderScroll() {
     // Check if we're near the footer
     const nearFooter = currentScrollY + windowHeight >= footerTop - 50;
     
-    // Scrolling up - always show header (regardless of footer position)
+    // STRICT RULE: If near footer AND we have scrolled down significantly, hide header
+    // The "currentScrollY > 100" check prevents hiding header on short pages (like empty wishlist) where footer is visible at top
+    if (nearFooter && currentScrollY > 100) {
+        if (headerVisible) {
+            header.classList.add('header-hidden');
+            headerVisible = false;
+        }
+        lastScrollY = currentScrollY;
+        return;
+    }
+
+    // Scrolling up - always show header if NOT near footer
     if (currentScrollY < lastScrollY) {
         if (!headerVisible) {
             header.classList.remove('header-hidden');
@@ -57,8 +68,8 @@ function handleHeaderScroll() {
     }
     // Scrolling down
     else if (currentScrollY > lastScrollY) {
-        // Hide header when near footer OR after scrolling 100px
-        if (nearFooter || currentScrollY > 100) {
+        // Hide header after scrolling 100px
+        if (currentScrollY > 100) {
             if (headerVisible) {
                 header.classList.add('header-hidden');
                 headerVisible = false;
@@ -89,13 +100,25 @@ window.addEventListener('scroll', function() {
  */
 function initializeHeader() {
     if (header) {
-        // Always ensure header is visible on page load
+        // Always ensure header is visible on page load INITIALLY
         header.classList.remove('header-hidden');
         headerVisible = true;
         
         // Set the scrolled class if page is already scrolled
         if (window.scrollY > 50) {
             header.classList.add('scrolled');
+        }
+
+        // Check if we are already at the footer on load (e.g. refresh)
+        const footer = document.getElementById('footer');
+        if (footer) {
+            const footerTop = footer.offsetTop;
+            const windowHeight = window.innerHeight;
+            // Use same proximity logic as scroll handler WITH threshold for short pages
+            if (window.scrollY + windowHeight >= footerTop - 50 && window.scrollY > 100) {
+                header.classList.add('header-hidden');
+                headerVisible = false;
+            }
         }
         
         // Reset lastScrollY to current position

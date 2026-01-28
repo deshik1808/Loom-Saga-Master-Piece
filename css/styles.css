@@ -65,6 +65,9 @@
   --spacing-2xl: 10rem; /* 160px - NEW for hero sections */
   --spacing-3xl: 14rem; /* 224px - NEW for major section breaks */
 
+  /* Home Page Section Rhythm - Luxury Vertical Spacing */
+  --section-rhythm: 5rem; /* 80px - Authoritative section gap for home page */
+
   /* Motion - Premium Easing Curves */
   --transition-instant: 0.1s ease;
   --transition-fast: 0.2s ease;
@@ -97,6 +100,13 @@
 
   /* Serif Font Variable */
   --font-serif: "Cormorant Garamond", serif;
+}
+
+/* Mobile: Slightly reduced section rhythm for compact screens */
+@media (max-width: 767px) {
+  :root {
+    --section-rhythm: 4rem; /* 64px on mobile */
+  }
 }
 
 /* ==================== RESET & BASE ==================== */
@@ -911,6 +921,9 @@ ul {
   }
 }
 
+/* ==================== OPTICAL SPACING OVERRIDES ==================== */
+/* Moved to end of file to defeat overrides */
+
 /* ==================== HERO SECTION (Mobile First) ==================== */
 .hero {
   position: relative;
@@ -1029,11 +1042,12 @@ ul {
 
 /* ==================== INTRO SECTION (Mobile First) ==================== */
 .intro-section {
-  padding: var(--spacing-xl) var(--spacing-md); /* Consistent horizontal padding */
+  padding: 0 0 var(--spacing-md); /* Bottom padding only; margin-top handles gap */
   background-color: transparent;
   text-align: center;
   max-width: var(--max-width);
-  margin: 0 auto;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .intro-title {
@@ -1057,69 +1071,14 @@ ul {
   margin: 0 auto;
 }
 
-/* ==================== DISCOVER SECTION ==================== */
-.discover-section {
-  padding: 0 var(--spacing-md) var(--spacing-lg); /* Increased bottom padding for gap */
-  max-width: var(--max-width);
-  margin: 0 auto;
-}
 
-.discover-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--spacing-sm);
-  width: 100%;
-}
-
-.discover-card {
-  position: relative;
-  display: block;
-  overflow: hidden;
-  text-decoration: none;
-}
-
-.discover-image-wrapper {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 3 / 4; /* Portrait aspect ratio for elegance */
-  overflow: hidden;
-}
-
-.discover-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.6s ease;
-}
-
-.discover-card:hover .discover-image {
-  transform: scale(1.03);
-}
-
-.discover-overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: var(--spacing-md);
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.4), transparent);
-  display: flex;
-  align-items: flex-end;
-}
-
-.discover-text {
-  font-family: var(--font-body);
-  font-size: 1.1rem;
-  font-weight: 300;
-  letter-spacing: 0.05em;
-  color: var(--color-white);
-}
 
 /* ==================== VIDEO SECTION ==================== */
 .video-section-full {
-  padding: 0 var(--spacing-md) var(--spacing-md); /* Reduced bottom padding */
+  padding: 0 var(--spacing-md) var(--spacing-md); /* Bottom padding only; margin-top handles gap */
   max-width: var(--max-width);
-  margin: 0 auto;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .video-wrapper-full {
@@ -1199,7 +1158,7 @@ input[type="text"]::-ms-clear {
   left: 0;
   width: 100%;
   background: var(--color-white);
-  padding: 20px var(--spacing-md) 30px;
+  padding: 16px var(--spacing-md) 12px;
   max-height: 80vh;
   overflow-y: auto;
   transform: translateY(-100%);
@@ -1215,9 +1174,9 @@ input[type="text"]::-ms-clear {
 .search-overlay__input-row {
   display: flex;
   align-items: center;
-  gap: var(--spacing-md);
+  gap: 12px;
   max-width: 700px;
-  margin: 0 auto 20px;
+  margin: 0 auto 10px;
 }
 
 .search-overlay__input-container {
@@ -1304,7 +1263,7 @@ input[type="text"]::-ms-clear {
 /* Popular Search Section */
 .search-overlay__popular {
   text-align: center;
-  margin-bottom: 25px;
+  margin-bottom: 14px;
 }
 
 .search-overlay__popular-label {
@@ -1316,7 +1275,7 @@ input[type="text"]::-ms-clear {
   text-decoration: underline;
   text-underline-offset: 3px;
   display: block;
-  margin-bottom: 12px;
+  margin-bottom: 5px;
 }
 
 .search-overlay__popular-links {
@@ -1340,19 +1299,22 @@ input[type="text"]::-ms-clear {
   content: "";
   position: absolute;
   bottom: -2px;
-  left: 0;
+  left: 50%;
   width: 0;
-  height: 1px;
-  background: var(--color-black);
-  transition: width 0.3s ease;
+  height: 2px;
+  background: var(--color-gold);
+  transition:
+    width var(--transition-elegant),
+    left var(--transition-elegant);
 }
 
 .search-overlay__popular-link:hover {
-  color: var(--color-black);
+  color: var(--color-gold);
 }
 
 .search-overlay__popular-link:hover::after {
   width: 100%;
+  left: 0;
 }
 
 /* Two-Column Results Container */
@@ -1483,13 +1445,13 @@ input[type="text"]::-ms-clear {
 /* ==================== SEARCH OVERLAY - MOBILE RESPONSIVE ==================== */
 @media (max-width: 767px) {
   .search-overlay__panel {
-    padding: 15px var(--spacing-sm) 25px;
+    padding: 12px var(--spacing-sm) 18px;
     max-height: 90vh;
   }
 
   .search-overlay__input-row {
     gap: var(--spacing-xs);
-    margin-bottom: 15px;
+    margin-bottom: 10px;
   }
 
   .search-overlay__input-container {
@@ -1531,6 +1493,24 @@ input[type="text"]::-ms-clear {
   }
 }
 
+/* ==================== SEARCH OVERLAY - DESKTOP REFINEMENTS ==================== */
+@media (min-width: 768px) {
+  /* 1. Search Input & Close Icon - Tighter grouping */
+  .search-overlay__input-row {
+    gap: 6px;
+  }
+
+  /* 2. Popular Search Spacing - Tighter */
+  .search-overlay__popular-label {
+    margin-bottom: 4px;
+  }
+
+  /* 3. Menu Item Bottom Spacing - Minimal */
+  .search-overlay__popular {
+    margin-bottom: 8px;
+  }
+}
+
 /* Legacy styles - hide old search modal */
 .search-modal {
   display: none;
@@ -1539,12 +1519,27 @@ input[type="text"]::-ms-clear {
   display: none;
 }
 
+/* ==================== HERO SECTION - HOME PAGE (Mobile First) ==================== */
+.hero {
+  /* Padding controlled by ID override above */
+}
+
+/* ==================== INTRO SECTION (Mobile First) ==================== */
+.intro-section {
+  padding-top: 2.5rem; /* 40px - Optical: Tighter coupling to Hero */
+  padding-bottom: var(--section-rhythm);
+}
+
 /* ==================== VIDEO SECTION (Mobile First) ==================== */
+.video-section-full {
+  padding-top: var(--section-rhythm);
+  padding-bottom: var(--section-rhythm);
+}
+
 /* ==================== DISCOVER SECTION (Mobile First) ==================== */
 .discover-section {
-  padding: 0 var(--spacing-md);
-  margin-bottom: var(--spacing-md);
-  max-width: 1600px; /* Bound section for premium zoom behavior */
+  padding: var(--section-rhythm) var(--spacing-md);
+  max-width: var(--max-width);
   margin-left: auto;
   margin-right: auto;
 }
@@ -1633,36 +1628,7 @@ input[type="text"]::-ms-clear {
   left: 0;
 }
 
-.video-section {
-  padding: 0 var(--spacing-sm) var(--spacing-lg);
-  background-color: transparent;
-}
-
-.video-container {
-  max-width: var(--max-width);
-  margin: 0 auto;
-}
-
-.video-wrapper {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 10;
-  overflow: hidden;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.video-thumbnail {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.6s ease;
-}
-
-.video-wrapper:hover .video-thumbnail {
-  transform: scale(1.02);
-}
-
+/* Play button styles shared across video sections */
 .play-btn {
   position: absolute;
   top: 50%;
@@ -1690,7 +1656,7 @@ input[type="text"]::-ms-clear {
 
 /* ==================== EXPLORE COLLECTION CAROUSEL (Mobile First) ==================== */
 .explore-section {
-  padding: var(--spacing-md) 0; /* Reduced top padding */
+  /* Padding controlled by ID override above */
   background-color: transparent;
   position: relative;
 }
@@ -1804,10 +1770,11 @@ input[type="text"]::-ms-clear {
 .story-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 0; /* LOCKED: Zero gap between Artist's Legacy and Our Craft Matters */
   width: 100%;
-  margin: 0;
-  padding: 0;
+  margin-left: 0;
+  margin-right: 0;
+  /* Padding controlled by ID override above */
 }
 
 /* Remove gap between the two story sections */
@@ -1930,14 +1897,17 @@ input[type="text"]::-ms-clear {
 
 /* ==================== FASHION INSIGHTS GRID (Renamed) ==================== */
 /* Using strict selectors to ensure application */
+/* ==================== FASHION INSIGHTS GRID (Renamed) ==================== */
+/* Using strict selectors to ensure application */
 section.fashion-insights-section {
-  /* Vertical Spacing: Reduced from 10rem to 5rem (Balanced) */
-  padding: 5rem var(--spacing-md) var(--spacing-xl) !important;
+  /* Padding controlled by ID override above */
   max-width: var(--max-width);
-  margin: 0 auto;
+  margin-left: auto;
+  margin-right: auto;
   position: relative;
   width: 100%;
 }
+
 
 .fashion-insights-title {
   font-family: var(--font-heading);
@@ -2147,6 +2117,13 @@ section.fashion-insights-section {
   color: var(--color-black);
 }
 
+/* Desktop: Square images for Fashion Insights */
+@media (min-width: 768px) {
+  .fashion-insight-image-wrapper {
+    aspect-ratio: 1 / 1;
+  }
+}
+
 /* ==================== FOOTER (Mobile First) ==================== */
 .footer {
   position: relative;
@@ -2208,7 +2185,7 @@ section.fashion-insights-section {
   transition: transform 0.3s ease;
   flex-shrink: 0;
   /* Ensure arrow color matches text */
-  stroke: var(--color-black); 
+  stroke: var(--color-black);
 }
 
 .footer-accordion-toggle.active svg {
@@ -2220,7 +2197,9 @@ section.fashion-insights-section {
   max-height: 0;
   overflow: hidden;
   /* Ultra-smooth, luxurious transition as requested */
-  transition: max-height 0.7s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition:
+    max-height 0.7s cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
   opacity: 0;
 }
 
@@ -2638,15 +2617,10 @@ section.fashion-insights-section {
   margin: 0 auto;
 }
 
-/* Craft Sections */
+/* Craft Sections - Uniform Spacing */
 .craft-section {
   padding: var(--spacing-lg) var(--spacing-md);
   background-color: var(--color-white);
-}
-
-/* Specific Override for First Section Spacing */
-#fabrics {
-  padding-top: var(--spacing-md);
 }
 
 .craft-section-alt {
@@ -2700,8 +2674,7 @@ section.fashion-insights-section {
 
 .craft-image img {
   width: 100%;
-  height: auto;
-  max-height: 400px;
+  aspect-ratio: 1 / 1;
   object-fit: cover;
   transition: transform var(--transition-slow);
 }
@@ -4134,9 +4107,15 @@ section.fashion-insights-section {
 /* ==================== COLLECTIONS PAGE ==================== */
 .collections-page {
   min-height: calc(100vh - 200px);
-  padding-top: calc(var(--header-height) + var(--spacing-lg));
+  padding-top: calc(var(--header-height) + var(--spacing-xl));
   padding-bottom: var(--spacing-xl);
   background-color: var(--color-cream);
+}
+
+.collections-page .container {
+  padding-left: 5%;
+  padding-right: 5%;
+  max-width: 100%;
 }
 
 .collections-title {
@@ -4146,7 +4125,7 @@ section.fashion-insights-section {
   color: var(--color-black);
   text-align: center;
   letter-spacing: 0.1em;
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: 3rem;
 }
 
 /* Collections Toolbar */
@@ -4216,7 +4195,7 @@ section.fashion-insights-section {
 .collections-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--spacing-lg);
+  gap: 45px 25px;
 }
 
 /* Collection Card */
@@ -4288,7 +4267,7 @@ section.fashion-insights-section {
 .gallery-images {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 0;
 }
 
 /* Individual gallery image container */
@@ -4337,7 +4316,7 @@ section.fashion-insights-section {
 .gallery-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  gap: 0;
 }
 
 .gallery-grid .gallery-image img {
@@ -4351,7 +4330,7 @@ section.fashion-insights-section {
 }
 
 .gallery-image--full img {
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 4 / 5;
   object-fit: cover;
 }
 
@@ -4624,7 +4603,7 @@ section.fashion-insights-section {
 .product-related-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--spacing-lg);
+  gap: 45px 25px;
 }
 
 /* ==================== PRODUCT LIGHTBOX (Premium Zoom) ==================== */
@@ -4970,9 +4949,15 @@ section.fashion-insights-section {
 /* ==================== PRODUCTS PAGE ==================== */
 .products-page {
   min-height: calc(100vh - 200px);
-  padding-top: calc(var(--header-height) + var(--spacing-lg));
+  padding-top: calc(var(--header-height) + var(--spacing-xl));
   padding-bottom: var(--spacing-xl);
   background-color: var(--color-cream);
+}
+
+.products-page .container {
+  padding-left: 5%;
+  padding-right: 5%;
+  max-width: 100%;
 }
 
 .products-title {
@@ -4982,7 +4967,7 @@ section.fashion-insights-section {
   color: var(--color-black);
   text-align: center;
   letter-spacing: 0.1em;
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: 3rem;
 }
 
 /* Products Toolbar */
@@ -5251,7 +5236,7 @@ section.fashion-insights-section {
 .products-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr); /* Mobile: 2 columns */
-  gap: 10px; /* Reduced from var(--spacing-lg) for premium density */
+  gap: 45px 25px; /* Vertical 30px, Horizontal 20px */
 }
 
 /* Product Card */
@@ -5882,6 +5867,9 @@ section.fashion-insights-section {
     flex-direction: row;
     justify-content: center;
     gap: var(--spacing-lg);
+    /* Reset Bootstrap default ul margin/padding for consistency */
+    margin: 0;
+    padding: 0;
   }
 
   .nav-link {
@@ -5890,7 +5878,8 @@ section.fashion-insights-section {
     letter-spacing: 0.15em;
     color: inherit;
     border-bottom: none;
-    padding: 0.5rem 0;
+    /* Updated Padding: adjusted to 0.75rem for balance */
+    padding: 0.5rem 0 0.75rem;
     gap: 0.35rem;
     position: relative; /* Ensure z-index applies */
     z-index: 10001; /* Fix: High z-index to stay above mega menu */
@@ -6050,7 +6039,7 @@ section.fashion-insights-section {
   .story-image {
     width: 100%;
     height: 100%;
-    
+
     border-radius: 0;
     position: relative;
     z-index: 1;
@@ -6064,11 +6053,11 @@ section.fashion-insights-section {
     display: block;
     object-fit: cover;
   }
-  
+
   .story-content {
     width: 100%;
     height: 100%;
-    
+
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -6082,11 +6071,11 @@ section.fashion-insights-section {
 
   /* Artist Legacy: Image Left (1), Text Right (2) */
   #artist-legacy .story-image {
-    order: 1; 
+    order: 1;
   }
 
   #artist-legacy .story-content {
-    order: 2; 
+    order: 2;
   }
 
   /* Craft Matters: Text Left (3), Image Right (4) */
@@ -6188,13 +6177,13 @@ section.fashion-insights-section {
   /* Collections Grid - 3 Columns on Desktop */
   .collections-grid {
     grid-template-columns: repeat(3, 1fr);
-    gap: var(--spacing-lg);
+    gap: 45px 25px;
   }
 
   /* Products Grid - 3 Columns on Desktop (default) */
   .products-grid {
     grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
+    gap:45px 25px;
   }
 
   /* Brand Story Blocks - Two Column on Desktop */
@@ -6212,6 +6201,17 @@ section.fashion-insights-section {
   }
 
   /* Product Detail - Two Column on Desktop */
+  /* Product Detail Page Spacing */
+  .product-detail-page {
+      padding-top: calc(var(--header-height) + var(--spacing-sm));
+  }
+
+  /* Global Container - Enhanced Margins for Premium Feel on Desktop (Standardized site-wide) */
+  .container {
+    padding-left: var(--spacing-lg);
+    padding-right: var(--spacing-lg);
+  }
+
   .product-detail-grid {
     grid-template-columns: 1fr 1fr;
     gap: var(--spacing-xl);
@@ -6224,11 +6224,11 @@ section.fashion-insights-section {
   }
 
   .gallery-images {
-    gap: 10px;
+    gap: 0;
   }
 
   .gallery-grid {
-    gap: 10px;
+    gap: 0;
   }
 
   /* Sticky Product Info */
@@ -6239,6 +6239,7 @@ section.fashion-insights-section {
     max-height: calc(100vh - var(--header-height) - 60px);
     overflow-y: auto;
     scrollbar-width: none;
+    padding-top: var(--spacing-xl);
   }
 
   .product-info::-webkit-scrollbar {
@@ -6247,7 +6248,7 @@ section.fashion-insights-section {
 
   .product-related-grid {
     grid-template-columns: repeat(3, 1fr);
-    gap: var(--spacing-lg);
+    gap: 45px 25px;
   }
 
   /* Wishlist Grid - 3 Columns on Desktop */
@@ -6391,7 +6392,7 @@ section.fashion-insights-section {
   }
 
   .craft-image img {
-    max-height: 450px;
+    /* Square aspect ratio enforced in base styles */
   }
 
   .craft-content {
@@ -8135,7 +8136,9 @@ section.fashion-insights-section {
   z-index: 10000;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease;
 }
 
 .search-overlay.active {
@@ -8166,7 +8169,7 @@ section.fashion-insights-section {
   display: flex;
   align-items: center;
   gap: var(--spacing-md);
-  max-width: 900px;
+  max-width: 600px;
   margin: 0 auto;
 }
 
@@ -8175,7 +8178,7 @@ section.fashion-insights-section {
   display: flex;
   align-items: center;
   border: 1px solid #ddd;
-  padding: 0.5rem 1rem;
+  padding: 0.25rem 0.75rem;
   background-color: var(--color-white);
 }
 
@@ -8230,10 +8233,11 @@ section.fashion-insights-section {
 /* Popular Search Links */
 .search-overlay__popular {
   display: flex;
+  flex-direction: column;
   align-items: center;
   gap: var(--spacing-sm);
-  max-width: 900px;
-  margin: var(--spacing-md) auto 0;
+  max-width: 600px;
+  margin: var(--spacing-sm) auto 0;
   flex-wrap: wrap;
 }
 
@@ -8241,7 +8245,7 @@ section.fashion-insights-section {
   font-family: var(--font-body);
   font-size: 0.75rem;
   font-weight: 500;
-  color: var(--color-text-light);
+  color: var(--color-gold);
   text-transform: uppercase;
   letter-spacing: 0.1em;
 }
@@ -8270,8 +8274,8 @@ section.fashion-insights-section {
   display: grid;
   grid-template-columns: 1fr 2fr;
   gap: var(--spacing-lg);
-  max-width: 900px;
-  margin: var(--spacing-lg) auto 0;
+  max-width: 600px;
+  margin: var(--spacing-sm) auto 0;
   padding-top: var(--spacing-md);
   border-top: 1px solid #eee;
 }
@@ -8821,7 +8825,7 @@ section.fashion-insights-section {
     background-color: var(--color-white) !important;
     backdrop-filter: none !important;
     height: 76px; /* Premium breathing room for brand dominance */
-    box-shadow: 0 1px 0 rgba(0,0,0,0.04) !important; /* Subtle divider */
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04) !important; /* Subtle divider */
     transition: transform var(--transition-luxury); /* Keep slide transition only */
   }
 
@@ -8992,7 +8996,9 @@ section.fashion-insights-section {
     z-index: 999; /* Above nav-overlay (998) */
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
+    transition:
+      opacity 0.3s ease,
+      visibility 0.3s ease;
     overflow: hidden;
   }
 
@@ -9292,26 +9298,22 @@ section.fashion-insights-section {
     scroll-snap-align: start;
     flex-shrink: 0;
   }
-  
+
   .discover-section {
-    padding: 0 0 0 var(--spacing-sm); /* Flush left padding, right gap handled by grid */
-    margin-bottom: var(--spacing-md);
+    padding: 0 var(--spacing-md);
     overflow: hidden; /* Prevent horizontal page scroll */
   }
 
   /* 2. SECTION SPACING & ALIGNMENT OPTIMIZATION */
-  
+
   /* Hero -> Intro: Reduce vertical padding */
   .intro-section {
-    padding-top: var(--spacing-lg); /* Reduced from XL */
-    padding-bottom: var(--spacing-lg);
-    padding-left: var(--spacing-sm); /* Consistent horizontal (16px) */
-    padding-right: var(--spacing-sm);
+    padding: var(--spacing-md) 0;
   }
 
   /* Video Section: Compact density */
   .video-section-full {
-    padding: 0 var(--spacing-sm) var(--spacing-sm);
+    padding: 0 var(--spacing-md);
   }
 
   /* Story Sections: Alignment */
@@ -9321,25 +9323,22 @@ section.fashion-insights-section {
 
   /* Fashion Insights: Reduce heavy spacing */
   section.fashion-insights-section {
-    padding-top: 3rem !important; /* Reduced from 5rem */
-    padding-bottom: var(--spacing-lg) !important; /* Reduced from XL/6rem */
-    padding-left: var(--spacing-sm) !important;
-    padding-right: var(--spacing-sm) !important;
+    padding: var(--spacing-md) 0 !important;
   }
-  
+
   .fashion-insights-title {
     margin-bottom: 2rem !important; /* Reduced from 3rem */
   }
 
   /* ==================== PHASE 2: VISUAL ELEVATION & SECTION EMPHASIS ==================== */
-  
+
   /* 1. VIDEO SECTION - Subtle Elevation (Primary Focus) */
   .video-wrapper-full {
     /* Soft, premium shadow: Large blur, low opacity, no harsh edges */
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
     border-radius: 4px; /* Refined, intentional edges */
     /* Ensure shadow doesn't get clipped */
-    overflow: visible; 
+    overflow: visible;
     /* Fix for overflow:visible breaking border-radius clipping on image */
   }
 
@@ -9357,7 +9356,7 @@ section.fashion-insights-section {
      So I can remove overflow:hidden on mobile to show shadow.
      BUT I need to clip the corners of the image to the border-radius.
   */
-  
+
   .video-wrapper-full {
     overflow: hidden; /* Keep hidden to clip image to border-radius */
     /* Box shadow on an element with overflow:hidden DOES work for outer shadow in modern browsers. */
@@ -9392,16 +9391,16 @@ section.fashion-insights-section {
     padding-bottom: var(--spacing-md); /* Optical balance */
     padding-right: var(--spacing-md); /* Peek separation */
     -webkit-overflow-scrolling: touch; /* Momentum scrolling */
-    
+
     /* Hide scrollbar for premium look */
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* IE/Edge */
   }
-  
+
   .fashion-insights-grid::-webkit-scrollbar {
     display: none; /* Chrome/Safari */
   }
-  
+
   .fashion-insight-card {
     flex: 0 0 85%; /* Shows full card + 15% preview of next */
     width: 85%;
@@ -9409,35 +9408,41 @@ section.fashion-insights-section {
     scroll-snap-align: start;
     margin-right: 0; /* Reset margins if any */
   }
-  
+
   /* Ensure images fill correctly in flex layout */
   .fashion-insight-image-wrapper {
     width: 100%;
     aspect-ratio: 4 / 5;
   }
-  
+
   /* 2. MOTION DISCIPLINE - Subtle Entrance (8-12px lift) */
   .reveal-card {
     opacity: 0;
     transform: translateY(12px);
-    transition: 
+    transition:
       opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
       transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     will-change: opacity, transform;
   }
-  
+
   .reveal-card.revealed {
     opacity: 1;
     transform: translateY(0);
   }
-  
+
   /* Stagger delay for cards */
-  .fashion-insight-card:nth-child(1) { transition-delay: 0.1s; }
-  .fashion-insight-card:nth-child(2) { transition-delay: 0.2s; }
-  .fashion-insight-card:nth-child(3) { transition-delay: 0.3s; }
+  .fashion-insight-card:nth-child(1) {
+    transition-delay: 0.1s;
+  }
+  .fashion-insight-card:nth-child(2) {
+    transition-delay: 0.2s;
+  }
+  .fashion-insight-card:nth-child(3) {
+    transition-delay: 0.3s;
+  }
 
   /* ==================== PHASE 4: MICRO-POLISH — CTA CLARITY ==================== */
-  
+
   /* 1. DISCOVER SECTION — CTA UNDERLINE */
   .discover-text {
     text-decoration: underline;
@@ -9454,7 +9459,7 @@ section.fashion-insights-section {
     text-underline-offset: 3px;
     text-decoration-color: currentColor;
   }
-  
+
   /* Hide the animated ::after pseudo underline on mobile */
   .story-link::after {
     display: none !important;
@@ -9473,17 +9478,652 @@ section.fashion-insights-section {
     margin-top: 1.5rem; /* Reduced from 4rem default */
     text-align: center;
   }
-  
+
   .view-more-link {
     text-decoration: underline;
     text-decoration-thickness: 1px;
     text-underline-offset: 3px;
     text-decoration-color: currentColor;
   }
-  
+
   /* Hide the animated ::after pseudo underline on mobile */
   .view-more-link::after {
     display: none !important;
   }
+}
+
+/* ==================== PHASE 2: HOME PAGE SECTION SPACING (DESKTOP) ==================== */
+@media screen and (min-width: 1024px) {
+  /* GLOBAL SECTION SPACING ADJUSTMENT
+     Goal: Consistent breathing space (100px) between major sections.
+     Scope: Desktop only.
+  */
+
+  /* 1. Intro Section */
+  #intro {
+    margin-bottom: 100px;
+    /* Uniform Horizontal Margins */
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: var(--max-width);
+  }
+
+  /* 2. Discover Section */
+  #discover {
+    margin-bottom: 100px;
+    /* Uniform Horizontal Margins */
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: var(--max-width);
+  }
+
+  /* 3. Video Section */
+  #video-section {
+    margin-bottom: 100px;
+    /* Uniform Horizontal Margins */
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: var(--max-width);
+  }
+
+  /* 4. Explore Collection */
+  #explore {
+    margin-bottom: 100px;
+    /* Uniform Horizontal Margins */
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: var(--max-width);
+  }
+
+  /* 5. Story Wrapper (Contains the Locked Pair) */
+  .story-wrapper {
+    margin-bottom: 100px;
+    gap: 0; /* Ensure container adds no gap */
+    /* Uniform Horizontal Margins */
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: var(--max-width);
+  }
+
+  /* LOCKED SECTION PAIR (CRITICAL)
+     Goal: Zero gap between Artist's Legacy and Our Craft Matters.
+  */
+  #artist-legacy {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  #craft-matters {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+
+  /* 6. Fashion Insights (Bottom Section) */
+  #fashion-insights {
+    /* Remove space between "View All" and footer */
+    margin-bottom: 0;
+    /* Reduce internal bottom padding to minimize gap */
+    padding-bottom: 40px !important;
+
+    /* Uniform Horizontal Margins */
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: var(--max-width);
+  }
+}
+
+/* ==================== DESKTOP MICRO-POLISH (New) ==================== */
+@media (min-width: 1024px) {
+  /* Restrained Premium Hover for Header Icons */
+  .header-icons .icon-btn {
+    transition: opacity var(--transition-fast);
+  }
+
+  .header-icons .icon-btn:hover {
+    opacity: 0.6 !important; /* Manish Malhotra Style: Simple opacity fade */
+    filter: none !important; /* Remove any gold or shadow filters */
+    transform: none !important; /* Ensure no movement */
+  }
+
+  .header-icons .icon-btn:hover img,
+  .header-icons .icon-btn:hover svg {
+    filter: inherit !important; /* Inherit the removal of filters */
+  }
+}
+
+/* ==================== CRITICAL: FORCE COMPACT SEARCH OVERLAY ==================== */
+/* Adding high-specificity override to ensure search box compaction is visible */
+@media screen and (min-width: 320px) {
+  .search-overlay__input-row,
+  .search-overlay__popular,
+  .search-overlay__results,
+  .search-overlay__no-results {
+    max-width: 600px !important;
+    width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}
+
+/* ==================== UNIFIED SECTION SPACING - APPROVED DESIGN MATCH ==================== */
+/* GOAL: Visually uniform gaps between all sections EXCEPT Artist's Legacy/Craft Matters (which touch) */
+/* Visual gap reference: ~60px provides balanced breathing room as shown in approved design */
+
+/* Define uniform section spacing variable */
+:root {
+  --section-gap: 60px;
+}
+
+/* Reset all section margins first */
+#hero,
+#intro,
+#discover,
+#video-section,
+#explore,
+.story-wrapper,
+#fashion-insights {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* =========================== */
+/* SECTION-BY-SECTION SPACING  */
+/* =========================== */
+
+/* 1. INTRO SECTION - gap below hero */
+#intro {
+  padding-top: var(--section-gap) !important;
+  padding-bottom: var(--section-gap) !important;
+}
+
+/* 2. DISCOVER SECTION - uniform gap after intro */
+.discover-section,
+#discover {
+  padding-top: var(--section-gap) !important;
+  padding-bottom: var(--section-gap) !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* 3. VIDEO SECTION - uniform gap after discover */
+.video-section-full,
+#video-section {
+  padding-top: var(--section-gap) !important;
+  padding-bottom: var(--section-gap) !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* 4. EXPLORE SECTION - uniform gap after video */
+.explore-section,
+#explore {
+  padding-top: var(--section-gap) !important;
+  padding-bottom: var(--section-gap) !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* 5. STORY WRAPPER - gap before and after (contains Artist's Legacy + Craft Matters) */
+.story-wrapper {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 0 !important;
+  margin-top: var(--section-gap) !important;
+  margin-bottom: var(--section-gap) !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  max-width: none !important;
+}
+
+/* 6. FASHION INSIGHTS - gap after story sections */
+.fashion-insights-section,
+#fashion-insights {
+  padding-top: 0 !important;
+  padding-bottom: var(--section-gap) !important;
+}
+
+/* =========================== */
+/* STORY SECTIONS GRID LAYOUT  */
+/* =========================== */
+
+/* Flatten story blocks to make children direct grid items */
+.story-block,
+#artist-legacy,
+#craft-matters {
+  display: contents !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Story images - fill grid cell completely, no margins/borders */
+.story-image {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+}
+
+.story-image img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+}
+
+/* Story content - match image height, no extra margins */
+.story-content {
+  margin: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+/* Grid order for correct layout:
+   Row 1: [Artist Legacy Image (1)] [Artist Legacy Content (2)]
+   Row 2: [Craft Matters Content (3)] [Craft Matters Image (4)] */
+#artist-legacy .story-image { order: 1 !important; }
+#artist-legacy .story-content { order: 2 !important; }
+#craft-matters .story-content { order: 3 !important; }
+#craft-matters .story-image { order: 4 !important; }
+
+/* ==================== FINAL SPACING OVERRIDES (The Nuclear Option) ==================== */
+/* Standardizing visual rhythm to match "Discover -> Video" benchmark (120px Visual Gap) */
+/* Formula: 60px Bottom Padding + 60px Top Padding = 120px consistent rhythm */
+
+/* 1. Hero → Intro: 120px Gap */
+#hero {
+  padding-bottom: 0 !important; /* Padding was absorbed/ineffective */
+  margin-bottom: 60px !important; /* Margin pushes sibling decisively */
+  /* Ensure height calculations don't collapse */
+  display: block !important;
+  position: relative !important;
+}
+#intro {
+  margin-top: 0 !important;
+  padding-top: 60px !important; 
+}
+
+/* Standard rhythm for middle sections (Discover, Video, etc.) */
+/* These usually have their own spacing, but we enforce consistency where needed */
+.discover-section,
+.video-section-full {
+  margin-top: 0 !important;
+  padding-top: 60px !important;
+  padding-bottom: 60px !important;
+}
+
+/* 2. Explore → Story: 120px Gap */
+#explore {
+  padding-bottom: 60px !important;
+  margin-bottom: 0 !important;
+}
+.story-wrapper {
+  margin-top: 0 !important;
+  padding-top: 60px !important; 
+}
+
+/* 3. Story → Fashion Insights: 120px Gap */
+.story-wrapper {
+  padding-bottom: 60px !important;
+  margin-bottom: 0 !important;
+}
+#fashion-insights {
+  margin-top: 0 !important;
+  padding-top: 60px !important;
+}
+
+/* 4. Fashion Insights → Footer: Subtle Gap (60px) */
+/* User requested "subtle gap" below View All */
+#fashion-insights {
+  padding-bottom: 60px !important;
+  margin-bottom: 0 !important;
+}
+#footer {
+  margin-top: 0 !important;
+  padding-top: 40px !important; /* Slight buffer for footer content */
+}
+
+/* 5. Explore → Story: Internal Swiper Padding Reduction */
+/* Reduces excess "air" below the card carousel within the Explore section */
+.explore-swiper {
+  padding-bottom: 20px !important; /* Reduced from 50px to match global rhythm */
+}
+
+/* ==================== SEARCH OVERLAY LUXURY REFINEMENTS ==================== */
+/* Hard overrides for premium Manish Malhotra-style search experience */
+
+/* 1. Tighten gap between search input container and close button */
+.search-overlay__input-row {
+  gap: 4px !important; /* Extremely tight grouping */
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+/* Desktop: Maintain tight grouping */
+@media (min-width: 768px) {
+  .search-overlay__input-row {
+    gap: 5px !important; 
+  }
+}
+
+/* Ensure no extra margins on close button affect centering */
+.search-overlay__close {
+  margin: 0 !important;
+  align-self: center !important;
+}
+
+/* 2. Reduce space between "POPULAR SEARCH:" label and navbar items */
+.search-overlay__popular-label {
+  margin-bottom: 3px !important; /* Reduced from 5px */
+}
+
+/* 3. Popular links - Match header navbar hover effect exactly */
+/* Base style - ensure proper positioning for underline animation */
+.search-overlay__popular-link {
+  font-family: var(--font-body) !important;
+  font-weight: 500 !important; /* Match nav-link weight */
+  color: var(--color-black) !important;
+  text-decoration: none !important;
+  position: relative !important;
+  display: inline-block !important;
+  transition: color var(--header-transition-timing, 0.4s ease) !important;
+}
+
+/* Underline pseudo-element - exactly matching .nav-link-text::after */
+.search-overlay__popular-link::after {
+  content: "" !important;
+  position: absolute !important;
+  bottom: -2px !important;
+  left: 50% !important;
+  width: 0 !important;
+  height: 2px !important;
+  background-color: var(--color-gold) !important;
+  transition: width var(--transition-elegant, 0.3s ease), left var(--transition-elegant, 0.3s ease) !important;
+}
+
+/* Hover state - Keep text BLACK (no gold), only animate underline */
+.search-overlay__popular-link:hover {
+  color: var(--color-black) !important; /* Prevent text color change */
+}
+
+.search-overlay__popular-link:hover::after {
+  width: 100% !important;
+  left: 0 !important;
+}
+
+/* 4. Reduce bottom padding on navbar items section */
+.search-overlay__popular {
+  margin-bottom: 8px !important; /* Reduced from 14px, matching header rhythm */
+  padding-bottom: 0 !important;
+}
+
+/* Panel padding refinement - tighter vertical spacing */
+.search-overlay__panel {
+  padding-top: 14px !important;
+  padding-bottom: 10px !important;
+}
+
+/* Input row margin - tighter coupling to popular search */
+.search-overlay__input-row {
+  margin-bottom: 8px !important; /* Reduced from 10px */
+}
+
+/* ==================== CART PAGE ==================== */
+.cart-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--spacing-md) 0;
+}
+
+.empty-cart-icon img {
+  width: 80px;
+  height: auto;
+  margin-bottom: var(--spacing-sm);
+}
+
+
+
+/* ==================== HANDLOOM LAYOUT REFINEMENTS (STRICT) ==================== */
+/* Implementing strict ID-based layout rules to ensure perfect image/text order */
+
+@media screen and (min-width: 1024px) {
+    /* Global Flex Setup - Override grid with flex */
+    .craft-block {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 2rem !important;
+    }
+
+    /* Content Sizing: Text takes remaining space */
+    .craft-content {
+        flex: 1; 
+        min-width: 0;
+    }
+
+    /* Image Sizing: Fixed Width */
+    .craft-image {
+        flex: 0 0 35%;
+        width: 35%;
+    }
+
+    /* --- STRICT SECTION LAYOUTS --- */
+    
+    /* Section 2: Image Left | Text Right (#colour-dye) */
+    #colour-dye .craft-block {
+        flex-direction: row !important; 
+    }
+
+    /* Section 3: Text Left | Image Right (#warping) */
+    #warping .craft-block {
+        flex-direction: row-reverse !important;
+        direction: ltr !important;
+    }
+
+    /* Section 5: Image Left | Text Right (#techniques) */
+    #techniques .craft-block {
+        flex-direction: row !important;
+    }
+
+    /* Section 6: Text Left | Image Right (#finishing) */
+    #finishing .craft-block {
+        flex-direction: row-reverse !important;
+        direction: ltr !important;
+    }
+
+    /* --- CENTERED SECTIONS (1 & 4) --- */
+    /* Section 1 (#fabrics) & Section 4 (#weaving) */
+    .craft-block.craft-block-centered {
+        flex-direction: column !important;
+        text-align: center;
+        gap: 2rem !important;
+    }
+
+    .craft-block-centered .craft-image,
+    .craft-block-centered .craft-content {
+        flex: none;
+        width: 100%;
+        max-width: 900px;
+    }
+}
+
+/* Mobile: Always Stack Vertical */
+@media screen and (max-width: 1023px) {
+    .craft-block {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+}
+
+/* ==================== CENTERED SECTIONS & PROMISE IMAGE SIZING ==================== */
+/* Ensure sections 1, 4 (centered) and "Our Promise" have same square image size */
+
+/* Centered craft block images (Sections 1 & 4) */
+.craft-block-centered .craft-image {
+    width: 100%;
+    max-width: 600px;
+    margin: 24px auto 16px auto !important;
+}
+
+.craft-block-centered .craft-image img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+}
+
+/* Promise section styling */
+.promise-section {
+    padding: var(--spacing-lg) var(--spacing-md);
+    text-align: center;
+    background-color: var(--color-cream);
+}
+
+.promise-title {
+    font-family: var(--font-heading);
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-weight: 450;
+    color: var(--color-black);
+    margin-bottom: var(--spacing-lg);
+    letter-spacing: 0.05em;
+}
+
+.promise-image {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto var(--spacing-lg) auto;
+    overflow: hidden;
+}
+
+.promise-image img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+}
+
+.promise-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.promise-intro,
+.promise-item {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: var(--color-text-light);
+    line-height: 1.8;
+    margin-bottom: var(--spacing-sm);
+}
+
+/* ==================== HANDLOOM PAGE SECTION SPACING ==================== */
+/* Visual rhythm adjustments for uniform appearance */
+
+/* Hero Image Section */
+.handloom-hero-image {
+    width: 100%;
+    margin-bottom: var(--spacing-xl); /* Increased gap between hero and intro */
+}
+
+.handloom-hero-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Intro Section - Uniform spacing before Section 1 */
+.handloom-intro-section {
+    padding: var(--spacing-lg) var(--spacing-md);
+    text-align: center;
+    background-color: var(--color-white);
+}
+
+.handloom-title {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    font-weight: 450;
+    letter-spacing: 0.2em;
+    color: var(--color-black);
+    margin-bottom: var(--spacing-md);
+    text-transform: uppercase;
+}
+
+.handloom-intro {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: var(--color-text-light);
+    line-height: 1.9;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Reduced spacing for sections 4, 5, 6 and beyond */
+#weaving,
+#techniques,
+#finishing,
+.promise-section {
+    padding-top: var(--spacing-md);
+    padding-bottom: var(--spacing-md);
+}
+
+/* CTA Section */
+.craft-cta {
+    padding: var(--spacing-md) var(--spacing-md);
+    text-align: center;
+    background-color: var(--color-white);
+}
+
+.craft-cta-title {
+    font-family: var(--font-heading);
+    font-size: clamp(1.3rem, 3vw, 1.8rem);
+    font-weight: 450;
+    letter-spacing: var(--letter-spacing-normal);
+    color: var(--color-black);
+    margin-bottom: var(--spacing-sm);
+}
+
+.craft-cta-text {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: var(--color-text-light);
+    line-height: 1.8;
+    max-width: 600px;
+    margin: 0 auto var(--spacing-md) auto;
+}
+
+.craft-cta-btn {
+    display: inline-block;
+    padding: 0.875rem 2.5rem;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: var(--letter-spacing-wide);
+    text-transform: uppercase;
+    color: var(--color-white);
+    background-color: var(--color-black);
+    border: none;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    text-decoration: none;
+}
+
+.craft-cta-btn:hover {
+    background-color: var(--color-gold);
+    color: var(--color-black);
 }
 
