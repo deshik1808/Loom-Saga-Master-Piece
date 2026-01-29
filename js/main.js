@@ -1836,7 +1836,7 @@ function initProductCards() {
  * Pagination Manager - Handles article pagination on Fashion Insights page
  */
 const PaginationManager = {
-    articlesPerPage: 6,
+    articlesPerPage: 9,
     currentPage: 1,
     totalPages: 1,
     articles: [],

@@ -3548,8 +3548,10 @@ section.fashion-insights-section {
   background-color: var(--color-white);
 }
 
-/* About Page Container - Wider Side Margins */
-.about-page .container {
+/* Page Container - Wider Side Margins for Storytelling Pages */
+.about-page .container,
+.handloom-page .container,
+.brand-story-page .container {
   max-width: 1100px;
   padding-left: 5%;
   padding-right: 5%;
@@ -3588,13 +3590,13 @@ section.fashion-insights-section {
 
 .about-section-title {
   font-family: var(--font-body);
-  font-size: clamp(0.9rem, 2vw, 1.1rem);
+  font-size: clamp(1rem, 2.5vw, 1.3rem);
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--color-black);
   text-align: center;
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: 0;
 }
 
 /* About Block - Two Column */
@@ -3605,10 +3607,15 @@ section.fashion-insights-section {
   align-items: start;
 }
 
+.about-block-image {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
 .about-block-image img {
   width: 100%;
-  height: auto;
-  max-height: 550px;
+  aspect-ratio: 1 / 1;
   object-fit: cover;
 }
 
@@ -3628,7 +3635,7 @@ section.fashion-insights-section {
 
 .about-heading-small {
   font-family: var(--font-body);
-  font-size: clamp(0.95rem, 2vw, 1.1rem);
+  font-size: clamp(1.05rem, 2.5vw, 1.3rem);
   font-weight: 600;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -3676,13 +3683,14 @@ section.fashion-insights-section {
 }
 
 .about-feature-image {
-  margin: 0 auto var(--spacing-md);
-  max-width: 800px;
+  margin: 24px auto 16px auto;
+  max-width: 600px;
+  width: 100%;
 }
 
 .about-feature-image img {
   width: 100%;
-  height: auto;
+  aspect-ratio: 4 / 3;
   object-fit: cover;
 }
 
@@ -3770,7 +3778,7 @@ section.fashion-insights-section {
 
 /* Brand About Section */
 .brand-about {
-  padding: var(--spacing-lg) 0;
+  padding: var(--spacing-lg) 0 var(--spacing-md) 0;
   text-align: center;
 }
 
@@ -3788,32 +3796,34 @@ section.fashion-insights-section {
   font-size: 1rem;
   font-weight: 500;
   color: var(--color-black);
-  margin-bottom: var(--spacing-md);
+  margin-bottom: 0px;
 }
 
 .brand-intro {
   font-family: var(--font-body);
   font-size: 0.9rem;
   color: var(--color-text);
-  line-height: 1.8;
+  line-height: 1.65;
   max-width: 800px;
   margin: 0 auto;
 }
 
 /* Brand Stands For Section */
 .brand-stands-for {
-  padding: var(--spacing-lg) 0;
+  padding: var(--spacing-md) 0 var(--spacing-lg) 0;
   text-align: center;
 }
 
 .brand-featured-image {
-  margin: var(--spacing-lg) auto;
-  max-width: 800px;
+  margin: 12px auto var(--spacing-lg) auto;
+  width: 100%;
+  max-width: 600px;
 }
 
 .brand-featured-image img {
   width: 100%;
-  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
 }
 
 .brand-values {
@@ -3826,7 +3836,7 @@ section.fashion-insights-section {
   font-family: var(--font-body);
   font-size: 0.9rem;
   color: var(--color-text);
-  line-height: 1.8;
+  line-height: 1.65;
   margin-bottom: var(--spacing-md);
 }
 
@@ -3836,12 +3846,7 @@ section.fashion-insights-section {
   padding: var(--spacing-lg) 0;
 }
 
-/* Increase side margins for two-column sections */
-.brand-philosophy .container,
-.brand-journey .container {
-  padding-left: var(--spacing-xl);
-  padding-right: var(--spacing-xl);
-}
+
 
 .brand-block {
   display: grid;
@@ -3852,7 +3857,8 @@ section.fashion-insights-section {
 
 .brand-block-image img {
   width: 100%;
-  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
 }
 
 .brand-block-title {
@@ -3874,7 +3880,7 @@ section.fashion-insights-section {
 
 /* Why Choose Table Section */
 .brand-why-table {
-  padding: var(--spacing-lg) 0;
+  padding: var(--spacing-lg) 0 var(--spacing-sm) 0;
 }
 
 /* Left-align heading to match table's left edge */
@@ -3887,7 +3893,7 @@ section.fashion-insights-section {
 
 .brand-table {
   max-width: 800px;
-  margin: var(--spacing-lg) auto 0;
+  margin: var(--spacing-md) auto 0;
 }
 
 .brand-table-header {
@@ -3923,22 +3929,23 @@ section.fashion-insights-section {
 
 /* Featured Banner */
 .brand-featured {
-  padding: var(--spacing-md) 0;
+  padding: var(--spacing-sm) 0;
 }
 
 .brand-featured-banner {
-  max-width: 800px;
+  max-width: 600px;
   margin: 0 auto;
 }
 
 .brand-featured-banner img {
   width: 100%;
-  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
 }
 
 /* Final Section */
 .brand-final {
-  padding: var(--spacing-xl) 0;
+  padding: var(--spacing-md) 0 var(--spacing-lg) 0;
   text-align: center;
 }
 
@@ -3970,139 +3977,7 @@ section.fashion-insights-section {
   color: var(--color-black);
 }
 
-/* ==================== AUTH PAGE (Login/Register) ==================== */
-.auth-page {
-  min-height: calc(100vh - 200px);
-  padding-top: calc(var(--header-height) + var(--spacing-md));
-  padding-bottom: var(--spacing-xl);
-  background-color: var(--color-cream);
-}
 
-.auth-container {
-  max-width: 550px;
-  margin: 0 auto;
-  padding: var(--spacing-lg);
-  text-align: center;
-}
-
-.auth-title {
-  font-family: var(--font-heading);
-  font-size: clamp(1.8rem, 4vw, 2.5rem);
-  font-weight: 400;
-  color: var(--color-black);
-  letter-spacing: 0.1em;
-  margin-bottom: var(--spacing-sm);
-}
-
-.auth-subtitle {
-  font-family: var(--font-body);
-  font-size: 0.9rem;
-  color: var(--color-text-light);
-  margin-bottom: var(--spacing-lg);
-}
-
-/* Auth Form */
-.auth-form {
-  text-align: left;
-}
-
-.auth-field {
-  margin-bottom: 0.5rem;
-}
-
-.auth-input {
-  width: 100%;
-  padding: 1rem 1.2rem;
-  font-family: var(--font-body);
-  font-size: 0.9rem;
-  color: var(--color-black);
-  background-color: #ffffff;
-  border: none;
-  box-shadow: none;
-  transition: box-shadow var(--transition-fast);
-}
-
-.auth-input::placeholder {
-  color: var(--color-text-light);
-}
-
-.auth-input:focus {
-  outline: none;
-  box-shadow: 0 0 0 1px var(--color-gold);
-}
-
-/* Forgot Password Link */
-.auth-forgot-link {
-  display: block;
-  font-family: var(--font-body);
-  font-size: 0.85rem;
-  color: var(--color-text-light);
-  margin-top: 0.5rem;
-  margin-bottom: 0.75rem;
-  transition: color var(--transition-fast);
-}
-
-.auth-forgot-link:hover {
-  color: var(--color-black);
-}
-
-/* Terms Checkbox */
-.auth-checkbox {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-  margin-bottom: 1rem;
-}
-
-.auth-checkbox input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
-  accent-color: var(--color-black);
-  cursor: pointer;
-}
-
-.auth-checkbox label {
-  font-family: var(--font-body);
-  font-size: 0.85rem;
-  color: var(--color-text);
-  cursor: pointer;
-}
-
-/* Auth Buttons */
-.auth-btn {
-  display: block;
-  width: 100%;
-  padding: 1rem;
-  font-family: var(--font-body);
-  font-size: 0.85rem;
-  font-weight: 500;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  text-align: center;
-  border: none;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  margin-bottom: var(--spacing-sm);
-}
-
-.auth-btn-primary {
-  color: var(--color-white);
-  background-color: #888;
-}
-
-.auth-btn-primary:hover {
-  background-color: #666;
-}
-
-.auth-btn-secondary {
-  color: var(--color-white);
-  background-color: var(--color-black);
-  text-decoration: none;
-}
-
-.auth-btn-secondary:hover {
-  background-color: #333;
-}
 
 /* ==================== COLLECTIONS PAGE ==================== */
 .collections-page {
@@ -4274,7 +4149,7 @@ section.fashion-insights-section {
 .gallery-image {
   position: relative;
   overflow: hidden;
-  cursor: pointer;
+  cursor: zoom-in;
   background-color: #f5f5f5;
 }
 
@@ -6156,9 +6031,13 @@ section.fashion-insights-section {
 
   /* About Block - Two Column on Desktop */
   .about-block {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 0.8fr 1.2fr;
     gap: var(--spacing-xl);
     align-items: center;
+  }
+
+  .about-block-reverse {
+    grid-template-columns: 1.2fr 0.8fr;
   }
 
   /* Reversed block - text on left, image on right */
@@ -6188,8 +6067,12 @@ section.fashion-insights-section {
 
   /* Brand Story Blocks - Two Column on Desktop */
   .brand-block {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 0.85fr 1.15fr; /* Image column slightly smaller */
     gap: var(--spacing-xl);
+  }
+
+  .brand-block-reverse {
+    grid-template-columns: 1.15fr 0.85fr; /* Text column first, then smaller image column */
   }
 
   .brand-block-reverse .brand-block-content {
@@ -7191,8 +7074,8 @@ section.fashion-insights-section {
 /* ==================== AUTH PAGES (Login, Register, Forgot Password) ==================== */
 .auth-page {
   min-height: 100vh;
-  padding-top: calc(var(--header-height) + var(--spacing-md));
-  padding-bottom: var(--spacing-xl);
+  padding-top: calc(var(--header-height) + 1.5rem);
+  padding-bottom: var(--spacing-lg);
   background-color: var(--color-cream);
   display: flex;
   align-items: center;
@@ -7203,7 +7086,7 @@ section.fashion-insights-section {
   width: 100%;
   max-width: 450px;
   margin: 0 auto;
-  padding: var(--spacing-lg);
+  padding: 2rem;
   background-color: transparent;
   box-shadow: none;
 }
@@ -7215,7 +7098,7 @@ section.fashion-insights-section {
   letter-spacing: 0.15em;
   color: var(--color-black);
   text-align: center;
-  margin-bottom: var(--spacing-sm);
+  margin-bottom: 0.5rem;
 }
 
 .auth-subtitle {
@@ -7223,7 +7106,7 @@ section.fashion-insights-section {
   font-size: 0.9rem;
   color: var(--color-text-light);
   text-align: center;
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: 1.75rem;
   line-height: 1.6;
 }
 
@@ -7239,7 +7122,7 @@ section.fashion-insights-section {
 
 .auth-input {
   width: 100%;
-  padding: 1rem 1.2rem;
+  padding: 0.85rem 1.2rem;
   font-family: var(--font-body);
   font-size: 0.95rem;
   color: var(--color-text);
@@ -7270,7 +7153,6 @@ section.fashion-insights-section {
   color: var(--color-text-light);
   text-align: right;
   display: block;
-  margin-top: -8px;
   transition: color var(--transition-fast);
 }
 
@@ -7295,9 +7177,9 @@ section.fashion-insights-section {
 
 .auth-checkbox label {
   font-family: var(--font-body);
-  font-size: 0.85rem;
+  font-size: 0.825rem;
   color: var(--color-text);
-  line-height: 1.5;
+  line-height: 1.4;
   cursor: pointer;
 }
 
@@ -7412,9 +7294,20 @@ section.fashion-insights-section {
 /* ==================== CHECKOUT PAGE ==================== */
 .checkout-page {
   min-height: 100vh;
-  padding-top: calc(var(--header-height) + var(--spacing-lg));
+  padding-top: var(--spacing-md);
   padding-bottom: var(--spacing-xl);
   background-color: var(--color-cream);
+}
+
+.checkout-logo {
+  text-align: center;
+  margin-bottom: var(--spacing-md);
+}
+
+.checkout-logo-img {
+  height: 40px;
+  width: auto;
+  margin: 0 auto;
 }
 
 .checkout-header {
@@ -10084,6 +9977,7 @@ section.fashion-insights-section {
 /* CTA Section */
 .craft-cta {
     padding: var(--spacing-md) var(--spacing-md);
+    margin: var(--spacing-lg) 0;
     text-align: center;
     background-color: var(--color-white);
 }
@@ -10127,3 +10021,223 @@ section.fashion-insights-section {
     color: var(--color-black);
 }
 
+/* ==================== FASHION INSIGHTS PAGE ==================== */
+/* Increased horizontal margins for the Fashion Insights page */
+.insights-page .container {
+    padding-left: 5%;
+    padding-right: 5%;
+}
+
+/* Hero Section */
+.insights-hero {
+    text-align: center;
+    padding: var(--spacing-md) 0 var(--spacing-lg) 0;
+}
+
+.insights-title {
+    font-family: var(--font-heading);
+    font-size: clamp(1.5rem, 4vw, 2.2rem);
+    font-weight: 400;
+    letter-spacing: var(--letter-spacing-display);
+    color: var(--color-black);
+    margin-bottom: var(--spacing-sm);
+}
+
+.insights-subtitle {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: var(--color-text-light);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: var(--line-height-relaxed);
+}
+
+/* Grid Section */
+.insights-grid-section {
+    padding-bottom: var(--spacing-md);
+}
+
+/* 3-Column Grid Layout */
+.insights-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: 25px;
+    row-gap: var(--spacing-lg);
+}
+
+/* Insight Cards - Remove hover shadow effect */
+.insight-card {
+    box-shadow: none !important;
+    transition: none;
+    display: flex;
+    flex-direction: column;
+}
+
+.insight-card:hover {
+    box-shadow: none !important;
+    transform: none !important;
+}
+
+.insight-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.insight-card-link:hover {
+    box-shadow: none !important;
+}
+
+/* Square Image Container (1:1 Aspect Ratio) */
+.insight-card-image {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background-color: var(--color-cream);
+}
+
+.insight-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Card Content */
+.insight-card-content {
+    padding: var(--spacing-sm) 0;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.insight-card-category {
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: var(--letter-spacing-wide);
+    text-transform: uppercase;
+    color: var(--color-gold);
+    margin-bottom: 0.5rem;
+}
+
+.insight-card-title {
+    font-family: var(--font-heading);
+    font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+    font-weight: 500;
+    color: var(--color-black);
+    line-height: 1.4;
+    margin-bottom: 0.5rem;
+}
+
+.insight-card-excerpt {
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    color: var(--color-text-light);
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+    flex-grow: 1;
+    /* Limit to 3 lines */
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.insight-card-date {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    letter-spacing: 0.02em;
+}
+
+/* Responsive: Tablet (2 columns) */
+@media (max-width: 1024px) {
+    .insights-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-md);
+    }
+}
+
+/* Responsive: Mobile (1 column) */
+@media (max-width: 600px) {
+    .insights-page .container {
+        padding-left: 5%;
+        padding-right: 5%;
+    }
+    
+    .insights-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+    
+    .insight-card-image {
+        aspect-ratio: 1 / 1;
+    }
+}
+
+/* ==================== ARTICLE PAGE STYLES ==================== */
+/* Section headings styling for article pages */
+
+.article-section-number {
+    font-family: var(--font-heading);
+    font-size: clamp(1.15rem, 2.5vw, 1.35rem);
+    font-weight: 600;
+    color: var(--color-black);
+    letter-spacing: 0.02em;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+/* Image constraints to match Handloom Section 1 */
+.article-block-image,
+.article-figure-hero {
+    width: 100%;
+    max-width: 600px;
+    margin: 8px auto 16px auto;
+}
+
+.article-block-image img,
+.article-figure-hero img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    display: block;
+}
+
+
+/* Related Articles Grid - Reduced Gap (High Specificity) */
+.related-articles .related-grid,
+.related-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    column-gap: 16px !important; 
+    row-gap: 24px !important;
+    margin-top: 24px !important;
+}
+
+@media (max-width: 1024px) {
+    .related-articles .related-grid,
+    .related-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+}
+
+@media (max-width: 600px) {
+    .related-articles .related-grid,
+    .related-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* Force cards to fill grid columns */
+.related-articles .related-grid .insight-card,
+.related-grid .insight-card {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+}
