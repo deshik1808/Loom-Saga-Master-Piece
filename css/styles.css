@@ -40,14 +40,23 @@
   --font-weight-thin: 200;
   --font-weight-light: 300;
   --font-weight-regular: 400;
-  --font-weight-medium: 500;
+  --font-weight-medium: 450;
+  --font-weight-semibold: 500;
+  --font-weight-bold: 600;
+
+  /* Standard Font Sizes */
+  --font-size-hero: clamp(2.8rem, 12vw, 4rem);
+  --font-size-h2: 1rem;
+  --font-size-body: 0.9rem;
+  --font-size-small: 0.8rem;
+  --font-size-xs: 0.75rem;
 
   /* Letter Spacing - Wider = More Premium */
   --letter-spacing-tight: 0.02em;
   --letter-spacing-normal: 0.05em;
   --letter-spacing-wide: 0.15em;
-  --letter-spacing-xwide: 0.25em;
-  --letter-spacing-display: 0.35em;
+  --letter-spacing-xwide: 0.2em;
+  --letter-spacing-display: 0.2em;
 
   /* Line Heights - Taller = More Breathing Room */
   --line-height-tight: 1.2;
@@ -102,10 +111,10 @@
   --font-serif: "Cormorant Garamond", serif;
 }
 
-/* Mobile: Slightly reduced section rhythm for compact screens */
+/* Mobile: More compact section rhythm for better content density */
 @media (max-width: 767px) {
   :root {
-    --section-rhythm: 4rem; /* 64px on mobile */
+    --section-rhythm: 3.2rem; /* Reduced from 4rem for tighter section flow */
   }
 }
 
@@ -121,6 +130,10 @@
 html {
   scroll-behavior: smooth;
   font-size: 16px;
+  /* Prevent horizontal scroll using clip - doesn't cause scroll resistance like hidden */
+  width: 100%;
+  overflow-x: clip;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -131,7 +144,10 @@ body {
   background-color: var(--color-bg);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+  /* Enforce containment using clip - doesn't cause scroll resistance */
+  width: 100%;
+  position: relative;
+  overflow-x: clip;
   /* Premium zoom-stable bounds for ultra-wide screens */
   max-width: 2560px;
   margin-left: auto;
@@ -938,8 +954,10 @@ ul {
 /* Mobile Hero Height Fix (≤768px): Reduce height to visually reveal content below */
 @media (max-width: 768px) {
   .hero {
-    height: 70svh;
+    height: 80svh; /* Mobile specific height */
     min-height: 450px; /* adjusted for smaller screens */
+    aspect-ratio: unset; /* Allow height to control dimensions */
+    max-height: none;
   }
 }
 
@@ -1070,8 +1088,6 @@ ul {
   max-width: 700px;
   margin: 0 auto;
 }
-
-
 
 /* ==================== VIDEO SECTION ==================== */
 .video-section-full {
@@ -1331,9 +1347,9 @@ input[type="text"]::-ms-clear {
 /* Column Title */
 .search-overlay__column-title {
   font-family: var(--font-body);
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-wide);
   color: var(--color-text-light);
   margin-bottom: 15px;
   text-transform: uppercase;
@@ -1519,7 +1535,6 @@ input[type="text"]::-ms-clear {
 .atelier-search {
   display: none;
 }
-
 
 /* ==================== INTRO SECTION (Mobile First) ==================== */
 .intro-section {
@@ -1905,7 +1920,6 @@ section.fashion-insights-section {
   width: 100%;
 }
 
-
 .fashion-insights-title {
   font-family: var(--font-heading);
   /* Increased to 1.5rem !important to strictly enforce visual weight */
@@ -2206,12 +2220,11 @@ section.fashion-insights-section {
 
 .footer-heading {
   font-family: var(--font-body);
-  /* Typography strength matching mobile menu */
-  font-size: 0.875rem; /* Match mobile menu */
-  font-weight: 500; /* Match mobile menu */
-  letter-spacing: 0.1em;
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-wide);
   color: var(--color-black);
-  margin-bottom: 0; /* Margin handled by toggle container or handled manually */
+  margin-bottom: 0;
   text-transform: uppercase;
 }
 
@@ -2582,6 +2595,21 @@ section.fashion-insights-section {
   overflow: hidden;
 }
 
+@media (max-width: 768px) {
+  main .handloom-hero-image {
+    height: 80svh !important;
+    min-height: 450px !important;
+    aspect-ratio: unset !important;
+    max-height: none !important;
+  }
+  
+  main .handloom-hero-image img {
+    height: 100% !important;
+    width: 100% !important;
+    object-fit: cover !important;
+  }
+}
+
 .handloom-hero-image img {
   width: 100%;
   height: 100%;
@@ -2598,18 +2626,20 @@ section.fashion-insights-section {
 
 .handloom-title {
   font-family: var(--font-heading);
-  font-size: clamp(1.4rem, 4vw, 2.2rem);
-  font-weight: 400;
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-xwide);
   color: var(--color-black);
-  letter-spacing: 0.12em;
   margin-bottom: var(--spacing-md);
+  text-transform: uppercase;
 }
 
 .handloom-intro {
   font-family: var(--font-body);
-  font-size: 0.9rem;
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-light);
   color: var(--color-text-light);
-  line-height: 1.9;
+  line-height: var(--line-height-relaxed);
   max-width: 750px;
   margin: 0 auto;
 }
@@ -2934,10 +2964,10 @@ section.fashion-insights-section {
 
 .insight-card-category {
   font-family: var(--font-body);
-  font-size: 0.7rem;
-  font-weight: 500;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: var(--letter-spacing-wide);
   color: var(--color-coral);
   display: block;
   margin-bottom: var(--spacing-xs);
@@ -2946,7 +2976,7 @@ section.fashion-insights-section {
 .insight-card-title {
   font-family: var(--font-heading);
   font-size: 1.5rem;
-  font-weight: 400;
+  font-weight: var(--font-weight-regular);
   color: var(--color-black);
   margin-bottom: var(--spacing-xs);
   line-height: 1.3;
@@ -3109,6 +3139,15 @@ section.fashion-insights-section {
   overflow: hidden;
 }
 
+@media (max-width: 768px) {
+  .article-hero {
+    height: 80svh;
+    min-height: 450px;
+    aspect-ratio: unset;
+    max-height: none;
+  }
+}
+
 .article-hero img {
   width: 100%;
   height: 100%;
@@ -3165,7 +3204,7 @@ section.fashion-insights-section {
 .article-title {
   font-family: var(--font-heading);
   font-size: clamp(1.5rem, 4vw, 2.2rem);
-  font-weight: 400;
+  font-weight: var(--font-weight-light);
   color: var(--color-black);
   letter-spacing: 0.05em;
   margin-bottom: var(--spacing-sm);
@@ -3173,9 +3212,10 @@ section.fashion-insights-section {
 
 .article-intro-text {
   font-family: var(--font-body);
-  font-size: 0.95rem;
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-light);
   color: var(--color-text-light);
-  line-height: 1.8;
+  line-height: var(--line-height-relaxed);
   max-width: 800px;
   margin: 0 auto;
 }
@@ -3198,12 +3238,13 @@ section.fashion-insights-section {
 
 .article-section-number {
   font-family: var(--font-body);
-  font-size: 0.9rem;
-  font-weight: 500;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
   color: var(--color-black);
   text-align: center;
-  margin-bottom: 3vh; /* Consistent vertical spacing */
-  letter-spacing: 0.02em;
+  margin-bottom: 3vh;
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
 }
 
 /* Article Block - Stacked Layout */
@@ -3570,6 +3611,15 @@ section.fashion-insights-section {
   overflow: hidden;
 }
 
+@media (max-width: 768px) {
+  .about-hero {
+    height: 80svh;
+    min-height: 450px;
+    aspect-ratio: unset;
+    max-height: none;
+  }
+}
+
 .about-hero img {
   width: 100%;
   height: 100%;
@@ -3584,9 +3634,9 @@ section.fashion-insights-section {
 .about-section-label {
   display: block;
   font-family: var(--font-body);
-  font-size: 1.3rem;
-  font-weight: 600;
-  letter-spacing: 0.15em;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-wide);
   text-transform: uppercase;
   color: var(--color-text);
   margin-bottom: var(--spacing-md);
@@ -3594,9 +3644,9 @@ section.fashion-insights-section {
 
 .about-section-title {
   font-family: var(--font-body);
-  font-size: clamp(1rem, 2.5vw, 1.3rem);
-  font-weight: 600;
-  letter-spacing: 0.1em;
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-xwide);
   text-transform: uppercase;
   color: var(--color-black);
   text-align: center;
@@ -3630,7 +3680,7 @@ section.fashion-insights-section {
 .about-heading {
   font-family: var(--font-heading);
   font-size: clamp(1.8rem, 5vw, 2.8rem);
-  font-weight: 400;
+  font-weight: var(--font-weight-light);
   color: var(--color-black);
   line-height: 1.25;
   letter-spacing: 0.04em;
@@ -3639,9 +3689,9 @@ section.fashion-insights-section {
 
 .about-heading-small {
   font-family: var(--font-body);
-  font-size: clamp(1.05rem, 2.5vw, 1.3rem);
-  font-weight: 600;
-  letter-spacing: 0.05em;
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-wide);
   text-transform: uppercase;
   color: var(--color-black);
   margin-bottom: var(--spacing-md);
@@ -3774,6 +3824,15 @@ section.fashion-insights-section {
   overflow: hidden;
 }
 
+@media (max-width: 768px) {
+  .brand-hero {
+    height: 80svh !important;
+    min-height: 450px !important;
+    aspect-ratio: unset !important;
+    max-height: none !important;
+  }
+}
+
 .brand-hero-image {
   width: 100%;
   height: 100%;
@@ -3788,26 +3847,28 @@ section.fashion-insights-section {
 
 .brand-section-title {
   font-family: var(--font-heading);
-  font-size: clamp(1.4rem, 3vw, 1.8rem);
-  font-weight: 400;
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-xwide);
   color: var(--color-black);
-  letter-spacing: 0.1em;
   margin-bottom: var(--spacing-md);
+  text-transform: uppercase;
 }
 
 .brand-subtitle {
   font-family: var(--font-body);
-  font-size: 1rem;
-  font-weight: 500;
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-light);
   color: var(--color-black);
   margin-bottom: 0px;
 }
 
 .brand-intro {
   font-family: var(--font-body);
-  font-size: 0.9rem;
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-light);
   color: var(--color-text);
-  line-height: 1.65;
+  line-height: var(--line-height-relaxed);
   max-width: 800px;
   margin: 0 auto;
 }
@@ -3850,8 +3911,6 @@ section.fashion-insights-section {
   padding: var(--spacing-lg) 0;
 }
 
-
-
 .brand-block {
   display: grid;
   grid-template-columns: 1fr;
@@ -3867,18 +3926,19 @@ section.fashion-insights-section {
 
 .brand-block-title {
   font-family: var(--font-heading);
-  font-size: clamp(1.2rem, 2.5vw, 1.5rem);
-  font-weight: 400;
+  font-size: 1.3rem;
+  font-weight: var(--font-weight-medium);
   color: var(--color-black);
-  letter-spacing: 0.08em;
+  letter-spacing: var(--letter-spacing-wide);
   margin-bottom: var(--spacing-md);
 }
 
 .brand-block-content p {
   font-family: var(--font-body);
-  font-size: 0.9rem;
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-light);
   color: var(--color-text);
-  line-height: 1.8;
+  line-height: var(--line-height-relaxed);
   margin-bottom: var(--spacing-sm);
 }
 
@@ -3980,8 +4040,6 @@ section.fashion-insights-section {
   font-size: 0.95rem;
   color: var(--color-black);
 }
-
-
 
 /* ==================== COLLECTIONS PAGE ==================== */
 .collections-page {
@@ -4228,8 +4286,8 @@ section.fashion-insights-section {
 
 .product-title {
   font-family: var(--font-body);
-  font-size: clamp(1.1rem, 2.5vw, 1.3rem);
-  font-weight: 400;
+  font-size: 1.1rem;
+  font-weight: var(--font-weight-regular);
   color: var(--color-black);
   line-height: 1.4;
 }
@@ -4247,14 +4305,14 @@ section.fashion-insights-section {
 .product-price {
   font-family: var(--font-body);
   font-size: 1.1rem;
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   color: var(--color-black);
   margin-bottom: var(--spacing-xs);
 }
 
 .product-tax-note {
   font-family: var(--font-body);
-  font-size: 0.75rem;
+  font-size: var(--font-size-xs);
   color: var(--color-text-light);
   text-decoration: underline;
   text-underline-offset: 2px;
@@ -4390,8 +4448,8 @@ section.fashion-insights-section {
 
 .accordion-subtitle {
   font-family: var(--font-body);
-  font-size: 0.85rem;
-  font-weight: 500;
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-semibold);
   color: var(--color-black);
   margin-top: var(--spacing-sm);
   margin-bottom: var(--spacing-xs);
@@ -6066,7 +6124,7 @@ section.fashion-insights-section {
   /* Products Grid - 3 Columns on Desktop (default) */
   .products-grid {
     grid-template-columns: repeat(3, 1fr);
-    gap:45px 25px;
+    gap: 45px 25px;
   }
 
   /* Brand Story Blocks - Two Column on Desktop */
@@ -6090,7 +6148,7 @@ section.fashion-insights-section {
   /* Product Detail - Two Column on Desktop */
   /* Product Detail Page Spacing */
   .product-detail-page {
-      padding-top: calc(var(--header-height) + var(--spacing-sm));
+    padding-top: calc(var(--header-height) + var(--spacing-sm));
   }
 
   /* Global Container - Enhanced Margins for Premium Feel on Desktop (Standardized site-wide) */
@@ -7015,6 +7073,7 @@ section.fashion-insights-section {
   /* Carousel */
   .carousel-item {
     width: 320px;
+    max-width: 100%;
   }
 
   /* Removed .insight-card { width: 380px; } - This was causing grid overflow and hiding right margin */
@@ -8884,7 +8943,10 @@ section.fashion-insights-section {
     top: 76px; /* Below header */
     left: 0;
     right: 0;
-    bottom: 0;
+    bottom: 0; /* Explicitly anchor to bottom to prevent content bleeding */
+    /* Use dynamic viewport height to handle mobile address bar toggle properly */
+    height: calc(100vh - 76px);
+    height: calc(100dvh - 76px);
     background-color: var(--color-white);
     z-index: 999; /* Above nav-overlay (998) */
     opacity: 0;
@@ -8908,8 +8970,11 @@ section.fashion-insights-section {
     left: 0;
     right: 0;
     bottom: 0;
+    height: 100%;
     background-color: var(--color-white);
     overflow-y: auto;
+    overscroll-behavior: contain; /* Prevent scroll chaining to page below */
+    -webkit-overflow-scrolling: touch;
     padding: 0 24px 40px;
     transform: translateX(100%);
     transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
@@ -8949,9 +9014,9 @@ section.fashion-insights-section {
     border-bottom: 1px solid rgba(0, 0, 0, 0.06); /* Lighter separation between items */
   }
 
-  /* Remove border from last nav item to prevent duplicate divider before secondary section */
+  /* Allow border on last item so all items have lines below them */
   .mobile-menu__item:last-child {
-    border-bottom: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   }
 
   /* Remove highlight underline - all items have equal weight */
@@ -8991,10 +9056,10 @@ section.fashion-insights-section {
     transform: translateX(3px);
   }
 
-  /* Secondary Actions - Single CLEAR divider separating primary nav from secondary actions */
+  /* Secondary Actions - Gap handled by padding, border removed to avoid conflict with item border */
   .mobile-menu__secondary {
     padding: 24px 0 20px;
-    border-top: 1px solid rgba(0, 0, 0, 0.12); /* Balanced intentional divider - 1px with stronger opacity */
+    border-top: none; 
     margin-top: auto;
   }
 
@@ -9513,6 +9578,13 @@ section.fashion-insights-section {
   --section-gap: 60px;
 }
 
+/* Mobile: Subtle reduction of section gaps to prevent "emptiness" */
+@media screen and (max-width: 767px) {
+  :root {
+    --section-gap: 45px; /* Reduced from 60px (90px total gap vs 120px) */
+  }
+}
+
 /* Reset all section margins first */
 #hero,
 #intro,
@@ -9626,10 +9698,18 @@ section.fashion-insights-section {
 /* Grid order for correct layout:
    Row 1: [Artist Legacy Image (1)] [Artist Legacy Content (2)]
    Row 2: [Craft Matters Content (3)] [Craft Matters Image (4)] */
-#artist-legacy .story-image { order: 1 !important; }
-#artist-legacy .story-content { order: 2 !important; }
-#craft-matters .story-content { order: 3 !important; }
-#craft-matters .story-image { order: 4 !important; }
+#artist-legacy .story-image {
+  order: 1 !important;
+}
+#artist-legacy .story-content {
+  order: 2 !important;
+}
+#craft-matters .story-content {
+  order: 3 !important;
+}
+#craft-matters .story-image {
+  order: 4 !important;
+}
 
 /* ==================== FINAL SPACING OVERRIDES (The Nuclear Option) ==================== */
 /* Standardizing visual rhythm to match "Discover -> Video" benchmark (120px Visual Gap) */
@@ -9638,14 +9718,14 @@ section.fashion-insights-section {
 /* 1. Hero → Intro: 120px Gap */
 #hero {
   padding-bottom: 0 !important; /* Padding was absorbed/ineffective */
-  margin-bottom: 60px !important; /* Margin pushes sibling decisively */
+  margin-bottom: var(--section-gap) !important; /* Use variable to sync with mobile reduction */
   /* Ensure height calculations don't collapse */
   display: block !important;
   position: relative !important;
 }
 #intro {
   margin-top: 0 !important;
-  padding-top: 60px !important; 
+  padding-top: var(--section-gap) !important;
 }
 
 /* Standard rhythm for middle sections (Discover, Video, etc.) */
@@ -9653,34 +9733,34 @@ section.fashion-insights-section {
 .discover-section,
 .video-section-full {
   margin-top: 0 !important;
-  padding-top: 60px !important;
-  padding-bottom: 60px !important;
+  padding-top: var(--section-gap) !important;
+  padding-bottom: var(--section-gap) !important;
 }
 
 /* 2. Explore → Story: 120px Gap */
 #explore {
-  padding-bottom: 60px !important;
+  padding-bottom: var(--section-gap) !important;
   margin-bottom: 0 !important;
 }
 .story-wrapper {
   margin-top: 0 !important;
-  padding-top: 60px !important; 
+  padding-top: var(--section-gap) !important;
 }
 
 /* 3. Story → Fashion Insights: 120px Gap */
 .story-wrapper {
-  padding-bottom: 60px !important;
+  padding-bottom: var(--section-gap) !important;
   margin-bottom: 0 !important;
 }
 #fashion-insights {
   margin-top: 0 !important;
-  padding-top: 60px !important;
+  padding-top: var(--section-gap) !important;
 }
 
 /* 4. Fashion Insights → Footer: Subtle Gap (60px) */
 /* User requested "subtle gap" below View All */
 #fashion-insights {
-  padding-bottom: 60px !important;
+  padding-bottom: var(--section-gap) !important;
   margin-bottom: 0 !important;
 }
 #footer {
@@ -9707,7 +9787,7 @@ section.fashion-insights-section {
 /* Desktop: Maintain tight grouping */
 @media (min-width: 768px) {
   .search-overlay__input-row {
-    gap: 5px !important; 
+    gap: 5px !important;
   }
 }
 
@@ -9743,7 +9823,9 @@ section.fashion-insights-section {
   width: 0 !important;
   height: 2px !important;
   background-color: var(--color-gold) !important;
-  transition: width var(--transition-elegant, 0.3s ease), left var(--transition-elegant, 0.3s ease) !important;
+  transition:
+    width var(--transition-elegant, 0.3s ease),
+    left var(--transition-elegant, 0.3s ease) !important;
 }
 
 /* Hover state - Keep text BLACK (no gold), only animate underline */
@@ -9789,79 +9871,77 @@ section.fashion-insights-section {
   margin-bottom: var(--spacing-sm);
 }
 
-
-
 /* ==================== HANDLOOM LAYOUT REFINEMENTS (STRICT) ==================== */
 /* Implementing strict ID-based layout rules to ensure perfect image/text order */
 
 @media screen and (min-width: 1024px) {
-    /* Global Flex Setup - Override grid with flex */
-    .craft-block {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: space-between !important;
-        gap: 2rem !important;
-    }
+  /* Global Flex Setup - Override grid with flex */
+  .craft-block {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 2rem !important;
+  }
 
-    /* Content Sizing: Text takes remaining space */
-    .craft-content {
-        flex: 1; 
-        min-width: 0;
-    }
+  /* Content Sizing: Text takes remaining space */
+  .craft-content {
+    flex: 1;
+    min-width: 0;
+  }
 
-    /* Image Sizing: Fixed Width */
-    .craft-image {
-        flex: 0 0 35%;
-        width: 35%;
-    }
+  /* Image Sizing: Fixed Width */
+  .craft-image {
+    flex: 0 0 35%;
+    width: 35%;
+  }
 
-    /* --- STRICT SECTION LAYOUTS --- */
-    
-    /* Section 2: Image Left | Text Right (#colour-dye) */
-    #colour-dye .craft-block {
-        flex-direction: row !important; 
-    }
+  /* --- STRICT SECTION LAYOUTS --- */
 
-    /* Section 3: Text Left | Image Right (#warping) */
-    #warping .craft-block {
-        flex-direction: row-reverse !important;
-        direction: ltr !important;
-    }
+  /* Section 2: Image Left | Text Right (#colour-dye) */
+  #colour-dye .craft-block {
+    flex-direction: row !important;
+  }
 
-    /* Section 5: Image Left | Text Right (#techniques) */
-    #techniques .craft-block {
-        flex-direction: row !important;
-    }
+  /* Section 3: Text Left | Image Right (#warping) */
+  #warping .craft-block {
+    flex-direction: row-reverse !important;
+    direction: ltr !important;
+  }
 
-    /* Section 6: Text Left | Image Right (#finishing) */
-    #finishing .craft-block {
-        flex-direction: row-reverse !important;
-        direction: ltr !important;
-    }
+  /* Section 5: Image Left | Text Right (#techniques) */
+  #techniques .craft-block {
+    flex-direction: row !important;
+  }
 
-    /* --- CENTERED SECTIONS (1 & 4) --- */
-    /* Section 1 (#fabrics) & Section 4 (#weaving) */
-    .craft-block.craft-block-centered {
-        flex-direction: column !important;
-        text-align: center;
-        gap: 2rem !important;
-    }
+  /* Section 6: Text Left | Image Right (#finishing) */
+  #finishing .craft-block {
+    flex-direction: row-reverse !important;
+    direction: ltr !important;
+  }
 
-    .craft-block-centered .craft-image,
-    .craft-block-centered .craft-content {
-        flex: none;
-        width: 100%;
-        max-width: 900px;
-    }
+  /* --- CENTERED SECTIONS (1 & 4) --- */
+  /* Section 1 (#fabrics) & Section 4 (#weaving) */
+  .craft-block.craft-block-centered {
+    flex-direction: column !important;
+    text-align: center;
+    gap: 2rem !important;
+  }
+
+  .craft-block-centered .craft-image,
+  .craft-block-centered .craft-content {
+    flex: none;
+    width: 100%;
+    max-width: 900px;
+  }
 }
 
 /* Mobile: Always Stack Vertical */
 @media screen and (max-width: 1023px) {
-    .craft-block {
-        display: flex;
-        flex-direction: column;
-        gap: 2rem;
-    }
+  .craft-block {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
 }
 
 /* ==================== CENTERED SECTIONS & PROMISE IMAGE SIZING ==================== */
@@ -9869,59 +9949,59 @@ section.fashion-insights-section {
 
 /* Centered craft block images (Sections 1 & 4) */
 .craft-block-centered .craft-image {
-    width: 100%;
-    max-width: 600px;
-    margin: 24px auto 16px auto !important;
+  width: 100%;
+  max-width: 600px;
+  margin: 24px auto 16px auto !important;
 }
 
 .craft-block-centered .craft-image img {
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    object-fit: cover;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
 }
 
 /* Promise section styling */
 .promise-section {
-    padding: var(--spacing-lg) var(--spacing-md);
-    text-align: center;
-    background-color: var(--color-cream);
+  padding: var(--spacing-lg) var(--spacing-md);
+  text-align: center;
+  background-color: var(--color-cream);
 }
 
 .promise-title {
-    font-family: var(--font-heading);
-    font-size: clamp(1.4rem, 3vw, 2rem);
-    font-weight: 450;
-    color: var(--color-black);
-    margin-bottom: var(--spacing-lg);
-    letter-spacing: 0.05em;
+  font-family: var(--font-heading);
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 450;
+  color: var(--color-black);
+  margin-bottom: var(--spacing-lg);
+  letter-spacing: 0.05em;
 }
 
 .promise-image {
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto var(--spacing-lg) auto;
-    overflow: hidden;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto var(--spacing-lg) auto;
+  overflow: hidden;
 }
 
 .promise-image img {
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    object-fit: cover;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
 }
 
 .promise-content {
-    max-width: 800px;
-    margin: 0 auto;
-    text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
 }
 
 .promise-intro,
 .promise-item {
-    font-family: var(--font-body);
-    font-size: 0.95rem;
-    color: var(--color-text-light);
-    line-height: 1.8;
-    margin-bottom: var(--spacing-sm);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--color-text-light);
+  line-height: 1.8;
+  margin-bottom: var(--spacing-sm);
 }
 
 /* ==================== HANDLOOM PAGE SECTION SPACING ==================== */
@@ -9929,40 +10009,41 @@ section.fashion-insights-section {
 
 /* Hero Image Section */
 .handloom-hero-image {
-    width: 100%;
-    margin-bottom: var(--spacing-xl); /* Increased gap between hero and intro */
+  width: 100%;
+  margin-bottom: var(--spacing-xl); /* Increased gap between hero and intro */
 }
 
 .handloom-hero-image img {
-    width: 100%;
-    height: auto;
-    display: block;
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
 /* Intro Section - Uniform spacing before Section 1 */
 .handloom-intro-section {
-    padding: var(--spacing-lg) var(--spacing-md);
-    text-align: center;
-    background-color: var(--color-white);
+  padding: var(--spacing-lg) var(--spacing-md);
+  text-align: center;
+  background-color: var(--color-white);
 }
 
 .handloom-title {
-    font-family: var(--font-heading);
-    font-size: 2rem;
-    font-weight: 450;
-    letter-spacing: 0.2em;
-    color: var(--color-black);
-    margin-bottom: var(--spacing-md);
-    text-transform: uppercase;
+  font-family: var(--font-heading);
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-xwide);
+  color: var(--color-black);
+  margin-bottom: var(--spacing-md);
+  text-transform: uppercase;
 }
 
 .handloom-intro {
-    font-family: var(--font-body);
-    font-size: 1rem;
-    color: var(--color-text-light);
-    line-height: 1.9;
-    max-width: 800px;
-    margin: 0 auto;
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-light);
+  color: var(--color-text-light);
+  line-height: var(--line-height-relaxed);
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 /* Reduced spacing for sections 4, 5, 6 and beyond */
@@ -9970,274 +10051,297 @@ section.fashion-insights-section {
 #techniques,
 #finishing,
 .promise-section {
-    padding-top: var(--spacing-md);
-    padding-bottom: var(--spacing-md);
+  padding-top: var(--spacing-md);
+  padding-bottom: var(--spacing-md);
 }
 
 /* CTA Section */
 .craft-cta {
-    padding: var(--spacing-md) var(--spacing-md);
-    margin: var(--spacing-lg) 0;
-    text-align: center;
-    background-color: var(--color-white);
+  padding: var(--spacing-md) var(--spacing-md);
+  margin: var(--spacing-lg) 0;
+  text-align: center;
+  background-color: var(--color-white);
 }
 
 .craft-cta-title {
-    font-family: var(--font-heading);
-    font-size: clamp(1.3rem, 3vw, 1.8rem);
-    font-weight: 450;
-    letter-spacing: var(--letter-spacing-normal);
-    color: var(--color-black);
-    margin-bottom: var(--spacing-sm);
+  font-family: var(--font-heading);
+  font-size: clamp(1.3rem, 3vw, 1.8rem);
+  font-weight: 450;
+  letter-spacing: var(--letter-spacing-normal);
+  color: var(--color-black);
+  margin-bottom: var(--spacing-sm);
 }
 
 .craft-cta-text {
-    font-family: var(--font-body);
-    font-size: 0.95rem;
-    color: var(--color-text-light);
-    line-height: 1.8;
-    max-width: 600px;
-    margin: 0 auto var(--spacing-md) auto;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--color-text-light);
+  line-height: 1.8;
+  max-width: 600px;
+  margin: 0 auto var(--spacing-md) auto;
 }
 
 .craft-cta-btn {
-    display: inline-block;
-    padding: 0.875rem 2.5rem;
-    font-family: var(--font-body);
-    font-size: 0.85rem;
-    font-weight: 500;
-    letter-spacing: var(--letter-spacing-wide);
-    text-transform: uppercase;
-    color: var(--color-white);
-    background-color: var(--color-black);
-    border: none;
-    cursor: pointer;
-    transition: var(--transition-smooth);
-    text-decoration: none;
+  display: inline-block;
+  padding: 0.875rem 2.5rem;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+  color: var(--color-white);
+  background-color: var(--color-black);
+  border: none;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  text-decoration: none;
 }
 
 .craft-cta-btn:hover {
-    background-color: var(--color-gold);
-    color: var(--color-black);
+  background-color: var(--color-gold);
+  color: var(--color-black);
 }
 
 /* ==================== FASHION INSIGHTS PAGE ==================== */
 /* Increased horizontal margins for the Fashion Insights page */
 .insights-page .container {
-    padding-left: 5%;
-    padding-right: 5%;
+  padding-left: 5%;
+  padding-right: 5%;
 }
 
 /* Hero Section */
 .insights-hero {
-    text-align: center;
-    padding: var(--spacing-md) 0 var(--spacing-lg) 0;
+  text-align: center;
+  padding: var(--spacing-md) 0 var(--spacing-lg) 0;
 }
 
 .insights-title {
-    font-family: var(--font-heading);
-    font-size: clamp(1.5rem, 4vw, 2.2rem);
-    font-weight: 400;
-    letter-spacing: var(--letter-spacing-display);
-    color: var(--color-black);
-    margin-bottom: var(--spacing-sm);
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 4vw, 2.2rem);
+  font-weight: 400;
+  letter-spacing: var(--letter-spacing-display);
+  color: var(--color-black);
+  margin-bottom: var(--spacing-sm);
 }
 
 .insights-subtitle {
-    font-family: var(--font-body);
-    font-size: 0.95rem;
-    color: var(--color-text-light);
-    max-width: 600px;
-    margin: 0 auto;
-    line-height: var(--line-height-relaxed);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--color-text-light);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: var(--line-height-relaxed);
 }
 
 /* Grid Section */
 .insights-grid-section {
-    padding-bottom: var(--spacing-md);
+  padding-bottom: var(--spacing-md);
 }
 
 /* 3-Column Grid Layout */
 .insights-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    column-gap: 25px;
-    row-gap: var(--spacing-lg);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: 25px;
+  row-gap: var(--spacing-lg);
 }
 
 /* Insight Cards - Remove hover shadow effect */
 .insight-card {
-    box-shadow: none !important;
-    transition: none;
-    display: flex;
-    flex-direction: column;
+  box-shadow: none !important;
+  transition: none;
+  display: flex;
+  flex-direction: column;
 }
 
 .insight-card:hover {
-    box-shadow: none !important;
-    transform: none !important;
+  box-shadow: none !important;
+  transform: none !important;
 }
 
 .insight-card-link {
-    text-decoration: none;
-    color: inherit;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .insight-card-link:hover {
-    box-shadow: none !important;
+  box-shadow: none !important;
 }
 
 /* Square Image Container (1:1 Aspect Ratio) */
 .insight-card-image {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    overflow: hidden;
-    background-color: var(--color-cream);
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background-color: var(--color-cream);
 }
 
 .insight-card-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 /* Card Content */
 .insight-card-content {
-    padding: var(--spacing-sm) 0;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
+  padding: var(--spacing-sm) 0;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 }
 
 .insight-card-category {
-    font-family: var(--font-body);
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: var(--letter-spacing-wide);
-    text-transform: uppercase;
-    color: var(--color-gold);
-    margin-bottom: 0.5rem;
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+  color: var(--color-gold);
+  margin-bottom: 0.5rem;
 }
 
 .insight-card-title {
-    font-family: var(--font-heading);
-    font-size: clamp(0.95rem, 1.5vw, 1.1rem);
-    font-weight: 500;
-    color: var(--color-black);
-    line-height: 1.4;
-    margin-bottom: 0.5rem;
+  font-family: var(--font-heading);
+  font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+  font-weight: 500;
+  color: var(--color-black);
+  line-height: 1.4;
+  margin-bottom: 0.5rem;
 }
 
 .insight-card-excerpt {
-    font-family: var(--font-body);
-    font-size: 0.85rem;
-    color: var(--color-text-light);
-    line-height: 1.6;
-    margin-bottom: 0.75rem;
-    flex-grow: 1;
-    /* Limit to 3 lines */
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--color-text-light);
+  line-height: 1.6;
+  margin-bottom: 0.75rem;
+  flex-grow: 1;
+  /* Limit to 3 lines */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .insight-card-date {
-    font-family: var(--font-body);
-    font-size: 0.75rem;
-    color: var(--color-text-muted);
-    letter-spacing: 0.02em;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  letter-spacing: 0.02em;
 }
 
 /* Responsive: Tablet (2 columns) */
 @media (max-width: 1024px) {
-    .insights-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: var(--spacing-md);
-    }
+  .insights-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+  }
 }
 
 /* Responsive: Mobile (1 column) */
 @media (max-width: 600px) {
-    .insights-page .container {
-        padding-left: 5%;
-        padding-right: 5%;
-    }
-    
-    .insights-grid {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-md);
-    }
-    
-    .insight-card-image {
-        aspect-ratio: 1 / 1;
-    }
+  .insights-page .container {
+    padding-left: 5%;
+    padding-right: 5%;
+  }
+
+  .insights-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+
+  .insight-card-image {
+    aspect-ratio: 1 / 1;
+  }
 }
 
 /* ==================== ARTICLE PAGE STYLES ==================== */
 /* Section headings styling for article pages */
 
 .article-section-number {
-    font-family: var(--font-heading);
-    font-size: clamp(1.15rem, 2.5vw, 1.35rem);
-    font-weight: 600;
-    color: var(--color-black);
-    letter-spacing: 0.02em;
-    margin-bottom: 8px;
-    line-height: 1.4;
+  font-family: var(--font-heading);
+  font-size: clamp(1.15rem, 2.5vw, 1.35rem);
+  font-weight: 600;
+  color: var(--color-black);
+  letter-spacing: 0.02em;
+  margin-bottom: 8px;
+  line-height: 1.4;
 }
 
 /* Image constraints to match Handloom Section 1 */
 .article-block-image,
 .article-figure-hero {
-    width: 100%;
-    max-width: 600px;
-    margin: 8px auto 16px auto;
+  width: 100%;
+  max-width: 600px;
+  margin: 8px auto 16px auto;
 }
 
 .article-block-image img,
 .article-figure-hero img {
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    object-fit: cover;
-    display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
 }
-
 
 /* Related Articles Grid - Reduced Gap (High Specificity) */
 .related-articles .related-grid,
 .related-grid {
-    display: grid !important;
-    grid-template-columns: repeat(3, 1fr) !important;
-    column-gap: 16px !important; 
-    row-gap: 24px !important;
-    margin-top: 24px !important;
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  column-gap: 16px !important;
+  row-gap: 24px !important;
+  margin-top: 24px !important;
 }
 
 @media (max-width: 1024px) {
-    .related-articles .related-grid,
-    .related-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
-    }
+  .related-articles .related-grid,
+  .related-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
 }
 
 @media (max-width: 600px) {
-    .related-articles .related-grid,
-    .related-grid {
-        grid-template-columns: 1fr !important;
-    }
+  .related-articles .related-grid,
+  .related-grid {
+    grid-template-columns: 1fr !important;
+  }
 }
 
 /* Force cards to fill grid columns */
 .related-articles .related-grid .insight-card,
 .related-grid .insight-card {
-    width: 100% !important;
-    max-width: none !important;
-    margin: 0 !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+}
+
+/* ==================== MOBILE HORIZONTAL OVERFLOW PREVENTION ==================== */
+/* MINIMAL FIX: Using overflow-x: clip instead of hidden.
+   The 'clip' value prevents horizontal overflow without affecting touch scroll behavior,
+   unlike 'hidden' which can cause scroll resistance on mobile devices. */
+
+@media screen and (max-width: 768px) {
+  /* Disable smooth scrolling on mobile - it causes scroll resistance on touch devices */
+  html {
+    scroll-behavior: auto;
+    overflow-x: clip;
+    width: 100%;
+  }
+
+  body {
+    overflow-x: clip;
+    width: 100%;
+  }
+
+  /* Mobile menu must be contained to prevent transform overflow */
+  .mobile-menu {
+    overflow: hidden;
+  }
 }
