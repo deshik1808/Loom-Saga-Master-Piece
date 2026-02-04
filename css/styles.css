@@ -8359,6 +8359,7 @@ section.fashion-insights-section {
   display: block;
   width: 100%;
   height: 100%;
+  min-width: 0; /* Override global .product-card min-width to allow Swiper to size cards correctly */
 }
 
 .explore-swiper .product-card img {
