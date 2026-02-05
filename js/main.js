@@ -802,6 +802,7 @@ const DesktopMegaMenuController = {
     activeDropdown: null,
     hideTimeout: null,
     isCursorOverHeader: false,
+    isYielding: false,
     currentTranslateY: 0,
     
     init() {
@@ -820,7 +821,10 @@ const DesktopMegaMenuController = {
             headerElement.addEventListener('mouseleave', () => {
                 this.isCursorOverHeader = false;
                 // If we leave the header area, reset the scroll yield immediately
-                this.resetScrollPosition();
+                // UNLESS we are currently yielding (scrolling down past limit)
+                if (!this.isYielding) {
+                    this.resetScrollPosition();
+                }
             });
         }
         
@@ -836,7 +840,10 @@ const DesktopMegaMenuController = {
             // Mouse leaves nav item
             item.addEventListener('mouseleave', () => {
                 if (window.innerWidth < 768) return;
-                this.scheduleHide(item, megaMenu);
+                // Do not hide if yielding
+                if (!this.isYielding) {
+                    this.scheduleHide(item, megaMenu);
+                }
             });
             
             // Mouse enters mega menu - keep it visible
@@ -849,7 +856,10 @@ const DesktopMegaMenuController = {
                 // Mouse leaves mega menu - hide it
                 megaMenu.addEventListener('mouseleave', () => {
                     if (window.innerWidth < 768) return;
-                    this.hideMenu(item, megaMenu);
+                    // Do not hide if yielding
+                    if (!this.isYielding) {
+                         this.hideMenu(item, megaMenu);
+                    }
                 });
             }
         });
@@ -891,8 +901,9 @@ const DesktopMegaMenuController = {
     
     // Core Logic: Handle Vertical Scroll
     handleScroll(currentScrollY, lastScrollY) {
-        // Only apply logic if cursor is hovering the header/dropdown
-        if (!this.isCursorOverHeader) {
+        // If we are yielding, we continue yielding regardless of cursor (until scroll UP)
+        // If not yielding, we only start if cursor is over header
+        if (!this.isCursorOverHeader && !this.isYielding) {
             // Ensure we are reset if not hovering
             if (this.currentTranslateY !== 0) {
                  this.resetScrollPosition();
@@ -907,6 +918,7 @@ const DesktopMegaMenuController = {
 
         // SCROLL DOWN: Header yields (moves up with page)
         if (delta > 0) {
+            this.isYielding = true; // Mark as yielding
             // Decrease translateY (move up) by the scroll amount
             this.currentTranslateY -= delta;
             
@@ -917,7 +929,15 @@ const DesktopMegaMenuController = {
         } 
         // SCROLL UP: Header fixes to top
         else if (delta < 0) {
+             // Reset state immediately on scroll up
+             this.isYielding = false;
              this.resetScrollPosition();
+             
+             // Check if we should close cleanly (if cursor left during yielding)
+             if (!this.isCursorOverHeader && this.activeDropdown) {
+                 const megaMenu = this.activeDropdown.querySelector('.mega-menu');
+                 this.scheduleHide(this.activeDropdown, megaMenu);
+             }
         }
     },
     
@@ -935,6 +955,7 @@ const DesktopMegaMenuController = {
     
     resetScrollPosition() {
         this.currentTranslateY = 0;
+        this.isYielding = false; // Clear yielding flag
         const headerElement = document.getElementById('header');
         if (headerElement) {
             headerElement.style.transform = '';
