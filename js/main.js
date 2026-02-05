@@ -33,8 +33,10 @@ function handleHeaderScroll() {
     const footerTop = footer ? footer.offsetTop : Infinity;
     const windowHeight = window.innerHeight;
     
-    // If mega menu is active, do nothing - let the absolute positioning handle it
+    // If mega menu is active, delegate to its specific scroll logic
     if (typeof DesktopMegaMenuController !== 'undefined' && DesktopMegaMenuController.activeDropdown) {
+        DesktopMegaMenuController.handleScroll(currentScrollY, lastScrollY);
+        lastScrollY = currentScrollY; // Update lastScrollY here since we processed the scroll
         return;
     }
     
@@ -796,21 +798,31 @@ dropdowns.forEach(dropdown => {
 });
 
 // ==================== DESKTOP MEGA MENU HOVER ====================
-/**
- * Desktop Mega Menu Controller
- * Uses JavaScript to explicitly control which mega menu is visible,
- * preventing z-index stacking issues where multiple menus overlap.
- */
 const DesktopMegaMenuController = {
     activeDropdown: null,
     hideTimeout: null,
-    headerLocked: false,
+    isCursorOverHeader: false,
+    currentTranslateY: 0,
     
     init() {
         // Only apply on desktop
         if (window.innerWidth < 768) return;
         
         const dropdownItems = document.querySelectorAll('.nav-item.has-dropdown');
+        const headerElement = document.getElementById('header');
+        
+        // Track cursor over header area (including dropdowns which are children)
+        if (headerElement) {
+            headerElement.addEventListener('mouseenter', () => {
+                this.isCursorOverHeader = true;
+            });
+            
+            headerElement.addEventListener('mouseleave', () => {
+                this.isCursorOverHeader = false;
+                // If we leave the header area, reset the scroll yield immediately
+                this.resetScrollPosition();
+            });
+        }
         
         dropdownItems.forEach(item => {
             const megaMenu = item.querySelector('.mega-menu');
@@ -862,42 +874,74 @@ const DesktopMegaMenuController = {
             }
         }
         
-        // Lock header to background
-        this.lockHeader();
+        // Disable lockHeader - we now use dynamic scroll yield handling
+        // this.lockHeader();
         
         // Show this menu
         if (megaMenu) {
             item.classList.add('mega-menu-active');
             megaMenu.classList.add('mega-menu-visible');
             this.activeDropdown = item;
+            
+            // Reset translation on open
+            this.currentTranslateY = 0;
+            this.updateHeaderTransform(0);
         }
     },
     
-    lockHeader() {
-        // Disabled to prevent layout jumping/z-index issues on cart page
-        if (this.headerLocked) return;
+    // Core Logic: Handle Vertical Scroll
+    handleScroll(currentScrollY, lastScrollY) {
+        // Only apply logic if cursor is hovering the header/dropdown
+        if (!this.isCursorOverHeader) {
+            // Ensure we are reset if not hovering
+            if (this.currentTranslateY !== 0) {
+                 this.resetScrollPosition();
+            }
+            return;
+        }
+
+        const delta = currentScrollY - lastScrollY;
+        const headerElement = document.getElementById('header');
         
-        const scrollY = window.scrollY;
-        
-        // Only lock if we are scrolled down a bit (to avoid jumping at very top)
-        // or effectively, just always lock it to current position so it moves up when scrolling
-        header.style.position = 'absolute';
-        header.style.top = `${scrollY}px`;
-        header.style.width = '100%';
-        this.headerLocked = true;
+        if (!headerElement) return;
+
+        // SCROLL DOWN: Header yields (moves up with page)
+        if (delta > 0) {
+            // Decrease translateY (move up) by the scroll amount
+            this.currentTranslateY -= delta;
+            
+            // Apply transform strictly without transition for instant sync
+            // We use inline styles to override CSS transitions
+            headerElement.style.transition = 'none';
+            headerElement.style.transform = `translateY(${this.currentTranslateY}px)`;
+        } 
+        // SCROLL UP: Header fixes to top
+        else if (delta < 0) {
+             this.resetScrollPosition();
+        }
     },
     
-    unlockHeader() {
-        // Disabled
-        if (!this.headerLocked) return;
+    updateHeaderTransform(y) {
+        const headerElement = document.getElementById('header');
+        if (!headerElement) return;
         
-        header.style.position = '';
-        header.style.top = '';
-        header.style.width = '';
-        this.headerLocked = false;
-        
-        // Re-run checking for scroll state to ensure correct class
-        handleHeaderScroll();
+        if (y === 0) {
+            headerElement.style.transform = '';
+            headerElement.style.transition = ''; // Restore CSS transition
+        } else {
+            headerElement.style.transform = `translateY(${y}px)`;
+        }
+    },
+    
+    resetScrollPosition() {
+        this.currentTranslateY = 0;
+        const headerElement = document.getElementById('header');
+        if (headerElement) {
+            headerElement.style.transform = '';
+             // Allow a frame for transition to clear if strictly needed, 
+             // but usually removing style restores CSS class behavior
+            headerElement.style.transition = ''; 
+        }
     },
     
     scheduleHide(item, megaMenu) {
@@ -914,7 +958,7 @@ const DesktopMegaMenuController = {
         }
         if (this.activeDropdown === item) {
             this.activeDropdown = null;
-            this.unlockHeader();
+            this.resetScrollPosition();
         }
     },
     
@@ -934,7 +978,7 @@ const DesktopMegaMenuController = {
             }
         });
         this.activeDropdown = null;
-        this.unlockHeader();
+        this.resetScrollPosition();
     }
 };
 
