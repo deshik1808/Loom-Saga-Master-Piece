@@ -150,6 +150,8 @@ const MobileMenuController = {
     navOverlay: null,
     isOpen: false,
     currentPanel: 'main',
+    panelStack: [], // Track navigation history for multi-level back nav
+    level3Counter: 0, // Counter for generating unique level-3 panel IDs
 
     // Mobile menu HTML template (injected dynamically on pages that don't have it)
     menuHTML: `
@@ -258,7 +260,7 @@ const MobileMenuController = {
             <li><a href="#">Kalamkari</a></li>
           </ul>
         </div>
-        <a href="collections.html" class="mobile-menu__view-all">View All Sarees</a>
+        <a href="collections.html" class="mobile-menu__view-all">VIEW ALL SAREES</a>
       </div>
       <div class="mobile-menu__panel mobile-menu__panel--sub" id="submenu-crafts" data-panel="crafts">
         <div class="mobile-menu__subheader">
@@ -326,6 +328,11 @@ const MobileMenuController = {
         }
 
         this.mainPanel = document.getElementById('mobileMenuMain');
+        
+        // Dynamic Panel Transformation
+        // Convert subgroups (Shop By Fabric, etc.) into their own panels level-3
+        this.transformSubgroupsToLevel3Panels();
+
         this.bindEvents();
         
         console.debug('[MobileMenuController] Initialized successfully');
@@ -371,20 +378,40 @@ const MobileMenuController = {
 
         // Sub-menu navigation buttons (safely query within menu)
         if (this.menu) {
-            this.menu.querySelectorAll('[data-submenu]').forEach(btn => {
-                btn.addEventListener('click', (e) => {
+            this.menu.addEventListener('click', (e) => {
+                // Handle level-1 links
+                const btn = e.target.closest('[data-submenu]');
+                if (btn) {
                     e.preventDefault();
-                    const submenuId = e.currentTarget.dataset.submenu;
+                    const submenuId = btn.dataset.submenu;
                     this.showSubPanel(submenuId);
-                });
-            });
+                    return;
+                }
 
-            // Back buttons
-            this.menu.querySelectorAll('[data-back]').forEach(btn => {
-                btn.addEventListener('click', (e) => {
+                // Handle level-2 (back to main)
+                const backBtn = e.target.closest('[data-back="main"]');
+                if (backBtn) {
                     e.preventDefault();
                     this.showMainPanel();
-                });
+                    return;
+                }
+                
+                // Handle level-3 (Subgroup) links
+                const level3Btn = e.target.closest('[data-level3]');
+                if (level3Btn) {
+                    e.preventDefault();
+                    const panelId = level3Btn.dataset.level3;
+                    this.showLevel3Panel(panelId);
+                    return;
+                }
+
+                // Handle level-3 back
+                const backLevel3 = e.target.closest('[data-back-level3]');
+                if (backLevel3) {
+                    e.preventDefault();
+                    this.goBackOneLevel();
+                    return;
+                }
             });
         }
 
@@ -470,10 +497,13 @@ const MobileMenuController = {
         if (!this.menu) return;
         
         this.currentPanel = 'main';
-        // Hide all sub-panels
-        this.menu.querySelectorAll('.mobile-menu__panel--sub').forEach(panel => {
-            panel.classList.remove('active');
+        this.panelStack = []; // Clear stack
+        
+        // Clear all panel states
+        this.menu.querySelectorAll('.mobile-menu__panel').forEach(panel => {
+            panel.classList.remove('active', 'panel-underneath');
         });
+        
         // Show main panel
         if (this.mainPanel) {
             this.mainPanel.classList.add('active');
@@ -483,11 +513,20 @@ const MobileMenuController = {
     showSubPanel(submenuId) {
         if (!this.menu) return;
         
+        // Push current into stack
+        this.panelStack.push('main');
         this.currentPanel = submenuId;
-        // Hide main panel
+        
+        // Clear active/underneath from all
+        this.menu.querySelectorAll('.mobile-menu__panel').forEach(panel => {
+            panel.classList.remove('active', 'panel-underneath');
+        });
+
+        // Set Main as underneath (for smooth back reveal)
         if (this.mainPanel) {
-            this.mainPanel.classList.remove('active');
+            this.mainPanel.classList.add('panel-underneath');
         }
+        
         // Show target sub-panel
         const subPanel = document.getElementById(`submenu-${submenuId}`);
         if (subPanel) {
@@ -500,12 +539,148 @@ const MobileMenuController = {
         
         // Reset all panels to initial state
         this.menu.querySelectorAll('.mobile-menu__panel').forEach(panel => {
-            panel.classList.remove('active');
+            panel.classList.remove('active', 'panel-underneath');
         });
         if (this.mainPanel) {
             this.mainPanel.classList.add('active');
         }
         this.currentPanel = 'main';
+        this.panelStack = [];
+    },
+
+    /**
+     * Transform subgroups into level-3 panel navigation
+     */
+    transformSubgroupsToLevel3Panels() {
+        if (!this.menu) return;
+        
+        // Find all subgroups
+        const subgroups = this.menu.querySelectorAll('.mobile-menu__subgroup');
+        
+        subgroups.forEach(subgroup => {
+            const titleEl = subgroup.querySelector('.mobile-menu__subgroup-title');
+            const sublist = subgroup.querySelector('.mobile-menu__sublist');
+            
+            if (!titleEl || !sublist) return;
+            
+            const title = titleEl.textContent;
+            const parentPanel = subgroup.closest('.mobile-menu__panel');
+            const parentPanelId = parentPanel.id.replace('submenu-', '');
+            
+            // Generate unique ID for new level-3 panel
+            const panelId = `level3-${parentPanelId}-${this.level3Counter++}`;
+            
+            // Clone content to create new panel
+            const sublistContent = sublist.cloneNode(true);
+            
+            // Generate the separate panel
+            this.generateLevel3Panel(panelId, title, parentPanelId, sublistContent);
+            
+            // Replace original subgroup with a button that opens this new panel
+            const navButton = document.createElement('button');
+            navButton.className = 'mobile-menu__link mobile-menu__subgroup-btn';
+            navButton.dataset.level3 = panelId;
+            navButton.innerHTML = `<span>${title}</span> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M13 5l7 7-7 7"/></svg>`;
+            
+            // Use div instead of li to avoid invalid HTML if not in ul
+            const listItem = document.createElement('div');
+            listItem.className = 'mobile-menu__item';
+            listItem.appendChild(navButton);
+            
+            // Replace the subgroup div with this item
+            subgroup.replaceWith(listItem);
+        });
+    },
+
+    generateLevel3Panel(panelId, title, parentPanelId, content) {
+        const panel = document.createElement('div');
+        panel.className = 'mobile-menu__panel mobile-menu__panel--sub mobile-menu__panel--level3';
+        panel.id = panelId;
+        panel.dataset.parent = parentPanelId;
+        
+        panel.innerHTML = `
+            <div class="mobile-menu__subheader">
+                <button class="mobile-menu__back" data-back-level3="${parentPanelId}">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="M11 19l-7-7 7-7"/></svg>
+                    <span>Back</span>
+                </button>
+                <h2 class="mobile-menu__subtitle">${title.toUpperCase()}</h2>
+            </div>
+        `;
+        
+        // Append the content (sublist)
+        panel.appendChild(content);
+        
+        // Inject into mobile menu container
+        this.menu.appendChild(panel);
+    },
+
+    showLevel3Panel(panelId) {
+        if (!this.menu) return;
+        
+        const targetPanel = document.getElementById(panelId);
+        if (!targetPanel) return;
+        
+        const parentPanelId = targetPanel.dataset.parent;
+        // Robust ID lookup: try exact match, then lowercase
+        let parentPanel = document.getElementById(`submenu-${parentPanelId}`);
+        if (!parentPanel && parentPanelId) {
+            parentPanel = document.getElementById(`submenu-${parentPanelId.toLowerCase()}`);
+        }
+        
+        // Push current panel to stack
+        this.panelStack.push(this.currentPanel);
+        this.currentPanel = panelId;
+        
+        // Clear active/underneath from all panels EXCEPT the parent we need to keep
+        this.menu.querySelectorAll('.mobile-menu__panel').forEach(panel => {
+            if (parentPanel && panel === parentPanel) {
+                // For the parent, strictly remove active but ensure underneath is set
+                panel.classList.remove('active');
+                panel.classList.add('panel-underneath');
+            } else if (this.mainPanel && panel === this.mainPanel) {
+                 // For main panel, strictly remove active but ensure underneath is set
+                panel.classList.remove('active');
+                panel.classList.add('panel-underneath');
+            } else {
+                panel.classList.remove('active', 'panel-underneath');
+            }
+        });
+        
+        // Show target
+        targetPanel.classList.add('active');
+    },
+
+    goBackOneLevel() {
+        if (this.panelStack.length === 0) {
+            this.showMainPanel();
+            return;
+        }
+        
+        const currentPanelId = this.currentPanel;
+        const previousPanel = this.panelStack.pop();
+        this.currentPanel = previousPanel;
+        
+        const currentPanelEl = document.getElementById(currentPanelId) || document.getElementById(`submenu-${currentPanelId}`);
+        
+        // Slide out current
+        if (currentPanelEl) {
+            currentPanelEl.classList.remove('active');
+        }
+        
+        // Restore previous
+        if (previousPanel === 'main') {
+            this.menu.querySelectorAll('.mobile-menu__panel').forEach(p => p.classList.remove('panel-underneath'));
+            if (this.mainPanel) this.mainPanel.classList.add('active');
+        } else {
+            const parentPanel = document.getElementById(`submenu-${previousPanel}`) || document.getElementById(previousPanel);
+            if (parentPanel) {
+                parentPanel.classList.remove('panel-underneath');
+                parentPanel.classList.add('active');
+            }
+            // Ensure main stays underneath
+            if (this.mainPanel) this.mainPanel.classList.add('panel-underneath');
+        }
     }
 };
 
@@ -658,7 +833,7 @@ const SearchOverlayManager = {
     
     showInitialState() {
         if (this.resultsContainer) this.resultsContainer.style.display = 'none';
-        if (this.popularSection) this.popularSection.style.display = 'block';
+        if (this.popularSection) this.popularSection.style.display = '';
         if (this.noResults) this.noResults.style.display = 'none';
     },
     

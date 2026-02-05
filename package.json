@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "share": "npx cloudflared tunnel --url http://localhost:3000",
     "build": "vite build",
     "preview": "vite preview"
   },

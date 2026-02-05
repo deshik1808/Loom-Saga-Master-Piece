@@ -1680,7 +1680,7 @@ input[type="text"]::-ms-clear {
   letter-spacing: 0.2em;
   color: var(--color-black);
   text-align: center;
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: var(--spacing-md);
   text-transform: uppercase;
   padding: 0 var(--spacing-sm);
 }
@@ -8322,26 +8322,7 @@ section.fashion-insights-section {
   color: var(--color-text-light);
 }
 
-/* Mobile Responsive */
-@media (max-width: 768px) {
-  .search-overlay__panel {
-    padding: var(--spacing-sm) var(--spacing-md);
-  }
 
-  .search-overlay__input-row {
-    flex-wrap: nowrap;
-  }
-
-  .search-overlay__results {
-    grid-template-columns: 1fr;
-    gap: var(--spacing-md);
-  }
-
-  .search-overlay__popular {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-}
 
 /* ==================== EXPLORE SWIPER ==================== */
 .explore-swiper {
@@ -8440,10 +8421,12 @@ section.fashion-insights-section {
 .cart-drawer {
   position: fixed;
   top: 0;
+  bottom: 0;
   right: 0;
   width: 100%;
   max-width: 450px;
-  height: 100vh;
+  height: 100vh; /* Fallback */
+  height: 100dvh; /* Dynamic viewport height */
   background-color: var(--color-bg); /* Use page background #fffff5 */
   z-index: 9999;
   transform: translateX(100%);
@@ -8451,6 +8434,13 @@ section.fashion-insights-section {
   box-shadow: -5px 0 30px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
+}
+
+@media (max-width: 768px) {
+  .cart-drawer {
+    max-width: 100%;
+    width: 100%;
+  }
 }
 
 .cart-drawer.active {
@@ -8615,6 +8605,7 @@ section.fashion-insights-section {
 /* Footer */
 .cart-drawer-footer {
   padding: var(--spacing-md);
+  padding-bottom: calc(var(--spacing-md) + env(safe-area-inset-bottom, 20px));
   border-top: 1px solid rgba(0, 0, 0, 0.1);
   background-color: var(--color-bg);
 }
@@ -8978,19 +8969,71 @@ section.fashion-insights-section {
     -webkit-overflow-scrolling: touch;
     padding: 0 24px 40px;
     transform: translateX(100%);
-    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Transition transform mostly, delay z-index to avoid clipping, animate filter for depth */
+    transition: 
+      transform 0.45s cubic-bezier(0.32, 0.72, 0, 1), 
+      visibility 0.45s,
+      z-index 0.01s 0.45s,
+      filter 0.4s ease;
+    visibility: hidden;
+    z-index: 1;
+    /* Strong shadow always present (off-screen when hidden) to ensure edge visibility during slide-out */
+    box-shadow: -15px 0 30px rgba(0, 0, 0, 0.12);
   }
 
+  /* Main panel stays in place */
   .mobile-menu__panel--main {
-    transform: translateX(-100%);
+    transform: translateX(0);
+    visibility: hidden;
+    box-shadow: none; /* Main panel doesn't need side shadow */
+  }
+
+  /* Active state - instant z-index rise */
+  .mobile-menu__panel.active {
+    transition: 
+      transform 0.45s cubic-bezier(0.32, 0.72, 0, 1), 
+      visibility 0s,
+      z-index 0s 0s,
+      filter 0.4s ease;
   }
 
   .mobile-menu__panel--main.active {
     transform: translateX(0);
+    visibility: visible;
+    z-index: 2;
   }
 
+  /* Sub-panels slide in */
   .mobile-menu__panel--sub.active {
     transform: translateX(0);
+    visibility: visible;
+    z-index: 3;
+    /* Shadow already on base class */
+  }
+
+  /* Level 3 Panels (Highest z-index) */
+  .mobile-menu__panel--level3 {
+    z-index: 4;
+  }
+  
+  .mobile-menu__panel--level3.active {
+    z-index: 5;
+  }
+
+  /* Critical: Keep parent panel visible underneath when child is active */
+  .mobile-menu__panel.panel-underneath {
+    transform: translateX(0) !important;
+    visibility: visible !important;
+    /* Subtle dimming to push parent to background */
+    filter: brightness(0.96);
+  }
+  
+  .mobile-menu__panel--main.panel-underneath {
+    z-index: 1 !important;
+  }
+  
+  .mobile-menu__panel--sub.panel-underneath {
+    z-index: 2 !important;
   }
 
   .mobile-menu__content {
@@ -9191,8 +9234,20 @@ section.fashion-insights-section {
     gap: 0 24px;
   }
 
+  /* Override grid to single column inside level-3 panels for uniformity */
+  .mobile-menu__panel--level3 .mobile-menu__sublist--grid {
+    display: block;
+  }
+
   .mobile-menu__subgroup {
     margin-bottom: 24px;
+  }
+
+  /* Styles for the button that replaces the inline subgroup list */
+  .mobile-menu__subgroup-btn {
+    width: 100%;
+    justify-content: space-between;
+    text-transform: uppercase;
   }
 
   .mobile-menu__subgroup-title {
@@ -9215,8 +9270,9 @@ section.fashion-insights-section {
     color: var(--color-gold-dark);
     text-decoration: none;
     text-align: center;
+    text-transform: uppercase;
     margin-top: 16px;
-    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    border-top: none;
   }
 
   /* Disable ALL hover effects on mobile navigation - tap only */
