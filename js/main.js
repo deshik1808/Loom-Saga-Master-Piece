@@ -33,10 +33,8 @@ function handleHeaderScroll() {
     const footerTop = footer ? footer.offsetTop : Infinity;
     const windowHeight = window.innerHeight;
     
-    // If mega menu is active, delegate to its specific scroll logic
+    // If mega menu is active, do nothing - let the absolute positioning handle it
     if (typeof DesktopMegaMenuController !== 'undefined' && DesktopMegaMenuController.activeDropdown) {
-        DesktopMegaMenuController.handleScroll(currentScrollY, lastScrollY);
-        lastScrollY = currentScrollY; // Update lastScrollY here since we processed the scroll
         return;
     }
     
@@ -329,10 +327,9 @@ const MobileMenuController = {
 
         this.mainPanel = document.getElementById('mobileMenuMain');
         
-        // Dynamic Panel Transformation
-        // Convert subgroups (Shop By Fabric, etc.) into their own panels level-3
+        // Transform subgroups into level-3 panel navigation (BEFORE binding events)
         this.transformSubgroupsToLevel3Panels();
-
+        
         this.bindEvents();
         
         console.debug('[MobileMenuController] Initialized successfully');
@@ -378,39 +375,36 @@ const MobileMenuController = {
 
         // Sub-menu navigation buttons (safely query within menu)
         if (this.menu) {
-            this.menu.addEventListener('click', (e) => {
-                // Handle level-1 links
-                const btn = e.target.closest('[data-submenu]');
-                if (btn) {
+            this.menu.querySelectorAll('[data-submenu]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
                     e.preventDefault();
-                    const submenuId = btn.dataset.submenu;
+                    const submenuId = e.currentTarget.dataset.submenu;
                     this.showSubPanel(submenuId);
-                    return;
-                }
+                });
+            });
 
-                // Handle level-2 (back to main)
-                const backBtn = e.target.closest('[data-back="main"]');
-                if (backBtn) {
+            // Back buttons (level-2 to main)
+            this.menu.querySelectorAll('[data-back]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
                     e.preventDefault();
-                    this.showMainPanel();
-                    return;
-                }
-                
-                // Handle level-3 (Subgroup) links
+                    this.goBackOneLevel();
+                });
+            });
+            
+            // Level-3 navigation buttons (use event delegation for dynamic buttons)
+            this.menu.addEventListener('click', (e) => {
                 const level3Btn = e.target.closest('[data-level3]');
                 if (level3Btn) {
                     e.preventDefault();
                     const panelId = level3Btn.dataset.level3;
                     this.showLevel3Panel(panelId);
-                    return;
                 }
-
-                // Handle level-3 back
-                const backLevel3 = e.target.closest('[data-back-level3]');
-                if (backLevel3) {
+                
+                // Level-3 back buttons
+                const backLevel3Btn = e.target.closest('[data-back-level3]');
+                if (backLevel3Btn) {
                     e.preventDefault();
                     this.goBackOneLevel();
-                    return;
                 }
             });
         }
@@ -497,13 +491,10 @@ const MobileMenuController = {
         if (!this.menu) return;
         
         this.currentPanel = 'main';
-        this.panelStack = []; // Clear stack
-        
-        // Clear all panel states
-        this.menu.querySelectorAll('.mobile-menu__panel').forEach(panel => {
-            panel.classList.remove('active', 'panel-underneath');
+        // Hide all sub-panels
+        this.menu.querySelectorAll('.mobile-menu__panel--sub').forEach(panel => {
+            panel.classList.remove('active');
         });
-        
         // Show main panel
         if (this.mainPanel) {
             this.mainPanel.classList.add('active');
@@ -513,21 +504,21 @@ const MobileMenuController = {
     showSubPanel(submenuId) {
         if (!this.menu) return;
         
-        // Push current into stack
-        this.panelStack.push('main');
+        // Push current panel to stack for back navigation
+        this.panelStack.push(this.currentPanel);
         this.currentPanel = submenuId;
         
-        // Clear active/underneath from all
+        // Clear all panel states first
         this.menu.querySelectorAll('.mobile-menu__panel').forEach(panel => {
             panel.classList.remove('active', 'panel-underneath');
         });
-
-        // Set Main as underneath (for smooth back reveal)
+        
+        // Keep main panel visible underneath (for smooth back reveal)
         if (this.mainPanel) {
             this.mainPanel.classList.add('panel-underneath');
         }
         
-        // Show target sub-panel
+        // Show target sub-panel on top
         const subPanel = document.getElementById(`submenu-${submenuId}`);
         if (subPanel) {
             subPanel.classList.add('active');
@@ -539,63 +530,92 @@ const MobileMenuController = {
         
         // Reset all panels to initial state
         this.menu.querySelectorAll('.mobile-menu__panel').forEach(panel => {
-            panel.classList.remove('active', 'panel-underneath');
+            panel.classList.remove('active');
         });
         if (this.mainPanel) {
             this.mainPanel.classList.add('active');
         }
         this.currentPanel = 'main';
-        this.panelStack = [];
+        this.panelStack = []; // Clear navigation history
     },
 
     /**
      * Transform subgroups into level-3 panel navigation
+     * Converts inline subgroup content to dedicated clickable panels
      */
     transformSubgroupsToLevel3Panels() {
         if (!this.menu) return;
+
+        // Find all level-2 panels that contain subgroups
+        const level2Panels = this.menu.querySelectorAll('.mobile-menu__panel--sub');
         
-        // Find all subgroups
-        const subgroups = this.menu.querySelectorAll('.mobile-menu__subgroup');
-        
-        subgroups.forEach(subgroup => {
-            const titleEl = subgroup.querySelector('.mobile-menu__subgroup-title');
-            const sublist = subgroup.querySelector('.mobile-menu__sublist');
+        level2Panels.forEach(level2Panel => {
+            const subgroups = level2Panel.querySelectorAll('.mobile-menu__subgroup');
+            if (subgroups.length === 0) return; // No subgroups to transform
             
-            if (!titleEl || !sublist) return;
+            const parentPanelId = level2Panel.dataset.panel || level2Panel.id.replace('submenu-', '');
             
-            const title = titleEl.textContent;
-            const parentPanel = subgroup.closest('.mobile-menu__panel');
-            const parentPanelId = parentPanel.id.replace('submenu-', '');
+            subgroups.forEach(subgroup => {
+                const titleEl = subgroup.querySelector('.mobile-menu__subgroup-title');
+                const sublist = subgroup.querySelector('.mobile-menu__sublist');
+                
+                if (!titleEl || !sublist) return;
+                
+                const title = titleEl.textContent.trim();
+                const panelId = `level3-${parentPanelId}-${this.level3Counter++}`;
+                
+                // Clone the sublist content for the new panel
+                const sublistContent = sublist.cloneNode(true);
+                
+                // Generate level-3 panel
+                this.generateLevel3Panel(panelId, title, parentPanelId, sublistContent);
+                
+                // Replace the subgroup with a navigation button
+                const navButton = document.createElement('button');
+                navButton.className = 'mobile-menu__link mobile-menu__subgroup-btn';
+                navButton.dataset.level3 = panelId;
+                navButton.dataset.parent = parentPanelId;
+                navButton.innerHTML = `
+                    <span>${title}</span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M13 5l7 7-7 7"/></svg>
+                `;
+                
+                // Create wrapper li for proper list flow
+                const listItem = document.createElement('li');
+                listItem.className = 'mobile-menu__item';
+                listItem.appendChild(navButton);
+                
+                // Replace subgroup with the button
+                subgroup.replaceWith(listItem);
+            });
             
-            // Generate unique ID for new level-3 panel
-            const panelId = `level3-${parentPanelId}-${this.level3Counter++}`;
-            
-            // Clone content to create new panel
-            const sublistContent = sublist.cloneNode(true);
-            
-            // Generate the separate panel
-            this.generateLevel3Panel(panelId, title, parentPanelId, sublistContent);
-            
-            // Replace original subgroup with a button that opens this new panel
-            const navButton = document.createElement('button');
-            navButton.className = 'mobile-menu__link mobile-menu__subgroup-btn';
-            navButton.dataset.level3 = panelId;
-            navButton.innerHTML = `<span>${title}</span> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M13 5l7 7-7 7"/></svg>`;
-            
-            // Use div instead of li to avoid invalid HTML if not in ul
-            const listItem = document.createElement('div');
-            listItem.className = 'mobile-menu__item';
-            listItem.appendChild(navButton);
-            
-            // Replace the subgroup div with this item
-            subgroup.replaceWith(listItem);
+            // Wrap existing items in a ul if not already
+            const existingItems = level2Panel.querySelectorAll('.mobile-menu__item');
+            if (existingItems.length > 0) {
+                const existingList = level2Panel.querySelector('.mobile-menu__sublist, .mobile-menu__list');
+                if (!existingList) {
+                    const ul = document.createElement('ul');
+                    ul.className = 'mobile-menu__list';
+                    existingItems.forEach(item => ul.appendChild(item));
+                    const subheader = level2Panel.querySelector('.mobile-menu__subheader');
+                    if (subheader) {
+                        subheader.insertAdjacentElement('afterend', ul);
+                    }
+                }
+            }
         });
+        
+        console.debug('[MobileMenuController] Transformed subgroups to level-3 panels');
     },
 
+    /**
+     * Generate a new level-3 panel and inject it into the menu
+     */
     generateLevel3Panel(panelId, title, parentPanelId, content) {
         const panel = document.createElement('div');
         panel.className = 'mobile-menu__panel mobile-menu__panel--sub mobile-menu__panel--level3';
         panel.id = panelId;
+        panel.dataset.panel = panelId;
         panel.dataset.parent = parentPanelId;
         
         panel.innerHTML = `
@@ -615,42 +635,48 @@ const MobileMenuController = {
         this.menu.appendChild(panel);
     },
 
+    /**
+     * Show a level-3 panel and hide the parent
+     */
     showLevel3Panel(panelId) {
         if (!this.menu) return;
         
         const targetPanel = document.getElementById(panelId);
         if (!targetPanel) return;
         
+        // Get parent panel ID from data attribute
         const parentPanelId = targetPanel.dataset.parent;
-        // Robust ID lookup: try exact match, then lowercase
-        let parentPanel = document.getElementById(`submenu-${parentPanelId}`);
-        if (!parentPanel && parentPanelId) {
-            parentPanel = document.getElementById(`submenu-${parentPanelId.toLowerCase()}`);
-        }
         
-        // Push current panel to stack
+        // Push current panel to stack for back navigation
         this.panelStack.push(this.currentPanel);
         this.currentPanel = panelId;
         
-        // Clear active/underneath from all panels EXCEPT the parent we need to keep
+        // Clear all panel states first
         this.menu.querySelectorAll('.mobile-menu__panel').forEach(panel => {
-            if (parentPanel && panel === parentPanel) {
-                // For the parent, strictly remove active but ensure underneath is set
-                panel.classList.remove('active');
-                panel.classList.add('panel-underneath');
-            } else if (this.mainPanel && panel === this.mainPanel) {
-                 // For main panel, strictly remove active but ensure underneath is set
-                panel.classList.remove('active');
-                panel.classList.add('panel-underneath');
-            } else {
-                panel.classList.remove('active', 'panel-underneath');
-            }
+            panel.classList.remove('active', 'panel-underneath');
         });
         
-        // Show target
+        // Keep main panel visible at bottom
+        if (this.mainPanel) {
+            this.mainPanel.classList.add('panel-underneath');
+        }
+        
+        // Keep parent level-2 panel visible underneath level-3
+        if (parentPanelId) {
+            const parentPanel = document.getElementById(`submenu-${parentPanelId}`);
+            if (parentPanel) {
+                parentPanel.classList.add('panel-underneath');
+            }
+        }
+        
+        // Show target level-3 panel on top
         targetPanel.classList.add('active');
     },
 
+    /**
+     * Go back one level in the navigation stack
+     * Uses reveal animation - current panel slides away, revealing parent underneath
+     */
     goBackOneLevel() {
         if (this.panelStack.length === 0) {
             this.showMainPanel();
@@ -661,25 +687,36 @@ const MobileMenuController = {
         const previousPanel = this.panelStack.pop();
         this.currentPanel = previousPanel;
         
-        const currentPanelEl = document.getElementById(currentPanelId) || document.getElementById(`submenu-${currentPanelId}`);
+        // Get the current panel element
+        const currentPanelEl = document.getElementById(currentPanelId) || 
+                               document.getElementById(`submenu-${currentPanelId}`);
         
-        // Slide out current
+        // Remove active from current panel (triggers slide-out animation)
         if (currentPanelEl) {
             currentPanelEl.classList.remove('active');
         }
         
-        // Restore previous
+        // Show previous panel (it should already be visible as panel-underneath)
         if (previousPanel === 'main') {
-            this.menu.querySelectorAll('.mobile-menu__panel').forEach(p => p.classList.remove('panel-underneath'));
-            if (this.mainPanel) this.mainPanel.classList.add('active');
+            // Clear all panel-underneath classes and show main as active
+            this.menu.querySelectorAll('.mobile-menu__panel').forEach(panel => {
+                panel.classList.remove('panel-underneath');
+            });
+            if (this.mainPanel) {
+                this.mainPanel.classList.add('active');
+            }
         } else {
-            const parentPanel = document.getElementById(`submenu-${previousPanel}`) || document.getElementById(previousPanel);
+            // Promote the parent panel from underneath to active
+            const parentPanel = document.getElementById(`submenu-${previousPanel}`) || 
+                                document.getElementById(previousPanel);
             if (parentPanel) {
                 parentPanel.classList.remove('panel-underneath');
                 parentPanel.classList.add('active');
             }
-            // Ensure main stays underneath
-            if (this.mainPanel) this.mainPanel.classList.add('panel-underneath');
+            // Keep main visible underneath if we're still at level-2
+            if (this.mainPanel) {
+                this.mainPanel.classList.add('panel-underneath');
+            }
         }
     }
 };
@@ -833,7 +870,7 @@ const SearchOverlayManager = {
     
     showInitialState() {
         if (this.resultsContainer) this.resultsContainer.style.display = 'none';
-        if (this.popularSection) this.popularSection.style.display = '';
+        if (this.popularSection) this.popularSection.style.display = 'block';
         if (this.noResults) this.noResults.style.display = 'none';
     },
     
@@ -973,35 +1010,21 @@ dropdowns.forEach(dropdown => {
 });
 
 // ==================== DESKTOP MEGA MENU HOVER ====================
+/**
+ * Desktop Mega Menu Controller
+ * Uses JavaScript to explicitly control which mega menu is visible,
+ * preventing z-index stacking issues where multiple menus overlap.
+ */
 const DesktopMegaMenuController = {
     activeDropdown: null,
     hideTimeout: null,
-    isCursorOverHeader: false,
-    isYielding: false,
-    currentTranslateY: 0,
+    headerLocked: false,
     
     init() {
         // Only apply on desktop
         if (window.innerWidth < 768) return;
         
         const dropdownItems = document.querySelectorAll('.nav-item.has-dropdown');
-        const headerElement = document.getElementById('header');
-        
-        // Track cursor over header area (including dropdowns which are children)
-        if (headerElement) {
-            headerElement.addEventListener('mouseenter', () => {
-                this.isCursorOverHeader = true;
-            });
-            
-            headerElement.addEventListener('mouseleave', () => {
-                this.isCursorOverHeader = false;
-                // If we leave the header area, reset the scroll yield immediately
-                // UNLESS we are currently yielding (scrolling down past limit)
-                if (!this.isYielding) {
-                    this.resetScrollPosition();
-                }
-            });
-        }
         
         dropdownItems.forEach(item => {
             const megaMenu = item.querySelector('.mega-menu');
@@ -1015,10 +1038,7 @@ const DesktopMegaMenuController = {
             // Mouse leaves nav item
             item.addEventListener('mouseleave', () => {
                 if (window.innerWidth < 768) return;
-                // Do not hide if yielding
-                if (!this.isYielding) {
-                    this.scheduleHide(item, megaMenu);
-                }
+                this.scheduleHide(item, megaMenu);
             });
             
             // Mouse enters mega menu - keep it visible
@@ -1031,10 +1051,7 @@ const DesktopMegaMenuController = {
                 // Mouse leaves mega menu - hide it
                 megaMenu.addEventListener('mouseleave', () => {
                     if (window.innerWidth < 768) return;
-                    // Do not hide if yielding
-                    if (!this.isYielding) {
-                         this.hideMenu(item, megaMenu);
-                    }
+                    this.hideMenu(item, megaMenu);
                 });
             }
         });
@@ -1059,85 +1076,42 @@ const DesktopMegaMenuController = {
             }
         }
         
-        // Disable lockHeader - we now use dynamic scroll yield handling
-        // this.lockHeader();
+        // Lock header to background
+        this.lockHeader();
         
         // Show this menu
         if (megaMenu) {
             item.classList.add('mega-menu-active');
             megaMenu.classList.add('mega-menu-visible');
             this.activeDropdown = item;
-            
-            // Reset translation on open
-            this.currentTranslateY = 0;
-            this.updateHeaderTransform(0);
         }
     },
     
-    // Core Logic: Handle Vertical Scroll
-    handleScroll(currentScrollY, lastScrollY) {
-        // If we are yielding, we continue yielding regardless of cursor (until scroll UP)
-        // If not yielding, we only start if cursor is over header
-        if (!this.isCursorOverHeader && !this.isYielding) {
-            // Ensure we are reset if not hovering
-            if (this.currentTranslateY !== 0) {
-                 this.resetScrollPosition();
-            }
-            return;
-        }
-
-        const delta = currentScrollY - lastScrollY;
-        const headerElement = document.getElementById('header');
+    lockHeader() {
+        // Disabled to prevent layout jumping/z-index issues on cart page
+        if (this.headerLocked) return;
         
-        if (!headerElement) return;
-
-        // SCROLL DOWN: Header yields (moves up with page)
-        if (delta > 0) {
-            this.isYielding = true; // Mark as yielding
-            // Decrease translateY (move up) by the scroll amount
-            this.currentTranslateY -= delta;
-            
-            // Apply transform strictly without transition for instant sync
-            // We use inline styles to override CSS transitions
-            headerElement.style.transition = 'none';
-            headerElement.style.transform = `translateY(${this.currentTranslateY}px)`;
-        } 
-        // SCROLL UP: Header fixes to top
-        else if (delta < 0) {
-             // Reset state immediately on scroll up
-             this.isYielding = false;
-             this.resetScrollPosition();
-             
-             // Check if we should close cleanly (if cursor left during yielding)
-             if (!this.isCursorOverHeader && this.activeDropdown) {
-                 const megaMenu = this.activeDropdown.querySelector('.mega-menu');
-                 this.scheduleHide(this.activeDropdown, megaMenu);
-             }
-        }
-    },
-    
-    updateHeaderTransform(y) {
-        const headerElement = document.getElementById('header');
-        if (!headerElement) return;
+        const scrollY = window.scrollY;
         
-        if (y === 0) {
-            headerElement.style.transform = '';
-            headerElement.style.transition = ''; // Restore CSS transition
-        } else {
-            headerElement.style.transform = `translateY(${y}px)`;
-        }
+        // Only lock if we are scrolled down a bit (to avoid jumping at very top)
+        // or effectively, just always lock it to current position so it moves up when scrolling
+        header.style.position = 'absolute';
+        header.style.top = `${scrollY}px`;
+        header.style.width = '100%';
+        this.headerLocked = true;
     },
     
-    resetScrollPosition() {
-        this.currentTranslateY = 0;
-        this.isYielding = false; // Clear yielding flag
-        const headerElement = document.getElementById('header');
-        if (headerElement) {
-            headerElement.style.transform = '';
-             // Allow a frame for transition to clear if strictly needed, 
-             // but usually removing style restores CSS class behavior
-            headerElement.style.transition = ''; 
-        }
+    unlockHeader() {
+        // Disabled
+        if (!this.headerLocked) return;
+        
+        header.style.position = '';
+        header.style.top = '';
+        header.style.width = '';
+        this.headerLocked = false;
+        
+        // Re-run checking for scroll state to ensure correct class
+        handleHeaderScroll();
     },
     
     scheduleHide(item, megaMenu) {
@@ -1154,7 +1128,7 @@ const DesktopMegaMenuController = {
         }
         if (this.activeDropdown === item) {
             this.activeDropdown = null;
-            this.resetScrollPosition();
+            this.unlockHeader();
         }
     },
     
@@ -1174,7 +1148,7 @@ const DesktopMegaMenuController = {
             }
         });
         this.activeDropdown = null;
-        this.resetScrollPosition();
+        this.unlockHeader();
     }
 };
 

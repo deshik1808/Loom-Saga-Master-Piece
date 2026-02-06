@@ -1680,7 +1680,7 @@ input[type="text"]::-ms-clear {
   letter-spacing: 0.2em;
   color: var(--color-black);
   text-align: center;
-  margin-bottom: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
   text-transform: uppercase;
   padding: 0 var(--spacing-sm);
 }
@@ -2602,7 +2602,7 @@ section.fashion-insights-section {
     aspect-ratio: unset !important;
     max-height: none !important;
   }
-  
+
   main .handloom-hero-image img {
     height: 100% !important;
     width: 100% !important;
@@ -8187,8 +8187,8 @@ section.fashion-insights-section {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--spacing-sm);
-  max-width: 600px;
+  gap: var(--spacing-xs);
+  max-width: 800px;
   margin: var(--spacing-sm) auto 0;
   flex-wrap: wrap;
 }
@@ -8200,12 +8200,17 @@ section.fashion-insights-section {
   color: var(--color-gold);
   text-transform: uppercase;
   letter-spacing: 0.1em;
+  display: block;
+  width: 100%;
+  text-align: center;
 }
 
 .search-overlay__popular-links {
   display: flex;
-  gap: var(--spacing-sm);
+  gap: var(--spacing-xs) var(--spacing-sm);
   flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
 }
 
 .search-overlay__popular-link {
@@ -8322,7 +8327,26 @@ section.fashion-insights-section {
   color: var(--color-text-light);
 }
 
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .search-overlay__panel {
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
 
+  .search-overlay__input-row {
+    flex-wrap: nowrap;
+  }
+
+  .search-overlay__results {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+
+  .search-overlay__popular {
+    flex-direction: column;
+    align-items: center;
+  }
+}
 
 /* ==================== EXPLORE SWIPER ==================== */
 .explore-swiper {
@@ -8340,7 +8364,6 @@ section.fashion-insights-section {
   display: block;
   width: 100%;
   height: 100%;
-  min-width: 0; /* Override global .product-card min-width to allow Swiper to size cards correctly */
 }
 
 .explore-swiper .product-card img {
@@ -8421,12 +8444,10 @@ section.fashion-insights-section {
 .cart-drawer {
   position: fixed;
   top: 0;
-  bottom: 0;
   right: 0;
   width: 100%;
   max-width: 450px;
-  height: 100vh; /* Fallback */
-  height: 100dvh; /* Dynamic viewport height */
+  height: 100vh;
   background-color: var(--color-bg); /* Use page background #fffff5 */
   z-index: 9999;
   transform: translateX(100%);
@@ -8434,13 +8455,6 @@ section.fashion-insights-section {
   box-shadow: -5px 0 30px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-}
-
-@media (max-width: 768px) {
-  .cart-drawer {
-    max-width: 100%;
-    width: 100%;
-  }
 }
 
 .cart-drawer.active {
@@ -8605,7 +8619,6 @@ section.fashion-insights-section {
 /* Footer */
 .cart-drawer-footer {
   padding: var(--spacing-md);
-  padding-bottom: calc(var(--spacing-md) + env(safe-area-inset-bottom, 20px));
   border-top: 1px solid rgba(0, 0, 0, 0.1);
   background-color: var(--color-bg);
 }
@@ -8956,6 +8969,7 @@ section.fashion-insights-section {
   }
 
   /* Panel System */
+  /* Panel System */
   .mobile-menu__panel {
     position: absolute;
     top: 0;
@@ -8968,33 +8982,48 @@ section.fashion-insights-section {
     overscroll-behavior: contain; /* Prevent scroll chaining to page below */
     -webkit-overflow-scrolling: touch;
     padding: 0 24px 40px;
+    
+    /* Child panels slide in from right */
     transform: translateX(100%);
-    /* Transition transform mostly, delay z-index to avoid clipping, animate filter for depth */
+    
+    /* Physical border defined to prevent 'ghost' text effect against white background */
+    border-left: 1px solid rgba(0,0,0,0.1) !important;
+    
+    /* Luxurious Apple-style spring easing */
     transition: 
-      transform 0.45s cubic-bezier(0.32, 0.72, 0, 1), 
-      visibility 0.45s,
-      z-index 0.01s 0.45s,
-      filter 0.4s ease;
+      transform 0.5s cubic-bezier(0.19, 1, 0.22, 1), 
+      visibility 0.5s,
+      z-index 0.01s 0.5s, /* Delay z-index drop until after slide */
+      filter 0.5s ease,
+      border-radius 0.5s ease;
+      
     visibility: hidden;
     z-index: 1;
-    /* Strong shadow always present (off-screen when hidden) to ensure edge visibility during slide-out */
-    box-shadow: -15px 0 30px rgba(0, 0, 0, 0.12);
+    
+    /* Strong shadow for distinct layering */
+    box-shadow: -20px 0 40px rgba(0, 0, 0, 0.15);
   }
 
-  /* Main panel stays in place */
+  /* Main panel - starts in position, just not visible */
   .mobile-menu__panel--main {
-    transform: translateX(0);
+    transform: translateX(0); /* Default Main is centered but hidden */
     visibility: hidden;
-    box-shadow: none; /* Main panel doesn't need side shadow */
+    box-shadow: none; /* Main panel is base, no shadow needed */
+    border-left: none !important;
   }
 
-  /* Active state - instant z-index rise */
+  /* Active state - instant z-index rise and reset filters */
   .mobile-menu__panel.active {
     transition: 
-      transform 0.45s cubic-bezier(0.32, 0.72, 0, 1), 
+      transform 0.5s cubic-bezier(0.19, 1, 0.22, 1), 
       visibility 0s,
       z-index 0s 0s,
-      filter 0.4s ease;
+      filter 0.5s ease,
+      border-radius 0.5s ease;
+      
+    filter: brightness(1) contrast(1);
+    border-radius: 0;
+    transform: translateX(0) scale(1);
   }
 
   .mobile-menu__panel--main.active {
@@ -9003,37 +9032,82 @@ section.fashion-insights-section {
     z-index: 2;
   }
 
-  /* Sub-panels slide in */
+  /* Level-2 panels - slide over main, revealing main underneath when going back */
+  .mobile-menu__panel--sub {
+    z-index: 3; /* Always above main when visible */
+  }
+
   .mobile-menu__panel--sub.active {
     transform: translateX(0);
     visibility: visible;
     z-index: 3;
-    /* Shadow already on base class */
   }
 
-  /* Level 3 Panels (Highest z-index) */
+  /* Level-3 panels - slide over level-2, revealing level-2 underneath when going back */
   .mobile-menu__panel--level3 {
-    z-index: 4;
+    z-index: 4; /* Always above level-2 when visible */
   }
-  
+
   .mobile-menu__panel--level3.active {
+    transform: translateX(0);
+    visibility: visible;
     z-index: 5;
   }
 
-  /* Critical: Keep parent panel visible underneath when child is active */
+  /* Keep parent panels visible underneath active children */
   .mobile-menu__panel.panel-underneath {
-    transform: translateX(0) !important;
+    /* Scale down and stay centered to create 'stack' depth */
+    transform: translateX(0) scale(0.93) !important;
+    transform-origin: center center;
     visibility: visible !important;
-    /* Subtle dimming to push parent to background */
-    filter: brightness(0.96);
+    
+    /* Dimming to push into background */
+    filter: brightness(0.95) contrast(0.95) grayscale(0.1);
+    
+    /* Round corners to look like a card in the stack */
+    border-radius: 12px;
+    overflow: hidden; 
   }
-  
+
   .mobile-menu__panel--main.panel-underneath {
-    z-index: 1 !important;
+    z-index: 1 !important; /* Below active child */
   }
-  
+
   .mobile-menu__panel--sub.panel-underneath {
-    z-index: 2 !important;
+    z-index: 2 !important; /* Below active level-3 */
+  }
+
+  /* Subgroup navigation button (styled like main links) */
+  .mobile-menu__subgroup-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 18px 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: var(--color-black);
+    text-align: left;
+    text-transform: uppercase;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobile-menu__subgroup-btn svg {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    color: var(--color-black);
+    stroke-width: 2;
+    transition: transform 0.2s ease;
+  }
+
+  .mobile-menu__subgroup-btn:active svg {
+    transform: translateX(3px);
   }
 
   .mobile-menu__content {
@@ -9103,7 +9177,7 @@ section.fashion-insights-section {
   /* Secondary Actions - Gap handled by padding, border removed to avoid conflict with item border */
   .mobile-menu__secondary {
     padding: 24px 0 20px;
-    border-top: none; 
+    border-top: none;
     margin-top: auto;
   }
 
@@ -9241,13 +9315,6 @@ section.fashion-insights-section {
 
   .mobile-menu__subgroup {
     margin-bottom: 24px;
-  }
-
-  /* Styles for the button that replaces the inline subgroup list */
-  .mobile-menu__subgroup-btn {
-    width: 100%;
-    justify-content: space-between;
-    text-transform: uppercase;
   }
 
   .mobile-menu__subgroup-title {
@@ -9775,7 +9842,9 @@ section.fashion-insights-section {
 /* 1. Hero → Intro: 120px Gap */
 #hero {
   padding-bottom: 0 !important; /* Padding was absorbed/ineffective */
-  margin-bottom: var(--section-gap) !important; /* Use variable to sync with mobile reduction */
+  margin-bottom: var(
+    --section-gap
+  ) !important; /* Use variable to sync with mobile reduction */
   /* Ensure height calculations don't collapse */
   display: block !important;
   position: relative !important;
