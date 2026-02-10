@@ -2975,3 +2975,42 @@ const MobileFooterAccordion = {
     }
 };
 
+// ==================== WOOCOMMERCE FEATURED PRODUCT (PHASE 2) ====================
+document.addEventListener('DOMContentLoaded', function () {
+    const container = document.getElementById('wcFeaturedProduct');
+    if (!container) return;
+
+    fetch('/api/products')
+        .then(function (res) {
+            if (!res.ok) throw new Error('Failed to fetch');
+            return res.json();
+        })
+        .then(function (products) {
+            if (!products || !products.length) return;
+
+            var product = products[0];
+            var image = product.primaryImage;
+            var title = product.title;
+            var price = product.price;
+            var availability = product.availability;
+
+            var imageHTML = image
+                ? '<img src="' + image + '" alt="' + title + '" style="width:100%;display:block;aspect-ratio:3/4;object-fit:cover;" />'
+                : '';
+
+            var ctaHTML = availability === 'instock'
+                ? '<span style="display:inline-block;margin-top:16px;padding:12px 32px;border:1px solid #2c2c2c;font-family:inherit;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:#2c2c2c;cursor:default;">View Product</span>'
+                : '<span style="display:inline-block;margin-top:16px;font-family:inherit;font-size:12px;letter-spacing:1.5px;color:#999;text-transform:uppercase;">Currently Unavailable</span>';
+
+            container.innerHTML =
+                '<div style="max-width:420px;margin:60px auto;padding:0 20px;text-align:center;">' +
+                    imageHTML +
+                    '<h3 style="margin:20px 0 8px;font-family:\'Cormorant Garamond\',serif;font-size:22px;font-weight:400;letter-spacing:1px;color:#2c2c2c;text-transform:uppercase;">' + title + '</h3>' +
+                    '<span style="font-family:\'Roboto\',sans-serif;font-size:14px;letter-spacing:1px;color:#555;">₹' + price + '</span>' +
+                    '<div>' + ctaHTML + '</div>' +
+                '</div>';
+        })
+        .catch(function () {
+            // Fail silently — container stays empty
+        });
+});
