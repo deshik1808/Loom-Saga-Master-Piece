@@ -35,17 +35,35 @@ class ProductService {
   }
 
   /**
-   * Load products from JSON
+   * Load products from WordPress API
    * @private
    */
   async loadProducts() {
     try {
-      const response = await fetch('/data/products.json');
+      // Fetch from Vercel Serverless Function proxying WooCommerce
+      const response = await fetch('/api/products');
       const data = await response.json();
+      
+      // The API returns { products: [...] }
       this.products = data.products || [];
+      
+      // If no products, fallback to local for safety during development
+      if (this.products.length === 0) {
+        console.warn('ProductService: No products from API, checking local fallback');
+        const localResponse = await fetch('/data/products.json');
+        const localData = await localResponse.json();
+        this.products = localData.products || [];
+      }
     } catch (error) {
-      console.error('ProductService: Failed to load products', error);
-      this.products = [];
+      console.error('ProductService: Failed to load products from API', error);
+      // Fallback to local JSON on error
+      try {
+        const response = await fetch('/data/products.json');
+        const data = await response.json();
+        this.products = data.products || [];
+      } catch (localError) {
+        this.products = [];
+      }
     }
   }
 

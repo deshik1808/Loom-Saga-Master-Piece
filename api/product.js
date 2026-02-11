@@ -5,10 +5,15 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: "Server configuration error" });
   }
 
+  const productId = req.query.id;
+  if (!productId) {
+    return res.status(400).json({ error: "Missing product ID" });
+  }
+
   const credentials = Buffer.from(`${WC_CONSUMER_KEY}:${WC_CONSUMER_SECRET}`).toString("base64");
 
   try {
-    const response = await fetch(`${WC_API_URL}/wp-json/wc/v3/products`, {
+    const response = await fetch(`${WC_API_URL}/wp-json/wc/v3/products/${productId}`, {
       method: "GET",
       headers: {
         Authorization: `Basic ${credentials}`,
@@ -16,12 +21,12 @@ export default async function handler(req, res) {
     });
 
     if (!response.ok) {
-      return res.status(500).json({ error: "Failed to fetch products" });
+      return res.status(response.status).json({ error: "Failed to fetch product" });
     }
 
-    const wcProducts = await response.json();
+    const product = await response.json();
 
-    const products = wcProducts.map((product) => ({
+    const mapped = {
       id: product.id.toString(),
       name: product.name,
       slug: product.slug,
@@ -33,7 +38,6 @@ export default async function handler(req, res) {
       images: product.images?.map(img => img.src) || [],
       category: product.categories?.[0]?.name || "Uncategorized",
       featured: product.featured || false,
-      newArrival: product.date_created > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
       inStock: product.stock_status === "instock",
       attributes: {
         color: product.attributes?.find(a => a.name.toLowerCase() === "color")?.options?.[0] || null,
@@ -42,9 +46,9 @@ export default async function handler(req, res) {
       },
       tags: product.tags?.map(t => t.name) || [],
       checkoutUrl: `${WC_API_URL}/cart/?add-to-cart=${product.id}`
-    }));
+    };
 
-    return res.status(200).json({ products });
+    return res.status(200).json(mapped);
   } catch (error) {
     return res.status(500).json({ error: "Internal server error" });
   }

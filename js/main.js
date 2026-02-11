@@ -2985,32 +2985,131 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!res.ok) throw new Error('Failed to fetch');
             return res.json();
         })
-        .then(function (products) {
+        .then(function (data) {
+            // API returns { products: [...] }
+            const products = data.products;
             if (!products || !products.length) return;
 
             var product = products[0];
             var image = product.primaryImage;
-            var title = product.title;
+            var name = product.name;
             var price = product.price;
-            var availability = product.availability;
+            var inStock = product.inStock;
 
             var imageHTML = image
-                ? '<img src="' + image + '" alt="' + title + '" style="width:100%;display:block;aspect-ratio:3/4;object-fit:cover;" />'
+                ? '<a href="product-detail.html?id=' + product.id + '"><img src="' + image + '" alt="' + name + '" style="width:100%;display:block;aspect-ratio:3/4;object-fit:cover;" /></a>'
                 : '';
 
-            var ctaHTML = availability === 'instock'
-                ? '<span style="display:inline-block;margin-top:16px;padding:12px 32px;border:1px solid #2c2c2c;font-family:inherit;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:#2c2c2c;cursor:default;">View Product</span>'
+            var ctaHTML = inStock
+                ? '<a href="product-detail.html?id=' + product.id + '" style="display:inline-block;margin-top:16px;padding:12px 32px;border:1px solid #2c2c2c;font-family:inherit;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:#2c2c2c;text-decoration:none;">View Product</a>'
                 : '<span style="display:inline-block;margin-top:16px;font-family:inherit;font-size:12px;letter-spacing:1.5px;color:#999;text-transform:uppercase;">Currently Unavailable</span>';
 
             container.innerHTML =
                 '<div style="max-width:420px;margin:60px auto;padding:0 20px;text-align:center;">' +
+                    '<h2 style="font-family:\'Pinyon Script\', cursive; font-size: 32px; margin-bottom: 20px; color: #b8860b;">Latest from the Loom</h2>' +
                     imageHTML +
-                    '<h3 style="margin:20px 0 8px;font-family:\'Cormorant Garamond\',serif;font-size:22px;font-weight:400;letter-spacing:1px;color:#2c2c2c;text-transform:uppercase;">' + title + '</h3>' +
-                    '<span style="font-family:\'Roboto\',sans-serif;font-size:14px;letter-spacing:1px;color:#555;">₹' + price + '</span>' +
+                    '<h3 style="margin:20px 0 8px;font-family:\'Cormorant Garamond\',serif;font-size:22px;font-weight:400;letter-spacing:1px;color:#2c2c2c;text-transform:uppercase;">' + name + '</h3>' +
+                    '<span style="font-family:\'Roboto\',sans-serif;font-size:14px;letter-spacing:1px;color:#555;">₹' + price.toLocaleString('en-IN') + '</span>' +
                     '<div>' + ctaHTML + '</div>' +
                 '</div>';
         })
-        .catch(function () {
-            // Fail silently — container stays empty
+        .catch(function (err) {
+            console.error('Featured Product Load Error:', err);
+        });
+});
+
+// ==================== PDP DYNAMIC PRODUCT LOADING (PHASE 3) ====================
+document.addEventListener('DOMContentLoaded', function () {
+    // Only run on product-detail page
+    var titleEl = document.getElementById('pdpTitle');
+    if (!titleEl) return;
+
+    // 1. Read product ID from URL query string
+    var params = new URLSearchParams(window.location.search);
+    var productId = params.get('id');
+
+    // 2. If product ID is missing, stop execution
+    if (!productId) return;
+
+    // 3. Fetch product data
+    fetch('/api/product?id=' + encodeURIComponent(productId))
+        .then(function (res) {
+            if (!res.ok) throw new Error('Failed to fetch product');
+            return res.json();
+        })
+        .then(function (product) {
+            if (!product) return;
+
+            // 4a. Replace title (WordPress API returns 'name')
+            titleEl.textContent = product.name;
+
+            // 4b. Replace price
+            var priceEl = document.getElementById('pdpPrice');
+            if (priceEl) {
+                var formatted = product.price.toLocaleString('en-IN');
+                priceEl.textContent = 'Rs.' + formatted + '/-';
+            }
+
+            // 4c. Replace images
+            var images = product.images || [];
+            var img0 = document.getElementById('pdpImage0');
+            var img1 = document.getElementById('pdpImage1');
+            var img2 = document.getElementById('pdpImage2');
+
+            if (img0 && images[0]) {
+                img0.src = images[0];
+                img0.alt = product.name + ' - View 1';
+            }
+            if (img1 && images[1]) {
+                img1.src = images[1];
+                img1.alt = product.name + ' - View 2';
+            }
+            if (img2 && images[2]) {
+                img2.src = images[2];
+                img2.alt = product.name + ' - View 3';
+            }
+
+            // 4d. Update product-info data attributes (for cart/wishlist)
+            var productInfo = document.querySelector('.product-info');
+            if (productInfo) {
+                productInfo.dataset.productId = product.id;
+                productInfo.dataset.productName = product.name;
+                productInfo.dataset.productPrice = product.price;
+                if (images[0]) {
+                    productInfo.dataset.productImage = images[0];
+                }
+            }
+
+            // 5. Checkout Redirect Logic (Senior Move: Redirect to WooCommerce)
+            var addBtn = document.getElementById('addToCartBtn');
+            if (addBtn) {
+                if (product.inStock === false) {
+                    addBtn.textContent = 'OUT OF STOCK';
+                    addBtn.disabled = true;
+                    addBtn.style.opacity = '0.4';
+                } else {
+                    // Update button text to reflect direct checkout intent
+                    addBtn.textContent = 'BUY NOW';
+                    
+                    addBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        
+                        // Use the checkoutUrl provided by the API
+                        var checkoutUrl = product.checkoutUrl;
+                        
+                        if (checkoutUrl) {
+                            // Show a loading state on the button
+                            addBtn.textContent = 'REDIRECTING...';
+                            window.location.href = checkoutUrl;
+                        } else {
+                            console.error('Checkout URL missing');
+                        }
+                    });
+                }
+            }
+        })
+        .catch(function (err) {
+            console.error('PDP Load Error:', err);
+            // Fail silently — placeholders remain
         });
 });
