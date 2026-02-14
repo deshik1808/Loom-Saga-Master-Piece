@@ -1,7 +1,9 @@
 /**
  * ProductService - Data Access Layer for Loom Saga Products
- * @description Provides methods to fetch, filter, and search products from JSON data.
- * @version 1.0.0
+ * @description Provides methods to fetch, filter, and search products.
+ *   Primary source: WooCommerce via /api/products
+ *   Fallback: local /data/products.json
+ * @version 2.0.0
  */
 
 class ProductService {
@@ -12,6 +14,7 @@ class ProductService {
     this.filters = {};
     this.isLoaded = false;
     this.loadPromise = null;
+    this.dataSource = 'none'; // 'api' | 'local' | 'none'
   }
 
   /**
@@ -28,43 +31,142 @@ class ProductService {
       this.loadCollections()
     ]).then(() => {
       this.isLoaded = true;
-      console.log('ProductService: Data loaded successfully');
+      console.log(`ProductService: ${this.products.length} products loaded from ${this.dataSource}`);
     });
 
     return this.loadPromise;
   }
 
   /**
-   * Load products from WordPress API
+   * Load products from WordPress via Vercel serverless function
+   * Falls back to local JSON if API fails
    * @private
    */
   async loadProducts() {
     try {
       // Fetch from Vercel Serverless Function proxying WooCommerce
       const response = await fetch('/api/products');
+      if (!response.ok) throw new Error(`API returned ${response.status}`);
+
       const data = await response.json();
-      
-      // The API returns { products: [...] }
-      this.products = data.products || [];
-      
-      // If no products, fallback to local for safety during development
-      if (this.products.length === 0) {
-        console.warn('ProductService: No products from API, checking local fallback');
-        const localResponse = await fetch('/data/products.json');
-        const localData = await localResponse.json();
-        this.products = localData.products || [];
+      const apiProducts = data.products || [];
+
+      if (apiProducts.length > 0) {
+        // Normalise API products so the rest of the code can use the same shape
+        this.products = apiProducts.map(p => this._normalizeApiProduct(p));
+        this.dataSource = 'api';
+        return;
       }
+
+      console.warn('ProductService: WooCommerce returned 0 products, falling back to local JSON');
     } catch (error) {
-      console.error('ProductService: Failed to load products from API', error);
-      // Fallback to local JSON on error
-      try {
-        const response = await fetch('/data/products.json');
-        const data = await response.json();
-        this.products = data.products || [];
-      } catch (localError) {
-        this.products = [];
-      }
+      console.warn('ProductService: API failed, falling back to local JSON', error.message);
     }
+
+    // Fallback to local JSON
+    try {
+      const response = await fetch('/data/products.json');
+      const data = await response.json();
+      this.products = (data.products || []).map(p => this._normalizeLocalProduct(p));
+      this.dataSource = 'local';
+    } catch (localError) {
+      console.error('ProductService: Local fallback also failed', localError);
+      this.products = [];
+      this.dataSource = 'none';
+    }
+  }
+
+  /**
+   * Normalise a product from the WooCommerce API proxy
+   * so the rest of our code has a single consistent shape.
+   * @private
+   */
+  _normalizeApiProduct(p) {
+    return {
+      // ── Identity ──
+      id: String(p.id),
+      sku: p.sku || '',
+      slug: p.slug || '',
+      name: p.name || '',
+
+      // ── Pricing ──
+      price: parseFloat(p.price) || 0,
+      regularPrice: parseFloat(p.regularPrice) || 0,
+      salePrice: parseFloat(p.salePrice) || 0,
+
+      // ── Text ──
+      description: p.description || '',
+      shortDescription: p.shortDescription || '',
+
+      // ── Media ──
+      images: {
+        primary: p.primaryImage || '',
+        gallery: p.images || [],
+        placeholder: p.primaryImage || 'https://placehold.co/400x500/e0e0e0/666?text=No+Image'
+      },
+
+      // ── Taxonomy ──
+      category: p.category || 'uncategorized',      // primary category slug
+      categoryName: p.categoryName || 'Uncategorized',
+      categories: p.categories || [],                  // [{name,slug}, …]
+      tags: p.tags || [],
+
+      // ── Stock ──
+      inStock: p.inStock !== false,
+      stockQuantity: p.stockQuantity ?? null,           // null = unlimited
+      manageStock: p.manageStock || false,
+
+      // ── Flags ──
+      featured: p.featured || false,
+      newArrival: p.newArrival || false,
+
+      // ── Attributes (for filters) ──
+      attributes: {
+        color: typeof p.attributes?.color === 'string'
+          ? { name: p.attributes.color, hex: null }
+          : (p.attributes?.color || null),
+        fabric: p.attributes?.fabric || null,
+        occasion: p.attributes?.occasion || [],
+        raw: p.attributes?.raw || []
+      },
+
+      // ── Checkout ──
+      checkoutUrl: p.checkoutUrl || ''
+    };
+  }
+
+  /**
+   * Normalise a product from data/products.json
+   * @private
+   */
+  _normalizeLocalProduct(p) {
+    return {
+      id: String(p.id),
+      sku: p.sku || '',
+      slug: p.slug || '',
+      name: p.name || '',
+      price: p.price || 0,
+      regularPrice: p.compareAtPrice || 0,
+      salePrice: 0,
+      description: p.description || '',
+      shortDescription: p.shortDescription || '',
+      images: {
+        primary: p.images?.primary || '',
+        gallery: p.images?.gallery || [],
+        placeholder: p.images?.placeholder || ''
+      },
+      category: p.category || 'uncategorized',
+      categoryName: '',
+      categories: (p.collections || []).map(s => ({ slug: s, name: s })),
+      tags: p.tags || [],
+      inStock: p.inStock !== false,
+      stockQuantity: p.quantity ?? null,
+      manageStock: p.quantity != null,
+      featured: p.featured || false,
+      newArrival: p.newArrival || false,
+      attributes: p.attributes || {},
+      checkoutUrl: ''
+    };
   }
 
   /**
@@ -101,92 +203,74 @@ class ProductService {
 
   // ==================== PRODUCT METHODS ====================
 
-  /**
-   * Get all products
-   * @returns {Array} All products
-   */
+  /** Get all products */
   getAllProducts() {
     return this.products;
   }
 
-  /**
-   * Get a product by ID
-   * @param {string} id - Product ID
-   * @returns {Object|null} Product or null if not found
-   */
+  /** Get a product by ID */
   getProductById(id) {
-    return this.products.find(p => p.id === id) || null;
+    return this.products.find(p => String(p.id) === String(id)) || null;
   }
 
-  /**
-   * Get a product by slug
-   * @param {string} slug - Product slug
-   * @returns {Object|null} Product or null if not found
-   */
+  /** Get a product by slug */
   getProductBySlug(slug) {
     return this.products.find(p => p.slug === slug) || null;
   }
 
   /**
-   * Get products by category
-   * @param {string} categoryId - Category ID
-   * @returns {Array} Products in category
+   * Get products by category slug.
+   * Checks the primary category AND the full categories array so a product
+   * assigned to multiple WooCommerce categories will appear on every page.
    */
-  getProductsByCategory(categoryId) {
-    return this.products.filter(p => p.category === categoryId);
+  getProductsByCategory(categorySlug) {
+    return this.products.filter(p =>
+      p.category === categorySlug ||
+      p.categories.some(c => c.slug === categorySlug)
+    );
   }
 
-  /**
-   * Get featured products
-   * @param {number} limit - Maximum number of products to return
-   * @returns {Array} Featured products
-   */
+  /** Get featured products */
   getFeaturedProducts(limit = 6) {
     return this.products.filter(p => p.featured).slice(0, limit);
   }
 
-  /**
-   * Get new arrival products
-   * @param {number} limit - Maximum number of products to return
-   * @returns {Array} New arrival products
-   */
+  /** Get new arrival products */
   getNewArrivals(limit = 8) {
     return this.products.filter(p => p.newArrival).slice(0, limit);
   }
 
-  /**
-   * Get related products
-   * @param {string} productId - Current product ID
-   * @param {number} limit - Maximum number of products to return
-   * @returns {Array} Related products
-   */
+  /** Get related products */
   getRelatedProducts(productId, limit = 4) {
     const product = this.getProductById(productId);
-    if (!product || !product.relatedProducts) return [];
+    if (!product) return [];
 
-    return product.relatedProducts
-      .map(id => this.getProductById(id))
-      .filter(p => p !== null)
+    // If the product has explicit relatedProducts, use those
+    if (product.relatedProducts && product.relatedProducts.length > 0) {
+      return product.relatedProducts
+        .map(id => this.getProductById(id))
+        .filter(p => p !== null)
+        .slice(0, limit);
+    }
+
+    // Otherwise, return products from the same category (excluding self)
+    return this.products
+      .filter(p => p.id !== product.id && p.category === product.category)
       .slice(0, limit);
   }
 
   /**
    * Filter products based on criteria
-   * @param {Object} filters - Filter criteria
-   * @param {string} [filters.category] - Category ID
-   * @param {string[]} [filters.colors] - Array of color IDs
-   * @param {string[]} [filters.fabrics] - Array of fabric IDs
-   * @param {string[]} [filters.occasions] - Array of occasion IDs
-   * @param {Object} [filters.priceRange] - Price range {min, max}
-   * @param {boolean} [filters.inStock] - Only in-stock products
-   * @returns {Array} Filtered products
    */
   filterProducts(filters = {}) {
     let results = [...this.products];
 
-    // Filter by category
+    // Filter by category (checks all assigned categories)
     if (filters.category) {
-      results = results.filter(p => p.category === filters.category);
+      results = results.filter(p =>
+        p.category === filters.category ||
+        p.categories.some(c => c.slug === filters.category)
+      );
     }
 
     // Filter by subcategory
@@ -197,8 +281,10 @@ class ProductService {
     // Filter by colors
     if (filters.colors && filters.colors.length > 0) {
       results = results.filter(p => {
-        const productColor = p.attributes?.color?.name?.toLowerCase();
-        return filters.colors.some(c => 
+        const productColor = (typeof p.attributes?.color === 'object')
+          ? p.attributes?.color?.name?.toLowerCase()
+          : (p.attributes?.color || '').toLowerCase();
+        return filters.colors.some(c =>
           productColor?.includes(c.toLowerCase()) ||
           p.tags?.some(tag => tag.toLowerCase() === c.toLowerCase())
         );
@@ -208,7 +294,9 @@ class ProductService {
     // Filter by fabrics
     if (filters.fabrics && filters.fabrics.length > 0) {
       results = results.filter(p => {
-        const fabric = p.attributes?.fabric?.toLowerCase() || '';
+        const fabric = (typeof p.attributes?.fabric === 'string')
+          ? p.attributes.fabric.toLowerCase()
+          : '';
         return filters.fabrics.some(f => fabric.includes(f.toLowerCase()));
       });
     }
@@ -217,7 +305,7 @@ class ProductService {
     if (filters.occasions && filters.occasions.length > 0) {
       results = results.filter(p => {
         const occasions = p.attributes?.occasion || [];
-        return filters.occasions.some(o => 
+        return filters.occasions.some(o =>
           occasions.some(occ => occ.toLowerCase() === o.toLowerCase())
         );
       });
@@ -236,7 +324,8 @@ class ProductService {
 
     // Filter by collection
     if (filters.collection) {
-      results = results.filter(p => 
+      results = results.filter(p =>
+        p.categories?.some(c => c.slug === filters.collection) ||
         p.collections?.includes(filters.collection)
       );
     }
@@ -246,16 +335,13 @@ class ProductService {
 
   /**
    * Sort products
-   * @param {Array} products - Products to sort
-   * @param {string} sortBy - Sort criteria: 'newest', 'price-low', 'price-high', 'name-az', 'name-za', 'rating'
-   * @returns {Array} Sorted products
    */
   sortProducts(products, sortBy = 'newest') {
     const sorted = [...products];
 
     switch (sortBy) {
       case 'newest':
-        return sorted.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        return sorted.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
       case 'price-low':
         return sorted.sort((a, b) => a.price - b.price);
       case 'price-high':
@@ -273,8 +359,6 @@ class ProductService {
 
   /**
    * Search products by query
-   * @param {string} query - Search query
-   * @returns {Array} Matching products
    */
   searchProducts(query) {
     if (!query || query.trim().length < 2) return [];
@@ -282,14 +366,18 @@ class ProductService {
     const searchTerms = query.toLowerCase().trim().split(/\s+/);
 
     return this.products.filter(product => {
+      const colorName = typeof product.attributes?.color === 'object'
+        ? product.attributes.color.name
+        : product.attributes?.color;
+
       const searchableText = [
         product.name,
         product.shortDescription,
         product.description,
         product.category,
-        product.subcategory,
+        product.categoryName,
         ...(product.tags || []),
-        product.attributes?.color?.name,
+        colorName,
         product.attributes?.fabric,
         ...(product.attributes?.occasion || [])
       ].filter(Boolean).join(' ').toLowerCase();
@@ -300,74 +388,36 @@ class ProductService {
 
   // ==================== CATEGORY METHODS ====================
 
-  /**
-   * Get all categories
-   * @returns {Array} All categories
-   */
   getAllCategories() {
     return this.categories;
   }
 
-  /**
-   * Get a category by ID
-   * @param {string} id - Category ID
-   * @returns {Object|null} Category or null
-   */
   getCategoryById(id) {
     return this.categories.find(c => c.id === id) || null;
   }
 
-  /**
-   * Get a category by slug
-   * @param {string} slug - Category slug
-   * @returns {Object|null} Category or null
-   */
   getCategoryBySlug(slug) {
     return this.categories.find(c => c.slug === slug) || null;
   }
 
-  /**
-   * Get featured categories
-   * @returns {Array} Featured categories
-   */
   getFeaturedCategories() {
     return this.categories.filter(c => c.featured);
   }
 
   // ==================== COLLECTION METHODS ====================
 
-  /**
-   * Get all collections
-   * @returns {Array} All collections
-   */
   getAllCollections() {
     return this.collections;
   }
 
-  /**
-   * Get a collection by ID
-   * @param {string} id - Collection ID
-   * @returns {Object|null} Collection or null
-   */
   getCollectionById(id) {
     return this.collections.find(c => c.id === id) || null;
   }
 
-  /**
-   * Get a collection by slug
-   * @param {string} slug - Collection slug
-   * @returns {Object|null} Collection or null
-   */
   getCollectionBySlug(slug) {
     return this.collections.find(c => c.slug === slug) || null;
   }
 
-  /**
-   * Get products in a collection
-   * @param {string} collectionId - Collection ID
-   * @param {number} limit - Maximum number of products
-   * @returns {Array} Products in collection
-   */
   getProductsInCollection(collectionId, limit = null) {
     const collection = this.getCollectionById(collectionId);
     if (!collection) return [];
@@ -383,10 +433,6 @@ class ProductService {
     return products;
   }
 
-  /**
-   * Get collections to show on homepage
-   * @returns {Array} Homepage collections
-   */
   getHomepageCollections() {
     return this.collections
       .filter(c => c.showOnHomepage)
@@ -395,22 +441,13 @@ class ProductService {
 
   // ==================== FILTER METHODS ====================
 
-  /**
-   * Get all available filters
-   * @returns {Object} All filter options
-   */
   getFilters() {
     return this.filters;
   }
 
-  /**
-   * Get filter options for a category
-   * @param {string} categoryId - Category ID
-   * @returns {Object} Filter options with counts
-   */
   getFilterOptionsForCategory(categoryId) {
     const products = this.getProductsByCategory(categoryId);
-    
+
     return {
       colors: this.getColorCounts(products),
       fabrics: this.getFabricCounts(products),
@@ -419,14 +456,13 @@ class ProductService {
     };
   }
 
-  /**
-   * Get color counts for products
-   * @private
-   */
+  /** @private */
   getColorCounts(products) {
     const counts = {};
     products.forEach(p => {
-      const color = p.attributes?.color?.name;
+      const color = typeof p.attributes?.color === 'object'
+        ? p.attributes.color.name
+        : p.attributes?.color;
       if (color) {
         counts[color] = (counts[color] || 0) + 1;
       }
@@ -434,10 +470,7 @@ class ProductService {
     return counts;
   }
 
-  /**
-   * Get fabric counts for products
-   * @private
-   */
+  /** @private */
   getFabricCounts(products) {
     const counts = {};
     products.forEach(p => {
@@ -449,10 +482,7 @@ class ProductService {
     return counts;
   }
 
-  /**
-   * Get occasion counts for products
-   * @private
-   */
+  /** @private */
   getOccasionCounts(products) {
     const counts = {};
     products.forEach(p => {
@@ -463,14 +493,11 @@ class ProductService {
     return counts;
   }
 
-  /**
-   * Get price range counts for products
-   * @private
-   */
+  /** @private */
   getPriceRangeCounts(products) {
     const ranges = this.filters.priceRange || [];
     const counts = {};
-    
+
     ranges.forEach(range => {
       const min = range.min || 0;
       const max = range.max || Infinity;
@@ -482,28 +509,14 @@ class ProductService {
 
   // ==================== UTILITY METHODS ====================
 
-  /**
-   * Format price for display
-   * @param {number} price - Price in INR
-   * @returns {string} Formatted price
-   */
   formatPrice(price) {
     return `₹${price.toLocaleString('en-IN')}`;
   }
 
-  /**
-   * Get product count
-   * @returns {number} Total product count
-   */
   getProductCount() {
     return this.products.length;
   }
 
-  /**
-   * Parse URL filters from query string
-   * @param {string} queryString - URL query string
-   * @returns {Object} Parsed filters
-   */
   parseUrlFilters(queryString) {
     const params = new URLSearchParams(queryString);
     const filters = {};
@@ -514,7 +527,7 @@ class ProductService {
     if (params.has('fabric')) filters.fabrics = params.getAll('fabric');
     if (params.has('occasion')) filters.occasions = params.getAll('occasion');
     if (params.has('collection')) filters.collection = params.get('collection');
-    
+
     if (params.has('minPrice') || params.has('maxPrice')) {
       filters.priceRange = {
         min: parseInt(params.get('minPrice')) || 0,
@@ -527,11 +540,6 @@ class ProductService {
     return filters;
   }
 
-  /**
-   * Build URL from filters
-   * @param {Object} filters - Filter object
-   * @returns {string} URL query string
-   */
   buildFilterUrl(filters) {
     const params = new URLSearchParams();
 

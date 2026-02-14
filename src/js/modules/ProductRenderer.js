@@ -1,33 +1,67 @@
 /**
  * ProductRenderer - Dynamic Product Card Rendering
- * @description Renders product cards from JSON data into DOM containers
- * @version 1.0.0
+ * @description Renders product cards from WooCommerce-sourced data into DOM
+ * @version 2.0.0
  */
 
 class ProductRenderer {
   /**
-   * Render a single product card
-   * @param {Object} product - Product data object
+   * Get an optimized image URL using Statically.io for remote WordPress images
+   * @param {string} url - Original image URL
+   * @param {number} width - Target width
+   * @param {number} quality - Image quality (1-100)
+   * @returns {string} Optimized URL
+   */
+  static getOptimizedImage(url, width = 800, quality = 75) {
+    if (!url) return 'https://placehold.co/800x1000/e0e0e0/666?text=No+Image';
+
+    // 1. Handle placeholders
+    if (url.includes('placehold.co')) return url;
+
+    // 2. Detect Remote WordPress URLs (the source of the slowness)
+    const isRemote = url.startsWith('http') && !url.includes(window.location.hostname);
+
+    if (isRemote) {
+      // Use Statically.io - a free, high-performance CDN for WordPress/GitHub
+      const cleanUrl = url.replace(/^https?:\/\//, '');
+      return `https://p.statically.io/img/${cleanUrl}?w=${width}&f=webp&q=${quality}`;
+    }
+
+    // 3. Local images - return as is
+    return url;
+  }
+
+  /**
+   * Render a single product card.
+   * Shows "Out of Stock" badge when product is not in stock.
+   * @param {Object} product - Normalised product data object
    * @param {Object} options - Rendering options
-   * @param {boolean} [options.showWishlist=true] - Show wishlist button
-   * @param {boolean} [options.lazy=true] - Use lazy loading for images
    * @returns {string} HTML string for product card
    */
   static renderCard(product, options = {}) {
     const { showWishlist = true, lazy = true } = options;
-    
-    const imageUrl = product.images?.placeholder || product.images?.primary || 'https://placehold.co/400x500/e0e0e0/666?text=No+Image';
+
+    const primaryUrl = product.images?.primary || product.primaryImage || product.images?.placeholder;
+    const imageUrl = this.getOptimizedImage(primaryUrl, 600);
     const loadingAttr = lazy ? 'loading="lazy"' : 'loading="eager"';
+    const isOutOfStock = product.inStock === false;
 
     return `
-      <article class="product-card" 
+      <article class="product-card${isOutOfStock ? ' product-card--out-of-stock' : ''}" 
         data-product-id="${product.id}" 
         data-product-name="${this.escapeHtml(product.name)}" 
         data-product-price="${product.price}" 
-        data-product-image="${imageUrl}">
+        data-product-image="${imageUrl}"
+        data-stock-quantity="${product.stockQuantity ?? ''}"
+        data-in-stock="${product.inStock !== false}">
         <a href="product-detail.html?id=${product.id}" class="product-card-link">
-          <div class="product-card-image">
-            <img src="${imageUrl}" alt="${this.escapeHtml(product.name)}" ${loadingAttr}>
+          <div class="product-card-image luxury-shimmer">
+            <img src="${imageUrl}" 
+                 alt="${this.escapeHtml(product.name)}" 
+                 ${loadingAttr}
+                 onload="this.parentElement.classList.remove('luxury-shimmer')">
+            ${isOutOfStock ? '<span class="product-badge product-badge--oos">Out of Stock</span>' : ''}
+            ${product.salePrice && product.salePrice > 0 ? '<span class="product-badge product-badge--sale">Sale</span>' : ''}
             ${showWishlist ? this.renderWishlistButton() : ''}
           </div>
           <div class="product-card-info">
@@ -54,19 +88,12 @@ class ProductRenderer {
 
   /**
    * Render multiple product cards into a container
-   * @param {Array} products - Array of product objects
-   * @param {HTMLElement|string} container - Container element or selector
-   * @param {Object} options - Rendering options
-   * @param {boolean} [options.append=false] - Append instead of replace
-   * @param {boolean} [options.animate=true] - Add stagger animation class
-   * @param {string} [options.emptyMessage] - Message when no products
    */
   static renderGrid(products, container, options = {}) {
     const { append = false, animate = true, emptyMessage = 'No products found.' } = options;
 
-    // Get container element
-    const containerEl = typeof container === 'string' 
-      ? document.querySelector(container) 
+    const containerEl = typeof container === 'string'
+      ? document.querySelector(container)
       : container;
 
     if (!containerEl) {
@@ -87,14 +114,12 @@ class ProductRenderer {
     // Generate HTML
     const html = products.map(p => this.renderCard(p)).join('');
 
-    // Update container
     if (append) {
       containerEl.insertAdjacentHTML('beforeend', html);
     } else {
       containerEl.innerHTML = html;
     }
 
-    // Add animation class
     if (animate) {
       containerEl.classList.add('product-grid-animated');
     }
@@ -105,11 +130,9 @@ class ProductRenderer {
 
   /**
    * Render a horizontal product card (for search results)
-   * @param {Object} product - Product data
-   * @returns {string} HTML string
    */
   static renderHorizontalCard(product) {
-    const imageUrl = product.images?.thumbnail || product.images?.placeholder || product.images?.primary;
+    const imageUrl = product.images?.thumbnail || product.images?.placeholder || product.images?.primary || product.primaryImage;
 
     return `
       <a href="product-detail.html?id=${product.id}" class="search-product-card">
@@ -125,12 +148,7 @@ class ProductRenderer {
   }
 
   /**
-   * Render search results (suggestions + products)
-   * @param {Object} results - Search results
-   * @param {Array} results.products - Matching products
-   * @param {Array} results.categories - Matching categories
-   * @param {HTMLElement|string} suggestionsContainer - Suggestions list
-   * @param {HTMLElement|string} productsContainer - Products list
+   * Render search results
    */
   static renderSearchResults(results, suggestionsContainer, productsContainer) {
     const suggestionsEl = typeof suggestionsContainer === 'string'
@@ -141,7 +159,6 @@ class ProductRenderer {
       ? document.querySelector(productsContainer)
       : productsContainer;
 
-    // Render category suggestions
     if (suggestionsEl && results.categories) {
       suggestionsEl.innerHTML = results.categories
         .slice(0, 5)
@@ -155,7 +172,6 @@ class ProductRenderer {
         .join('');
     }
 
-    // Render product results
     if (productsEl && results.products) {
       productsEl.innerHTML = results.products
         .slice(0, 4)
@@ -166,12 +182,13 @@ class ProductRenderer {
 
   /**
    * Render cart drawer item
-   * @param {Object} item - Cart item (product + quantity)
-   * @returns {string} HTML string
    */
   static renderCartItem(item) {
-    const imageUrl = item.image || 'https://placehold.co/80x100/e0e0e0/666?text=No+Image';
+    const rawImage = item.image || 'https://placehold.co/80x100/e0e0e0/666?text=No+Image';
+    const imageUrl = this.getOptimizedImage(rawImage, 200);
     const total = item.price * item.quantity;
+    const maxStock = item.stockQuantity ?? null;
+    const atMax = maxStock !== null && item.quantity >= maxStock;
 
     return `
       <div class="cart-drawer-item" data-product-id="${item.id}">
@@ -183,7 +200,7 @@ class ProductRenderer {
           <div class="cart-item-quantity">
             <button class="qty-btn qty-minus" data-action="decrease">-</button>
             <span class="qty-value">${item.quantity}</span>
-            <button class="qty-btn qty-plus" data-action="increase">+</button>
+            <button class="qty-btn qty-plus" data-action="increase"${atMax ? ' disabled title="Stock limit reached"' : ''}>+</button>
           </div>
         </div>
         <div class="cart-item-price">
@@ -201,9 +218,6 @@ class ProductRenderer {
 
   /**
    * Render filter options
-   * @param {Object} filters - Filter data from ProductService
-   * @param {Object} activeFilters - Currently active filters
-   * @returns {string} HTML for filter panel
    */
   static renderFilters(filters, activeFilters = {}) {
     let html = '';
@@ -294,7 +308,7 @@ class ProductRenderer {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        
+
         const card = btn.closest('.product-card');
         if (!card) return;
 

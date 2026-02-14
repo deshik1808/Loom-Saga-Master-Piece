@@ -27,27 +27,27 @@ function handleHeaderScroll() {
     if (mobileMenuOpenFlag) {
         return;
     }
-    
+
     const currentScrollY = window.scrollY;
     const footer = document.getElementById('footer');
     const footerTop = footer ? footer.offsetTop : Infinity;
     const windowHeight = window.innerHeight;
-    
+
     // If mega menu is active, do nothing - let the absolute positioning handle it
     if (typeof DesktopMegaMenuController !== 'undefined' && DesktopMegaMenuController.activeDropdown) {
         return;
     }
-    
+
     // Add/remove scrolled class for background
     if (currentScrollY > 50) {
         header.classList.add('scrolled');
     } else {
         header.classList.remove('scrolled');
     }
-    
+
     // Check if we're near the footer
     const nearFooter = currentScrollY + windowHeight >= footerTop - 50;
-    
+
     // STRICT RULE: If near footer AND we have scrolled down significantly, hide header
     // The "currentScrollY > 100" check prevents hiding header on short pages (like empty wishlist) where footer is visible at top
     if (nearFooter && currentScrollY > 100) {
@@ -76,15 +76,15 @@ function handleHeaderScroll() {
             }
         }
     }
-    
+
     lastScrollY = currentScrollY;
 }
 
 // Listen for scroll events with throttling for performance
 let ticking = false;
-window.addEventListener('scroll', function() {
+window.addEventListener('scroll', function () {
     if (!ticking) {
-        window.requestAnimationFrame(function() {
+        window.requestAnimationFrame(function () {
             handleHeaderScroll();
             ticking = false;
         });
@@ -103,7 +103,7 @@ function initializeHeader() {
         // Always ensure header is visible on page load INITIALLY
         header.classList.remove('header-hidden');
         headerVisible = true;
-        
+
         // Set the scrolled class if page is already scrolled
         if (window.scrollY > 50) {
             header.classList.add('scrolled');
@@ -120,7 +120,7 @@ function initializeHeader() {
                 headerVisible = false;
             }
         }
-        
+
         // Reset lastScrollY to current position
         lastScrollY = window.scrollY;
     }
@@ -298,7 +298,7 @@ const MobileMenuController = {
 
     init() {
         this.hamburger = document.getElementById('hamburger');
-        
+
         // Exit early if hamburger doesn't exist (not a standard page)
         if (!this.hamburger) {
             console.debug('[MobileMenuController] No hamburger found, skipping init');
@@ -326,12 +326,12 @@ const MobileMenuController = {
         }
 
         this.mainPanel = document.getElementById('mobileMenuMain');
-        
+
         // Transform subgroups into level-3 panel navigation (BEFORE binding events)
         this.transformSubgroupsToLevel3Panels();
-        
+
         this.bindEvents();
-        
+
         console.debug('[MobileMenuController] Initialized successfully');
     },
 
@@ -347,7 +347,7 @@ const MobileMenuController = {
         // Find the best insertion point - after nav overlay if it exists, else after header
         const navOverlay = document.getElementById('navOverlay');
         const header = document.getElementById('header') || document.querySelector('.header');
-        
+
         if (navOverlay) {
             navOverlay.insertAdjacentHTML('afterend', this.menuHTML);
         } else if (header) {
@@ -390,7 +390,7 @@ const MobileMenuController = {
                     this.goBackOneLevel();
                 });
             });
-            
+
             // Level-3 navigation buttons (use event delegation for dynamic buttons)
             this.menu.addEventListener('click', (e) => {
                 const level3Btn = e.target.closest('[data-level3]');
@@ -399,7 +399,7 @@ const MobileMenuController = {
                     const panelId = level3Btn.dataset.level3;
                     this.showLevel3Panel(panelId);
                 }
-                
+
                 // Level-3 back buttons
                 const backLevel3Btn = e.target.closest('[data-back-level3]');
                 if (backLevel3Btn) {
@@ -434,9 +434,9 @@ const MobileMenuController = {
 
     open() {
         if (!this.menu || !this.hamburger) return;
-        
+
         this.isOpen = true;
-        
+
         // CRITICAL FIX: Force header visible and lock scroll-based hide/show
         mobileMenuOpenFlag = true;
         const headerEl = document.getElementById('header');
@@ -446,7 +446,7 @@ const MobileMenuController = {
             headerEl.classList.add('mobile-menu-active');
             headerVisible = true;
         }
-        
+
         this.menu.classList.add('active');
         this.menu.setAttribute('aria-hidden', 'false');
         this.hamburger.classList.add('active');
@@ -460,9 +460,9 @@ const MobileMenuController = {
 
     close() {
         if (!this.menu || !this.hamburger) return;
-        
+
         this.isOpen = false;
-        
+
         // CRITICAL FIX: Unlock scroll-based header behavior
         mobileMenuOpenFlag = false;
         const headerEl = document.getElementById('header');
@@ -471,7 +471,7 @@ const MobileMenuController = {
             // Update lastScrollY to current position to prevent sudden hide on next scroll
             lastScrollY = window.scrollY;
         }
-        
+
         this.menu.classList.remove('active');
         this.menu.setAttribute('aria-hidden', 'true');
         this.hamburger.classList.remove('active');
@@ -489,7 +489,7 @@ const MobileMenuController = {
 
     showMainPanel() {
         if (!this.menu) return;
-        
+
         this.currentPanel = 'main';
         // Hide all sub-panels
         this.menu.querySelectorAll('.mobile-menu__panel--sub').forEach(panel => {
@@ -503,21 +503,21 @@ const MobileMenuController = {
 
     showSubPanel(submenuId) {
         if (!this.menu) return;
-        
+
         // Push current panel to stack for back navigation
         this.panelStack.push(this.currentPanel);
         this.currentPanel = submenuId;
-        
+
         // Clear all panel states first
         this.menu.querySelectorAll('.mobile-menu__panel').forEach(panel => {
             panel.classList.remove('active', 'panel-underneath');
         });
-        
+
         // Keep main panel visible underneath (for smooth back reveal)
         if (this.mainPanel) {
             this.mainPanel.classList.add('panel-underneath');
         }
-        
+
         // Show target sub-panel on top
         const subPanel = document.getElementById(`submenu-${submenuId}`);
         if (subPanel) {
@@ -527,7 +527,7 @@ const MobileMenuController = {
 
     resetPanels() {
         if (!this.menu) return;
-        
+
         // Reset all panels to initial state
         this.menu.querySelectorAll('.mobile-menu__panel').forEach(panel => {
             panel.classList.remove('active');
@@ -548,28 +548,28 @@ const MobileMenuController = {
 
         // Find all level-2 panels that contain subgroups
         const level2Panels = this.menu.querySelectorAll('.mobile-menu__panel--sub');
-        
+
         level2Panels.forEach(level2Panel => {
             const subgroups = level2Panel.querySelectorAll('.mobile-menu__subgroup');
             if (subgroups.length === 0) return; // No subgroups to transform
-            
+
             const parentPanelId = level2Panel.dataset.panel || level2Panel.id.replace('submenu-', '');
-            
+
             subgroups.forEach(subgroup => {
                 const titleEl = subgroup.querySelector('.mobile-menu__subgroup-title');
                 const sublist = subgroup.querySelector('.mobile-menu__sublist');
-                
+
                 if (!titleEl || !sublist) return;
-                
+
                 const title = titleEl.textContent.trim();
                 const panelId = `level3-${parentPanelId}-${this.level3Counter++}`;
-                
+
                 // Clone the sublist content for the new panel
                 const sublistContent = sublist.cloneNode(true);
-                
+
                 // Generate level-3 panel
                 this.generateLevel3Panel(panelId, title, parentPanelId, sublistContent);
-                
+
                 // Replace the subgroup with a navigation button
                 const navButton = document.createElement('button');
                 navButton.className = 'mobile-menu__link mobile-menu__subgroup-btn';
@@ -579,16 +579,16 @@ const MobileMenuController = {
                     <span>${title}</span>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M13 5l7 7-7 7"/></svg>
                 `;
-                
+
                 // Create wrapper li for proper list flow
                 const listItem = document.createElement('li');
                 listItem.className = 'mobile-menu__item';
                 listItem.appendChild(navButton);
-                
+
                 // Replace subgroup with the button
                 subgroup.replaceWith(listItem);
             });
-            
+
             // Wrap existing items in a ul if not already
             const existingItems = level2Panel.querySelectorAll('.mobile-menu__item');
             if (existingItems.length > 0) {
@@ -604,7 +604,7 @@ const MobileMenuController = {
                 }
             }
         });
-        
+
         console.debug('[MobileMenuController] Transformed subgroups to level-3 panels');
     },
 
@@ -617,7 +617,7 @@ const MobileMenuController = {
         panel.id = panelId;
         panel.dataset.panel = panelId;
         panel.dataset.parent = parentPanelId;
-        
+
         panel.innerHTML = `
             <div class="mobile-menu__subheader">
                 <button class="mobile-menu__back" data-back-level3="${parentPanelId}">
@@ -627,10 +627,10 @@ const MobileMenuController = {
                 <h2 class="mobile-menu__subtitle">${title.toUpperCase()}</h2>
             </div>
         `;
-        
+
         // Append the content (sublist)
         panel.appendChild(content);
-        
+
         // Inject into mobile menu container
         this.menu.appendChild(panel);
     },
@@ -640,27 +640,27 @@ const MobileMenuController = {
      */
     showLevel3Panel(panelId) {
         if (!this.menu) return;
-        
+
         const targetPanel = document.getElementById(panelId);
         if (!targetPanel) return;
-        
+
         // Get parent panel ID from data attribute
         const parentPanelId = targetPanel.dataset.parent;
-        
+
         // Push current panel to stack for back navigation
         this.panelStack.push(this.currentPanel);
         this.currentPanel = panelId;
-        
+
         // Clear all panel states first
         this.menu.querySelectorAll('.mobile-menu__panel').forEach(panel => {
             panel.classList.remove('active', 'panel-underneath');
         });
-        
+
         // Keep main panel visible at bottom
         if (this.mainPanel) {
             this.mainPanel.classList.add('panel-underneath');
         }
-        
+
         // Keep parent level-2 panel visible underneath level-3
         if (parentPanelId) {
             const parentPanel = document.getElementById(`submenu-${parentPanelId}`);
@@ -668,7 +668,7 @@ const MobileMenuController = {
                 parentPanel.classList.add('panel-underneath');
             }
         }
-        
+
         // Show target level-3 panel on top
         targetPanel.classList.add('active');
     },
@@ -682,20 +682,20 @@ const MobileMenuController = {
             this.showMainPanel();
             return;
         }
-        
+
         const currentPanelId = this.currentPanel;
         const previousPanel = this.panelStack.pop();
         this.currentPanel = previousPanel;
-        
+
         // Get the current panel element
-        const currentPanelEl = document.getElementById(currentPanelId) || 
-                               document.getElementById(`submenu-${currentPanelId}`);
-        
+        const currentPanelEl = document.getElementById(currentPanelId) ||
+            document.getElementById(`submenu-${currentPanelId}`);
+
         // Remove active from current panel (triggers slide-out animation)
         if (currentPanelEl) {
             currentPanelEl.classList.remove('active');
         }
-        
+
         // Show previous panel (it should already be visible as panel-underneath)
         if (previousPanel === 'main') {
             // Clear all panel-underneath classes and show main as active
@@ -707,8 +707,8 @@ const MobileMenuController = {
             }
         } else {
             // Promote the parent panel from underneath to active
-            const parentPanel = document.getElementById(`submenu-${previousPanel}`) || 
-                                document.getElementById(previousPanel);
+            const parentPanel = document.getElementById(`submenu-${previousPanel}`) ||
+                document.getElementById(previousPanel);
             if (parentPanel) {
                 parentPanel.classList.remove('panel-underneath');
                 parentPanel.classList.add('active');
@@ -755,9 +755,9 @@ const SearchOverlayManager = {
     popularSection: null,
     noResults: null,
     debounceTimer: null,
-    
-    // Sample product data (placeholder images)
-    products: [
+
+    // Fallback product data (used only when ProductService is not available)
+    _fallbackProducts: [
         { id: 'LS-VSK-001', name: 'Lime Green Hand-printed Vishnupuri Silk Saree', price: 5199, image: 'https://placehold.co/140x180/9acd32/333', url: 'product-detail.html', category: 'Vishnupuri' },
         { id: 'LS-VSK-002', name: 'Mustard Yellow Vishnupuri Silk Saree', price: 5199, image: 'https://placehold.co/140x180/d4a017/333', url: 'product-detail.html', category: 'Vishnupuri' },
         { id: 'LS-VSK-003', name: 'Red Vishnupuri Silk Saree with Zari Border', price: 5499, image: 'https://placehold.co/140x180/c41e3a/fff', url: 'product-detail.html', category: 'Vishnupuri' },
@@ -767,7 +767,24 @@ const SearchOverlayManager = {
         { id: 'LS-HLM-002', name: 'Hand-woven Jamdani Saree', price: 4299, image: 'https://placehold.co/140x180/dda0dd/333', url: 'product-detail.html', category: 'Handloom' },
         { id: 'LS-WED-001', name: 'Bridal Red Banarasi Silk Saree', price: 12999, image: 'https://placehold.co/140x180/8b0000/fff', url: 'product-detail.html', category: 'Wedding' },
     ],
-    
+
+    // Dynamically get products from ProductService (live WooCommerce data) or fallback
+    get products() {
+        if (window.ProductService && window.ProductService.getProductCount && window.ProductService.getProductCount() > 0) {
+            return window.ProductService.getAllProducts().map(function (p) {
+                return {
+                    id: p.id,
+                    name: p.name,
+                    price: p.price,
+                    image: p.primaryImage || p.images?.[0] || 'https://placehold.co/140x180/e0e0e0/666?text=No+Image',
+                    url: 'product-detail.html?id=' + p.id,
+                    category: p.category || 'Uncategorized'
+                };
+            });
+        }
+        return this._fallbackProducts;
+    },
+
     // Category suggestions mapping
     categories: [
         { name: 'Silk Sarees', url: 'silk-sarees.html' },
@@ -776,7 +793,7 @@ const SearchOverlayManager = {
         { name: 'Wedding Collection', url: 'collections.html' },
         { name: 'New Arrivals', url: 'collections.html' },
     ],
-    
+
     init() {
         this.overlay = document.getElementById('searchOverlay');
         this.panel = this.overlay?.querySelector('.search-overlay__panel');
@@ -789,52 +806,52 @@ const SearchOverlayManager = {
         this.productList = document.getElementById('productList');
         this.popularSection = this.overlay?.querySelector('.search-overlay__popular');
         this.noResults = document.getElementById('searchNoResults');
-        
+
         if (!this.overlay) return;
-        
+
         this.bindEvents();
     },
-    
+
     bindEvents() {
         // Open search on search button click
         if (searchBtn) {
             searchBtn.addEventListener('click', () => this.open());
         }
-        
+
         // Close on close button click
         if (this.closeBtn) {
             this.closeBtn.addEventListener('click', () => this.close());
         }
-        
+
         // Close on backdrop click
         if (this.backdrop) {
             this.backdrop.addEventListener('click', () => this.close());
         }
-        
+
         // Close on Escape key
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && this.overlay?.classList.contains('active')) {
                 this.close();
             }
         });
-        
+
         // Live search on input
         if (this.input) {
             this.input.addEventListener('input', (e) => {
                 const value = e.target.value;
-                
+
                 // Toggle clear button visibility
                 if (this.clearBtn) {
                     this.clearBtn.style.display = value.length > 0 ? 'flex' : 'none';
                 }
-                
+
                 clearTimeout(this.debounceTimer);
                 this.debounceTimer = setTimeout(() => {
                     this.search(value);
                 }, 250);
             });
         }
-        
+
         // Clear button
         if (this.clearBtn) {
             this.clearBtn.addEventListener('click', () => {
@@ -845,66 +862,66 @@ const SearchOverlayManager = {
             });
         }
     },
-    
+
     open() {
         this.overlay.classList.add('active');
         this.overlay.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
-        
+
         // Focus input after animation
         setTimeout(() => {
             this.input?.focus();
         }, 300);
     },
-    
+
     close() {
         this.overlay.classList.remove('active');
         this.overlay.setAttribute('aria-hidden', 'true');
         document.body.style.overflow = '';
-        
+
         // Reset state
         if (this.input) this.input.value = '';
         if (this.clearBtn) this.clearBtn.style.display = 'none';
         this.showInitialState();
     },
-    
+
     showInitialState() {
         if (this.resultsContainer) this.resultsContainer.style.display = 'none';
         if (this.popularSection) this.popularSection.style.display = 'block';
         if (this.noResults) this.noResults.style.display = 'none';
     },
-    
+
     showResults() {
         if (this.resultsContainer) this.resultsContainer.style.display = 'grid';
         if (this.popularSection) this.popularSection.style.display = 'none';
         if (this.noResults) this.noResults.style.display = 'none';
     },
-    
+
     showNoResults() {
         if (this.resultsContainer) this.resultsContainer.style.display = 'none';
         if (this.popularSection) this.popularSection.style.display = 'none';
         if (this.noResults) this.noResults.style.display = 'block';
     },
-    
+
     search(query) {
         const trimmedQuery = query.trim().toLowerCase();
-        
+
         if (trimmedQuery.length < 2) {
             this.showInitialState();
             return;
         }
-        
+
         // Filter products
-        const matchedProducts = this.products.filter(product => 
+        const matchedProducts = this.products.filter(product =>
             product.name.toLowerCase().includes(trimmedQuery) ||
             product.category.toLowerCase().includes(trimmedQuery)
         );
-        
+
         // Filter matching categories for suggestions
         const matchedCategories = this.categories.filter(cat =>
             cat.name.toLowerCase().includes(trimmedQuery)
         );
-        
+
         if (matchedProducts.length > 0 || matchedCategories.length > 0) {
             this.showResults();
             this.renderSuggestions(matchedCategories, trimmedQuery);
@@ -913,10 +930,10 @@ const SearchOverlayManager = {
             this.showNoResults();
         }
     },
-    
+
     renderSuggestions(categories, query) {
         if (!this.suggestionList) return;
-        
+
         // If no category matches, show generic suggestion
         if (categories.length === 0) {
             this.suggestionList.innerHTML = `
@@ -928,36 +945,43 @@ const SearchOverlayManager = {
             `;
             return;
         }
-        
+
         this.suggestionList.innerHTML = categories.map(cat => `
             <li class="search-overlay__suggestion-item">
                 <a href="${cat.url}" class="search-overlay__suggestion-link">${cat.name}</a>
             </li>
         `).join('');
     },
-    
+
     renderProducts(products, query) {
         if (!this.productList) return;
-        
+
         if (products.length === 0) {
             this.productList.innerHTML = '<p class="search-overlay__no-products">No products found</p>';
             return;
         }
-        
+
         // Show max 5 products in dropdown
         const displayProducts = products.slice(0, 5);
-        
-        this.productList.innerHTML = displayProducts.map(product => `
+
+        this.productList.innerHTML = displayProducts.map(product => {
+            var imgSrc = product.image;
+            // Use ProductRenderer image optimization if available
+            if (window.ProductRenderer && window.ProductRenderer.getOptimizedImage) {
+                imgSrc = window.ProductRenderer.getOptimizedImage(product.image, 200);
+            }
+            return `
             <a href="${product.url}" class="search-overlay__product-card">
-                <img src="${product.image}" alt="${product.name}" class="search-overlay__product-image" loading="lazy">
+                <img src="${imgSrc}" alt="${product.name}" class="search-overlay__product-image" loading="lazy">
                 <div class="search-overlay__product-info">
                     <div class="search-overlay__product-name">${this.highlightMatch(product.name, query)}</div>
                     <div class="search-overlay__product-price">Rs.${product.price.toLocaleString('en-IN')}/-</div>
                 </div>
             </a>
-        `).join('');
+        `;
+        }).join('');
     },
-    
+
     highlightMatch(text, query) {
         const regex = new RegExp(`(${query})`, 'gi');
         return text.replace(regex, '<strong>$1</strong>');
@@ -1019,35 +1043,35 @@ const DesktopMegaMenuController = {
     activeDropdown: null,
     hideTimeout: null,
     headerLocked: false,
-    
+
     init() {
         // Only apply on desktop
         if (window.innerWidth < 768) return;
-        
+
         const dropdownItems = document.querySelectorAll('.nav-item.has-dropdown');
-        
+
         dropdownItems.forEach(item => {
             const megaMenu = item.querySelector('.mega-menu');
-            
+
             // Mouse enters nav item - show its mega menu
             item.addEventListener('mouseenter', () => {
                 if (window.innerWidth < 768) return;
                 this.showMenu(item, megaMenu);
             });
-            
+
             // Mouse leaves nav item
             item.addEventListener('mouseleave', () => {
                 if (window.innerWidth < 768) return;
                 this.scheduleHide(item, megaMenu);
             });
-            
+
             // Mouse enters mega menu - keep it visible
             if (megaMenu) {
                 megaMenu.addEventListener('mouseenter', () => {
                     if (window.innerWidth < 768) return;
                     this.cancelHide();
                 });
-                
+
                 // Mouse leaves mega menu - hide it
                 megaMenu.addEventListener('mouseleave', () => {
                     if (window.innerWidth < 768) return;
@@ -1055,7 +1079,7 @@ const DesktopMegaMenuController = {
                 });
             }
         });
-        
+
         // Reinitialize on window resize
         window.addEventListener('resize', () => {
             if (window.innerWidth >= 768) {
@@ -1063,10 +1087,10 @@ const DesktopMegaMenuController = {
             }
         });
     },
-    
+
     showMenu(item, megaMenu) {
         this.cancelHide();
-        
+
         // Hide any other active menus first
         if (this.activeDropdown && this.activeDropdown !== item) {
             const activeMegaMenu = this.activeDropdown.querySelector('.mega-menu');
@@ -1075,10 +1099,10 @@ const DesktopMegaMenuController = {
                 activeMegaMenu.classList.remove('mega-menu-visible');
             }
         }
-        
+
         // Lock header to background
         this.lockHeader();
-        
+
         // Show this menu
         if (megaMenu) {
             item.classList.add('mega-menu-active');
@@ -1086,13 +1110,13 @@ const DesktopMegaMenuController = {
             this.activeDropdown = item;
         }
     },
-    
+
     lockHeader() {
         // Disabled to prevent layout jumping/z-index issues on cart page
         if (this.headerLocked) return;
-        
+
         const scrollY = window.scrollY;
-        
+
         // Only lock if we are scrolled down a bit (to avoid jumping at very top)
         // or effectively, just always lock it to current position so it moves up when scrolling
         header.style.position = 'absolute';
@@ -1100,27 +1124,27 @@ const DesktopMegaMenuController = {
         header.style.width = '100%';
         this.headerLocked = true;
     },
-    
+
     unlockHeader() {
         // Disabled
         if (!this.headerLocked) return;
-        
+
         header.style.position = '';
         header.style.top = '';
         header.style.width = '';
         this.headerLocked = false;
-        
+
         // Re-run checking for scroll state to ensure correct class
         handleHeaderScroll();
     },
-    
+
     scheduleHide(item, megaMenu) {
         // Small delay to allow moving to mega menu
         this.hideTimeout = setTimeout(() => {
             this.hideMenu(item, megaMenu);
         }, 50);
     },
-    
+
     hideMenu(item, megaMenu) {
         if (megaMenu) {
             item.classList.remove('mega-menu-active');
@@ -1131,14 +1155,14 @@ const DesktopMegaMenuController = {
             this.unlockHeader();
         }
     },
-    
+
     cancelHide() {
         if (this.hideTimeout) {
             clearTimeout(this.hideTimeout);
             this.hideTimeout = null;
         }
     },
-    
+
     hideAllMenus() {
         document.querySelectorAll('.nav-item.has-dropdown').forEach(item => {
             item.classList.remove('mega-menu-active');
@@ -1161,7 +1185,7 @@ DesktopMegaMenuController.init();
  */
 const CartManager = {
     storageKey: 'loomSaga_cart',
-    
+
     /**
      * Get all cart items
      * @returns {Array} Cart items array
@@ -1170,7 +1194,7 @@ const CartManager = {
         const cart = localStorage.getItem(this.storageKey);
         return cart ? JSON.parse(cart) : [];
     },
-    
+
     /**
      * Save cart items to localStorage
      * @param {Array} items - Cart items array
@@ -1180,7 +1204,7 @@ const CartManager = {
         this.updateBadge();
         this.renderDrawer();
     },
-    
+
     /**
      * Add item to cart
      * @param {Object} product - Product object
@@ -1188,7 +1212,7 @@ const CartManager = {
     addItem(product) {
         const items = this.getItems();
         const existingIndex = items.findIndex(item => item.id === product.id);
-        
+
         if (existingIndex > -1) {
             // Increase quantity if item exists
             items[existingIndex].quantity += 1;
@@ -1199,12 +1223,12 @@ const CartManager = {
                 quantity: 1
             });
         }
-        
+
         this.saveItems(items);
         this.showNotification(`${product.name} added to cart`);
         return items;
     },
-    
+
     /**
      * Remove item from cart
      * @param {string} productId - Product ID to remove
@@ -1215,7 +1239,7 @@ const CartManager = {
         this.renderCart();
         return items;
     },
-    
+
     /**
      * Update item quantity
      * @param {string} productId - Product ID
@@ -1224,7 +1248,7 @@ const CartManager = {
     updateQuantity(productId, quantity) {
         const items = this.getItems();
         const itemIndex = items.findIndex(item => item.id === productId);
-        
+
         if (itemIndex > -1) {
             if (quantity <= 0) {
                 // Remove item if quantity is 0 or less
@@ -1233,12 +1257,12 @@ const CartManager = {
                 items[itemIndex].quantity = quantity;
             }
         }
-        
+
         this.saveItems(items);
         this.renderCart();
         return items;
     },
-    
+
     /**
      * Get cart total
      * @returns {number} Total price
@@ -1248,7 +1272,7 @@ const CartManager = {
             return total + (item.price * item.quantity);
         }, 0);
     },
-    
+
     /**
      * Get total items count
      * @returns {number} Total items
@@ -1256,7 +1280,7 @@ const CartManager = {
     getItemCount() {
         return this.getItems().reduce((count, item) => count + item.quantity, 0);
     },
-    
+
     /**
      * Update cart badge in header
      */
@@ -1268,7 +1292,7 @@ const CartManager = {
             cartCountEl.style.display = count > 0 ? 'flex' : 'none';
         }
     },
-    
+
     /**
      * Format price in Indian Rupees
      * @param {number} amount - Amount to format
@@ -1277,7 +1301,7 @@ const CartManager = {
     formatPrice(amount) {
         return `Rs. ${amount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
     },
-    
+
     /**
      * Show notification toast
      * @param {string} message - Message to show
@@ -1286,7 +1310,7 @@ const CartManager = {
         // Remove existing notification
         const existing = document.querySelector('.cart-notification');
         if (existing) existing.remove();
-        
+
         const notification = document.createElement('div');
         notification.className = 'cart-notification';
         notification.innerHTML = `
@@ -1296,17 +1320,17 @@ const CartManager = {
             <span>${message}</span>
         `;
         document.body.appendChild(notification);
-        
+
         // Trigger animation
         setTimeout(() => notification.classList.add('show'), 10);
-        
+
         // Remove after 3 seconds
         setTimeout(() => {
             notification.classList.remove('show');
             setTimeout(() => notification.remove(), 300);
         }, 3000);
     },
-    
+
     /**
      * Render cart items on cart page
      */
@@ -1315,22 +1339,22 @@ const CartManager = {
         const cartSummaryEl = document.getElementById('cartSummary');
         const cartEmptyEl = document.getElementById('cartEmpty');
         const cartContentEl = document.getElementById('cartContent');
-        
+
         if (!cartItemsEl) return; // Not on cart page
-        
+
         const items = this.getItems();
-        
+
         if (items.length === 0) {
             // Show empty state
             if (cartContentEl) cartContentEl.style.display = 'none';
             if (cartEmptyEl) cartEmptyEl.style.display = 'block';
             return;
         }
-        
+
         // Show cart content
         if (cartContentEl) cartContentEl.style.display = 'block';
         if (cartEmptyEl) cartEmptyEl.style.display = 'none';
-        
+
         // Render items
         cartItemsEl.innerHTML = items.map(item => `
             <div class="cart-item" data-id="${item.id}">
@@ -1364,17 +1388,17 @@ const CartManager = {
             </div>
         `).join('');
 
-        
+
         // Update total
         const totalEl = document.getElementById('cartTotalAmount');
         if (totalEl) {
             totalEl.textContent = this.formatPrice(this.getTotal());
         }
-        
+
         // Bind event listeners
         this.bindCartEvents();
     },
-    
+
     /**
      * Bind event listeners to cart controls
      */
@@ -1390,7 +1414,7 @@ const CartManager = {
                 }
             });
         });
-        
+
         // Quantity increase buttons
         document.querySelectorAll('.quantity-plus').forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -1402,7 +1426,7 @@ const CartManager = {
                 }
             });
         });
-        
+
         // Remove buttons
         document.querySelectorAll('.remove-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -1411,7 +1435,7 @@ const CartManager = {
             });
         });
     },
-    
+
     /**
      * Clear entire cart
      */
@@ -1473,7 +1497,7 @@ const CartManager = {
             if (drawerItemsEl) drawerItemsEl.style.display = 'none';
             if (drawerSubheader) drawerSubheader.style.display = 'none';
             if (drawerFooter) drawerFooter.style.display = 'none';
-            
+
             if (drawerEmpty) {
                 drawerEmpty.style.display = 'flex';
             } else {
@@ -1481,7 +1505,7 @@ const CartManager = {
                 drawerItemsEl.style.display = 'block';
                 drawerItemsEl.innerHTML = '<div class="search-no-results" style="padding: 20px; text-align: center;">Your cart is empty</div>';
             }
-            
+
             if (drawerTotalEl) drawerTotalEl.textContent = this.formatPrice(0);
             return;
         }
@@ -1573,7 +1597,7 @@ const CartManager = {
  */
 const WishlistManager = {
     storageKey: 'loomSaga_wishlist',
-    
+
     /**
      * Get all wishlist items
      * @returns {Array} Wishlist items array
@@ -1582,7 +1606,7 @@ const WishlistManager = {
         const wishlist = localStorage.getItem(this.storageKey);
         return wishlist ? JSON.parse(wishlist) : [];
     },
-    
+
     /**
      * Save wishlist items to localStorage
      * @param {Array} items - Wishlist items array
@@ -1591,7 +1615,7 @@ const WishlistManager = {
         localStorage.setItem(this.storageKey, JSON.stringify(items));
         this.updateBadge();
     },
-    
+
     /**
      * Add item to wishlist
      * @param {Object} product - Product object with id, name, price, image
@@ -1599,7 +1623,7 @@ const WishlistManager = {
     addItem(product) {
         const items = this.getItems();
         const existingIndex = items.findIndex(item => item.id === product.id);
-        
+
         if (existingIndex === -1) {
             items.push({
                 id: product.id,
@@ -1612,7 +1636,7 @@ const WishlistManager = {
             this.showNotification(`${product.name} added to wishlist`);
         }
     },
-    
+
     /**
      * Remove item from wishlist
      * @param {string} productId - Product ID to remove
@@ -1623,7 +1647,7 @@ const WishlistManager = {
         this.saveItems(filteredItems);
         this.showNotification('Removed from wishlist');
     },
-    
+
     /**
      * Toggle item in wishlist
      * @param {Object} product - Product object
@@ -1638,7 +1662,7 @@ const WishlistManager = {
             return true;
         }
     },
-    
+
     /**
      * Check if item is in wishlist
      * @param {string} productId - Product ID to check
@@ -1648,7 +1672,7 @@ const WishlistManager = {
         const items = this.getItems();
         return items.some(item => item.id === productId);
     },
-    
+
     /**
      * Get wishlist count
      * @returns {number}
@@ -1656,7 +1680,7 @@ const WishlistManager = {
     getCount() {
         return this.getItems().length;
     },
-    
+
     /**
      * Update wishlist badge in header
      */
@@ -1668,7 +1692,7 @@ const WishlistManager = {
             el.style.display = count > 0 ? 'flex' : 'none';
         });
     },
-    
+
     /**
      * Show notification toast
      * @param {string} message
@@ -1679,14 +1703,14 @@ const WishlistManager = {
             CartManager.showNotification(message);
         }
     },
-    
+
     /**
      * Clear entire wishlist
      */
     clearWishlist() {
         this.saveItems([]);
     },
-    
+
     /**
      * Remove duplicate items from wishlist based on product ID
      * This cleans up any existing duplicates that may have been added before the fix
@@ -1696,7 +1720,7 @@ const WishlistManager = {
         const items = this.getItems();
         const seenIds = new Set();
         const uniqueItems = [];
-        
+
         for (const item of items) {
             // Use product ID for deduplication (not name, since different products can have similar names)
             if (!seenIds.has(item.id)) {
@@ -1704,13 +1728,13 @@ const WishlistManager = {
                 uniqueItems.push(item);
             }
         }
-        
+
         // Only save if duplicates were found
         if (uniqueItems.length !== items.length) {
             console.log(`Wishlist cleanup: Removed ${items.length - uniqueItems.length} duplicate(s)`);
             this.saveItems(uniqueItems);
         }
-        
+
         return uniqueItems;
     }
 };
@@ -1723,20 +1747,20 @@ const WishlistPageManager = {
     itemsPerPage: 6,
     currentPage: 1,
     totalPages: 1,
-    
+
     /**
      * Initialize wishlist page
      */
     init() {
         const wishlistGrid = document.getElementById('wishlistGrid');
         if (!wishlistGrid) return; // Not on wishlist page
-        
+
         // Clean up any duplicate items that may exist from before the fix
         WishlistManager.removeDuplicates();
-        
+
         this.render();
     },
-    
+
     /**
      * Render wishlist items for current page
      */
@@ -1745,16 +1769,16 @@ const WishlistPageManager = {
         const wishlistEmpty = document.getElementById('wishlistEmpty');
         const wishlistPagination = document.getElementById('wishlistPagination');
         const wishlistItemCount = document.getElementById('wishlistItemCount');
-        
+
         if (!wishlistGrid) return;
-        
+
         const items = WishlistManager.getItems();
-        
+
         // Update item count
         if (wishlistItemCount) {
             wishlistItemCount.textContent = items.length;
         }
-        
+
         // Handle empty state
         if (items.length === 0) {
             wishlistGrid.innerHTML = '';
@@ -1762,15 +1786,15 @@ const WishlistPageManager = {
             if (wishlistPagination) wishlistPagination.style.display = 'none';
             return;
         }
-        
+
         if (wishlistEmpty) wishlistEmpty.style.display = 'none';
-        
+
         // Calculate pagination
         this.totalPages = Math.ceil(items.length / this.itemsPerPage);
         const startIndex = (this.currentPage - 1) * this.itemsPerPage;
         const endIndex = startIndex + this.itemsPerPage;
         const pageItems = items.slice(startIndex, endIndex);
-        
+
         // Render items
         wishlistGrid.innerHTML = pageItems.map(item => `
             <article class="wishlist-card" data-product-id="${item.id}" data-product-name="${item.name}" data-product-price="${item.price}" data-product-image="${item.image}">
@@ -1789,29 +1813,29 @@ const WishlistPageManager = {
                 <button class="wishlist-add-btn" data-id="${item.id}">Add To Bag</button>
             </article>
         `).join('');
-        
+
         // Render pagination
         this.renderPagination();
-        
+
         // Bind events
         this.bindEvents();
     },
-    
+
     /**
      * Render pagination controls
      */
     renderPagination() {
         const wishlistPagination = document.getElementById('wishlistPagination');
         if (!wishlistPagination) return;
-        
+
         // Hide pagination if only one page
         if (this.totalPages <= 1) {
             wishlistPagination.style.display = 'none';
             return;
         }
-        
+
         wishlistPagination.style.display = 'flex';
-        
+
         const paginationNumbers = wishlistPagination.querySelector('.pagination-numbers');
         if (paginationNumbers) {
             paginationNumbers.innerHTML = '';
@@ -1823,22 +1847,22 @@ const WishlistPageManager = {
                 paginationNumbers.appendChild(btn);
             }
         }
-        
+
         // Update prev/next button states
         const prevBtn = wishlistPagination.querySelector('.pagination-prev');
         const nextBtn = wishlistPagination.querySelector('.pagination-next');
-        
+
         if (prevBtn) {
             prevBtn.disabled = this.currentPage === 1;
             prevBtn.style.opacity = this.currentPage === 1 ? '0.3' : '1';
         }
-        
+
         if (nextBtn) {
             nextBtn.disabled = this.currentPage === this.totalPages;
             nextBtn.style.opacity = this.currentPage === this.totalPages ? '0.3' : '1';
         }
     },
-    
+
     /**
      * Navigate to specific page
      */
@@ -1846,14 +1870,14 @@ const WishlistPageManager = {
         if (page < 1 || page > this.totalPages) return;
         this.currentPage = page;
         this.render();
-        
+
         // Scroll to top of wishlist
         const wishlistPage = document.querySelector('.wishlist-page');
         if (wishlistPage) {
             wishlistPage.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     },
-    
+
     /**
      * Bind event listeners
      */
@@ -1863,11 +1887,11 @@ const WishlistPageManager = {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                
+
                 const productId = btn.dataset.id;
                 if (productId) {
                     WishlistManager.removeItem(productId);
-                    
+
                     // Re-render after a short delay for animation
                     const card = btn.closest('.wishlist-card');
                     if (card) {
@@ -1875,7 +1899,7 @@ const WishlistPageManager = {
                         card.style.transform = 'scale(0.9)';
                         card.style.transition = 'all 0.3s ease';
                     }
-                    
+
                     setTimeout(() => {
                         // Adjust current page if necessary
                         const items = WishlistManager.getItems();
@@ -1888,12 +1912,12 @@ const WishlistPageManager = {
                 }
             });
         });
-        
+
         // Add to bag buttons
         document.querySelectorAll('.wishlist-add-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
-                
+
                 const card = btn.closest('.wishlist-card');
                 if (card) {
                     const product = {
@@ -1906,22 +1930,22 @@ const WishlistPageManager = {
                 }
             });
         });
-        
+
         // Pagination events
         const wishlistPagination = document.getElementById('wishlistPagination');
         if (wishlistPagination) {
             const prevBtn = wishlistPagination.querySelector('.pagination-prev');
             const nextBtn = wishlistPagination.querySelector('.pagination-next');
             const numbersContainer = wishlistPagination.querySelector('.pagination-numbers');
-            
+
             if (prevBtn) {
                 prevBtn.addEventListener('click', () => this.goToPage(this.currentPage - 1));
             }
-            
+
             if (nextBtn) {
                 nextBtn.addEventListener('click', () => this.goToPage(this.currentPage + 1));
             }
-            
+
             if (numbersContainer) {
                 numbersContainer.addEventListener('click', (e) => {
                     if (e.target.classList.contains('pagination-number')) {
@@ -1948,17 +1972,55 @@ function getWishlist() {
 }
 
 // ==================== CHECKOUT HANDLER ====================
+/**
+ * Initialize Checkout Process
+ * Connects the local cart to the WordPress/WooCommerce checkout
+ */
 function initCheckout() {
     const checkoutBtn = document.getElementById('checkoutBtn');
     if (checkoutBtn) {
-        checkoutBtn.addEventListener('click', () => {
+        checkoutBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+
             const items = CartManager.getItems();
             if (items.length === 0) {
                 alert('Your cart is empty!');
                 return;
             }
-            // For now, show alert - later this would go to checkout page
-            alert(`Proceeding to checkout with ${CartManager.getItemCount()} items.\nTotal: ${CartManager.formatPrice(CartManager.getTotal())}`);
+
+            // Show loading state on button
+            const originalText = checkoutBtn.textContent;
+            checkoutBtn.textContent = 'PREPARING CHECKOUT...';
+            checkoutBtn.style.pointerEvents = 'none';
+            checkoutBtn.style.opacity = '0.7';
+
+            try {
+                // Call our serverless function to get the secure checkout URL
+                const response = await fetch('/api/checkout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ items })
+                });
+
+                const data = await response.json();
+
+                if (data.url) {
+                    // Redirect to WordPress Checkout
+                    window.location.href = data.url;
+                } else {
+                    throw new Error(data.error || 'Failed to get checkout URL');
+                }
+            } catch (error) {
+                console.error('Checkout Error:', error);
+                alert('Sorry, we encountered an issue redirecting to checkout. Please try again.');
+
+                // Reset button state
+                checkoutBtn.textContent = originalText;
+                checkoutBtn.style.pointerEvents = 'auto';
+                checkoutBtn.style.opacity = '1';
+            }
         });
     }
 }
@@ -1969,29 +2031,29 @@ function initCheckout() {
  */
 function initCarousels() {
     const carousels = document.querySelectorAll('.carousel-track, .insights-carousel');
-    
+
     carousels.forEach(carousel => {
         let isDown = false;
         let startX;
         let scrollLeft;
-        
+
         carousel.addEventListener('mousedown', (e) => {
             isDown = true;
             carousel.classList.add('active');
             startX = e.pageX - carousel.offsetLeft;
             scrollLeft = carousel.scrollLeft;
         });
-        
+
         carousel.addEventListener('mouseleave', () => {
             isDown = false;
             carousel.classList.remove('active');
         });
-        
+
         carousel.addEventListener('mouseup', () => {
             isDown = false;
             carousel.classList.remove('active');
         });
-        
+
         carousel.addEventListener('mousemove', (e) => {
             if (!isDown) return;
             e.preventDefault();
@@ -1999,13 +2061,13 @@ function initCarousels() {
             const walk = (x - startX) * 2; // Scroll speed multiplier
             carousel.scrollLeft = scrollLeft - walk;
         });
-        
+
         // Touch support for mobile
         carousel.addEventListener('touchstart', (e) => {
             startX = e.touches[0].pageX - carousel.offsetLeft;
             scrollLeft = carousel.scrollLeft;
         }, { passive: true });
-        
+
         carousel.addEventListener('touchmove', (e) => {
             const x = e.touches[0].pageX - carousel.offsetLeft;
             const walk = (x - startX) * 2;
@@ -2022,7 +2084,7 @@ function initCarousels() {
 function initProductCards() {
     // Demo: Add sample product to cart for testing
     // This will be replaced with actual product data later
-    window.addDemoProduct = function() {
+    window.addDemoProduct = function () {
         CartManager.addItem({
             id: 'saree-001',
             name: 'Lime Green Hand Printed Vishnupuri Silk',
@@ -2032,8 +2094,8 @@ function initProductCards() {
             style: 'None'
         });
     };
-    
-    window.addDemoProduct2 = function() {
+
+    window.addDemoProduct2 = function () {
         CartManager.addItem({
             id: 'saree-002',
             name: 'Royal Blue Banarasi Silk',
@@ -2054,39 +2116,39 @@ const PaginationManager = {
     currentPage: 1,
     totalPages: 1,
     articles: [],
-    
+
     /**
      * Initialize pagination
      */
     init() {
         const grid = document.querySelector('.insights-grid');
         const pagination = document.getElementById('pagination');
-        
+
         if (!grid || !pagination) return;
-        
+
         this.articles = Array.from(grid.querySelectorAll('.insight-card'));
         this.totalPages = Math.ceil(this.articles.length / this.articlesPerPage);
-        
+
         // If only one page, hide pagination
         if (this.totalPages <= 1) {
             pagination.style.display = 'none';
             return;
         }
-        
+
         this.renderPagination();
         this.showPage(1);
         this.bindEvents();
     },
-    
+
     /**
      * Render pagination numbers
      */
     renderPagination() {
         const container = document.getElementById('paginationNumbers');
         if (!container) return;
-        
+
         container.innerHTML = '';
-        
+
         for (let i = 1; i <= this.totalPages; i++) {
             const btn = document.createElement('button');
             btn.className = 'pagination-number' + (i === this.currentPage ? ' active' : '');
@@ -2094,7 +2156,7 @@ const PaginationManager = {
             btn.dataset.page = i;
             container.appendChild(btn);
         }
-        
+
         // Add ellipsis if more than 4 pages
         if (this.totalPages > 4) {
             const numbers = container.querySelectorAll('.pagination-number');
@@ -2102,19 +2164,19 @@ const PaginationManager = {
             // This is a simple implementation - can be enhanced for larger page counts
         }
     },
-    
+
     /**
      * Show specific page
      * @param {number} page - Page number to show
      */
     showPage(page) {
         if (page < 1 || page > this.totalPages) return;
-        
+
         this.currentPage = page;
-        
+
         const startIndex = (page - 1) * this.articlesPerPage;
         const endIndex = startIndex + this.articlesPerPage;
-        
+
         // Hide all articles, then show current page's articles
         this.articles.forEach((article, index) => {
             if (index >= startIndex && index < endIndex) {
@@ -2123,34 +2185,34 @@ const PaginationManager = {
                 article.style.display = 'none';
             }
         });
-        
+
         // Update active page number
         const pageNumbers = document.querySelectorAll('.pagination-number');
         pageNumbers.forEach(num => {
             num.classList.toggle('active', parseInt(num.dataset.page) === page);
         });
-        
+
         // Update prev/next button states
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
-        
+
         if (prevBtn) {
             prevBtn.disabled = page === 1;
             prevBtn.style.opacity = page === 1 ? '0.3' : '1';
         }
-        
+
         if (nextBtn) {
             nextBtn.disabled = page === this.totalPages;
             nextBtn.style.opacity = page === this.totalPages ? '0.3' : '1';
         }
-        
+
         // Smooth scroll to top of articles section
         const gridSection = document.querySelector('.insights-grid-section');
         if (gridSection) {
             gridSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     },
-    
+
     /**
      * Bind pagination event listeners
      */
@@ -2158,19 +2220,19 @@ const PaginationManager = {
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
         const numbersContainer = document.getElementById('paginationNumbers');
-        
+
         if (prevBtn) {
             prevBtn.addEventListener('click', () => {
                 this.showPage(this.currentPage - 1);
             });
         }
-        
+
         if (nextBtn) {
             nextBtn.addEventListener('click', () => {
                 this.showPage(this.currentPage + 1);
             });
         }
-        
+
         if (numbersContainer) {
             numbersContainer.addEventListener('click', (e) => {
                 if (e.target.classList.contains('pagination-number')) {
@@ -2189,46 +2251,46 @@ const PaginationManager = {
 function init() {
     // Update cart badge from localStorage
     CartManager.updateBadge();
-    
+
     // Update wishlist badge
     const wishlist = getWishlist();
     updateWishlistCount(wishlist.length);
-    
+
     // Initial header state
     handleHeaderScroll();
-    
+
     // Initialize carousels
     initCarousels();
-    
+
     // Initialize cart page if we're on it
     CartManager.renderCart();
-    
+
     // Initialize checkout button
     initCheckout();
-    
+
     // Initialize product card listeners
     initProductCards();
-    
+
     // Initialize pagination (for Fashion Insights page)
     PaginationManager.init();
-    
+
     // Initialize wishlist buttons on product cards
     initWishlistButtons();
-    
+
     // Initialize wishlist page (if on wishlist page)
     WishlistPageManager.init();
-    
+
     // Initialize search functionality
     SearchManager.init();
-    
+
     // Initialize filter/sort functionality
     FilterSortManager.init();
-    
+
     // Initialize footer accordion
     if (typeof MobileFooterAccordion !== 'undefined') {
         MobileFooterAccordion.init();
     }
-    
+
     console.log('Loom Saga initialized successfully');
 }
 
@@ -2245,7 +2307,7 @@ const FilterSortManager = {
     filterClear: null,
     filterApply: null,
     productsGrid: null,
-    
+
     init() {
         this.sortBtn = document.getElementById('sortBtn');
         this.sortDropdown = document.getElementById('sortDropdown');
@@ -2255,13 +2317,13 @@ const FilterSortManager = {
         this.filterClear = document.getElementById('filterClear');
         this.filterApply = document.getElementById('filterApply');
         this.productsGrid = document.querySelector('.products-grid') || document.querySelector('.collections-grid');
-        
+
         if (!this.sortBtn && !this.filterBtn) return;
-        
+
         this.bindEvents();
         this.createOverlay();
     },
-    
+
     createOverlay() {
         // Create filter overlay if it doesn't exist
         if (!document.querySelector('.filter-overlay')) {
@@ -2269,11 +2331,11 @@ const FilterSortManager = {
             overlay.className = 'filter-overlay';
             overlay.id = 'filterOverlay';
             document.body.appendChild(overlay);
-            
+
             overlay.addEventListener('click', () => this.closeFilter());
         }
     },
-    
+
     bindEvents() {
         // Sort dropdown toggle
         if (this.sortBtn) {
@@ -2282,7 +2344,7 @@ const FilterSortManager = {
                 this.toggleSort();
             });
         }
-        
+
         // Sort options
         if (this.sortDropdown) {
             const sortOptions = this.sortDropdown.querySelectorAll('.sort-option');
@@ -2290,29 +2352,29 @@ const FilterSortManager = {
                 option.addEventListener('click', () => {
                     this.applySort(option.dataset.sort);
                     this.closeSort();
-                    
+
                     // Update active state
                     sortOptions.forEach(o => o.classList.remove('active'));
                     option.classList.add('active');
                 });
             });
         }
-        
+
         // Filter button
         if (this.filterBtn) {
             this.filterBtn.addEventListener('click', () => this.openFilter());
         }
-        
+
         // Filter close button
         if (this.filterClose) {
             this.filterClose.addEventListener('click', () => this.closeFilter());
         }
-        
+
         // Filter clear button
         if (this.filterClear) {
             this.filterClear.addEventListener('click', () => this.clearFilters());
         }
-        
+
         // Filter apply button
         if (this.filterApply) {
             this.filterApply.addEventListener('click', () => {
@@ -2320,10 +2382,10 @@ const FilterSortManager = {
                 this.closeFilter();
             });
         }
-        
+
         // Close sort on outside click
         document.addEventListener('click', () => this.closeSort());
-        
+
         // Close filter on Escape key
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
@@ -2332,22 +2394,22 @@ const FilterSortManager = {
             }
         });
     },
-    
+
     toggleSort() {
         if (this.sortDropdown) {
             this.sortDropdown.classList.toggle('active');
-            this.sortBtn.setAttribute('aria-expanded', 
+            this.sortBtn.setAttribute('aria-expanded',
                 this.sortDropdown.classList.contains('active'));
         }
     },
-    
+
     closeSort() {
         if (this.sortDropdown) {
             this.sortDropdown.classList.remove('active');
             this.sortBtn?.setAttribute('aria-expanded', 'false');
         }
     },
-    
+
     openFilter() {
         if (this.filterPanel) {
             this.filterPanel.classList.add('active');
@@ -2355,7 +2417,7 @@ const FilterSortManager = {
             document.getElementById('filterOverlay')?.classList.add('active');
         }
     },
-    
+
     closeFilter() {
         if (this.filterPanel) {
             this.filterPanel.classList.remove('active');
@@ -2363,19 +2425,19 @@ const FilterSortManager = {
             document.getElementById('filterOverlay')?.classList.remove('active');
         }
     },
-    
+
     applySort(sortType) {
         if (!this.productsGrid) return;
-        
+
         const products = Array.from(this.productsGrid.querySelectorAll('.product-card, .collection-card'));
-        
+
         products.sort((a, b) => {
             const nameA = a.querySelector('.product-card-name, .collection-card-name')?.textContent || '';
             const nameB = b.querySelector('.product-card-name, .collection-card-name')?.textContent || '';
             const priceA = this.extractPrice(a.querySelector('.product-card-price')?.textContent);
             const priceB = this.extractPrice(b.querySelector('.product-card-price')?.textContent);
-            
-            switch(sortType) {
+
+            switch (sortType) {
                 case 'price-low':
                     return priceA - priceB;
                 case 'price-high':
@@ -2389,19 +2451,19 @@ const FilterSortManager = {
                     return 0; // Keep original order
             }
         });
-        
+
         // Re-append sorted products
         products.forEach(product => this.productsGrid.appendChild(product));
-        
+
         // Show notification
         CartManager.showNotification(`Sorted by: ${this.getSortLabel(sortType)}`);
     },
-    
+
     extractPrice(priceText) {
         if (!priceText) return 0;
         return parseInt(priceText.replace(/[^0-9]/g, '')) || 0;
     },
-    
+
     getSortLabel(sortType) {
         const labels = {
             'newest': 'Newest First',
@@ -2412,50 +2474,50 @@ const FilterSortManager = {
         };
         return labels[sortType] || 'Default';
     },
-    
+
     clearFilters() {
         // Uncheck all checkboxes
         const checkboxes = this.filterPanel?.querySelectorAll('input[type="checkbox"]');
         checkboxes?.forEach(cb => cb.checked = false);
-        
+
         // Show all products
         const products = this.productsGrid?.querySelectorAll('.product-card');
         products?.forEach(product => product.style.display = '');
-        
+
         CartManager.showNotification('Filters cleared');
     },
-    
+
     applyFilters() {
         // This is a demo implementation - in production would filter based on product data
         const selectedColors = this.getCheckedValues('color');
         const selectedFabrics = this.getCheckedValues('fabric');
         const selectedPrices = this.getCheckedValues('price');
-        
+
         const hasFilters = selectedColors.length || selectedFabrics.length || selectedPrices.length;
-        
+
         if (!hasFilters) {
             // No filters, show all
             this.clearFilters();
             return;
         }
-        
+
         // Demo: Filter products based on name containing color
         const products = this.productsGrid?.querySelectorAll('.product-card');
         let visibleCount = 0;
-        
+
         products?.forEach(product => {
             const name = product.querySelector('.product-card-name')?.textContent.toLowerCase() || '';
             const price = this.extractPrice(product.querySelector('.product-card-price')?.textContent);
-            
-            let matchesColor = selectedColors.length === 0 || 
+
+            let matchesColor = selectedColors.length === 0 ||
                 selectedColors.some(color => name.includes(color));
-            
-            let matchesFabric = selectedFabrics.length === 0 || 
+
+            let matchesFabric = selectedFabrics.length === 0 ||
                 selectedFabrics.some(fabric => name.includes(fabric));
-            
-            let matchesPrice = selectedPrices.length === 0 || 
+
+            let matchesPrice = selectedPrices.length === 0 ||
                 selectedPrices.some(range => this.priceInRange(price, range));
-            
+
             if (matchesColor && matchesFabric && matchesPrice) {
                 product.style.display = '';
                 visibleCount++;
@@ -2463,15 +2525,15 @@ const FilterSortManager = {
                 product.style.display = 'none';
             }
         });
-        
+
         CartManager.showNotification(`Showing ${visibleCount} products`);
     },
-    
+
     getCheckedValues(name) {
         const checkboxes = this.filterPanel?.querySelectorAll(`input[name="${name}"]:checked`);
         return Array.from(checkboxes || []).map(cb => cb.value);
     },
-    
+
     priceInRange(price, range) {
         const [min, max] = range.split('-').map(v => v === '+' ? Infinity : parseInt(v) || 0);
         if (max === undefined) return price >= min;
@@ -2484,7 +2546,7 @@ const FilterSortManager = {
  */
 function initWishlistButtons() {
     const wishlistBtns = document.querySelectorAll('.product-wishlist-btn');
-    
+
     wishlistBtns.forEach(btn => {
         // Check if already in wishlist and set initial state
         const productCard = btn.closest('.product-card') || btn.closest('.wishlist-card') || btn.closest('.product-info');
@@ -2494,35 +2556,35 @@ function initWishlistButtons() {
                 btn.classList.add('active');
             }
         }
-        
+
         btn.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            
+
             // Get product data from parent card
             const card = btn.closest('.product-card') || btn.closest('.wishlist-card') || btn.closest('.product-info');
-            
+
             if (card) {
                 // Get product name first for stable ID generation
                 const productName = card.dataset.productName || card.querySelector('.product-card-name, .wishlist-card-name, .product-title')?.textContent || 'Product';
-                
+
                 // Generate stable ID from product name if data-product-id is missing
                 // This prevents duplicates by ensuring the same product always has the same ID
                 const generateStableId = (name) => {
                     const cleanName = name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').substring(0, 50);
                     return `product-${cleanName}`;
                 };
-                
+
                 const product = {
                     id: card.dataset.productId || generateStableId(productName),
                     name: productName,
                     price: parseFloat(card.dataset.productPrice) || 0,
                     image: card.dataset.productImage || card.querySelector('img')?.src || ''
                 };
-                
+
                 // Toggle wishlist item
                 const isAdded = WishlistManager.toggleItem(product);
-                
+
                 // Toggle visual state
                 if (isAdded) {
                     btn.classList.add('active');
@@ -2535,7 +2597,7 @@ function initWishlistButtons() {
             }
         });
     });
-    
+
     // Initialize wishlist badge count
     WishlistManager.updateBadge();
 }
@@ -2546,15 +2608,15 @@ function initWishlistButtons() {
 function initProductDetail() {
     // Accordion toggle
     const accordionHeaders = document.querySelectorAll('.product-accordion-header');
-    
+
     accordionHeaders.forEach(header => {
         header.addEventListener('click', () => {
             const accordion = header.parentElement;
             const isActive = accordion.classList.contains('active');
-            
+
             // Toggle active class
             accordion.classList.toggle('active');
-            
+
             // Update aria-expanded
             header.setAttribute('aria-expanded', !isActive);
         });
@@ -2562,7 +2624,7 @@ function initProductDetail() {
 
     // Color swatch selection
     const colorSwatches = document.querySelectorAll('.color-swatch');
-    
+
     colorSwatches.forEach(swatch => {
         swatch.addEventListener('click', () => {
             colorSwatches.forEach(s => s.classList.remove('active'));
@@ -2573,7 +2635,7 @@ function initProductDetail() {
     // Add to Cart button handler
     const addToCartBtn = document.getElementById('addToCartBtn');
     const productInfo = document.querySelector('.product-info');
-    
+
     if (addToCartBtn && productInfo) {
         addToCartBtn.addEventListener('click', () => {
             // Get product data from data attributes
@@ -2584,18 +2646,18 @@ function initProductDetail() {
                 image: productInfo.dataset.productImage,
                 quantity: 1
             };
-            
+
             // Get selected color if any
             const selectedColor = document.querySelector('.color-swatch.active');
             if (selectedColor) {
                 product.color = selectedColor.dataset.color;
             }
-            
+
             // Add to cart using CartManager
             CartManager.addItem(product);
         });
     }
-    
+
     // ==================== STACKED GALLERY LIGHTBOX ====================
     const lightbox = document.getElementById('productLightbox');
     const lightboxImage = document.getElementById('lightboxImage');
@@ -2604,20 +2666,20 @@ function initProductDetail() {
     const lightboxPrev = document.getElementById('lightboxPrev');
     const lightboxNext = document.getElementById('lightboxNext');
     const lightboxCounter = document.getElementById('lightboxCounter');
-    
+
     // Get all gallery images (stacked layout)
     const galleryImages = document.querySelectorAll('.gallery-image');
-    
+
     if (!lightbox || galleryImages.length === 0) return;
-    
+
     // Collect all image sources
     const imageSources = Array.from(galleryImages).map(container => {
         const img = container.querySelector('img');
         return img ? img.src : '';
     }).filter(src => src);
-    
+
     let currentImageIndex = 0;
-    
+
     // Open lightbox
     function openLightbox(index = 0) {
         currentImageIndex = index;
@@ -2626,14 +2688,14 @@ function initProductDetail() {
         lightbox.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
     }
-    
+
     // Close lightbox
     function closeLightbox() {
         lightbox.classList.remove('active');
         lightbox.setAttribute('aria-hidden', 'true');
         document.body.style.overflow = '';
     }
-    
+
     // Update lightbox image and counter
     function updateLightboxImage() {
         if (lightboxImage && imageSources[currentImageIndex]) {
@@ -2643,32 +2705,32 @@ function initProductDetail() {
             lightboxCounter.textContent = `${currentImageIndex + 1} / ${imageSources.length}`;
         }
     }
-    
+
     // Navigate to previous image
     function prevImage() {
         currentImageIndex = (currentImageIndex - 1 + imageSources.length) % imageSources.length;
         updateLightboxImage();
     }
-    
+
     // Navigate to next image
     function nextImage() {
         currentImageIndex = (currentImageIndex + 1) % imageSources.length;
         updateLightboxImage();
     }
-    
+
     // ==================== ZOOM + PAN FUNCTIONALITY (Binal Patel Style) ====================
     // Click to zoom in, move mouse to pan, click again to exit
     galleryImages.forEach((container, index) => {
         const img = container.querySelector('img');
         let isZoomed = false;
-        
+
         // Click to toggle zoom
         container.addEventListener('click', (e) => {
             if (!isZoomed) {
                 // Activate zoom mode
                 isZoomed = true;
                 container.classList.add('zoom-active');
-                
+
                 // Calculate initial pan position based on click
                 updatePan(e, container, img);
             } else {
@@ -2678,14 +2740,14 @@ function initProductDetail() {
                 img.style.transformOrigin = '';
             }
         });
-        
+
         // Mouse move for panning when zoomed
         container.addEventListener('mousemove', (e) => {
             if (isZoomed) {
                 updatePan(e, container, img);
             }
         });
-        
+
         // Reset zoom when mouse leaves
         container.addEventListener('mouseleave', () => {
             if (isZoomed) {
@@ -2695,7 +2757,7 @@ function initProductDetail() {
             }
         });
     });
-    
+
     // Helper function to update pan position
     function updatePan(e, container, img) {
         const rect = container.getBoundingClientRect();
@@ -2703,34 +2765,34 @@ function initProductDetail() {
         const y = ((e.clientY - rect.top) / rect.height) * 100;
         img.style.transformOrigin = `${x}% ${y}%`;
     }
-    
+
     // Lightbox controls
     if (lightboxClose) {
         lightboxClose.addEventListener('click', closeLightbox);
     }
-    
+
     if (lightboxBackdrop) {
         lightboxBackdrop.addEventListener('click', closeLightbox);
     }
-    
+
     if (lightboxPrev) {
         lightboxPrev.addEventListener('click', (e) => {
             e.stopPropagation();
             prevImage();
         });
     }
-    
+
     if (lightboxNext) {
         lightboxNext.addEventListener('click', (e) => {
             e.stopPropagation();
             nextImage();
         });
     }
-    
+
     // Keyboard navigation for lightbox
     document.addEventListener('keydown', (e) => {
         if (!lightbox.classList.contains('active')) return;
-        
+
         switch (e.key) {
             case 'Escape':
                 closeLightbox();
@@ -2761,17 +2823,17 @@ document.addEventListener('DOMContentLoaded', () => {
  */
 function initCarouselArrows() {
     const carouselArrows = document.querySelectorAll('.carousel-arrow');
-    
+
     carouselArrows.forEach(arrow => {
         arrow.addEventListener('click', () => {
             const carouselId = arrow.dataset.carousel;
             const carousel = document.getElementById(carouselId);
-            
+
             if (!carousel) return;
-            
+
             const scrollAmount = carousel.offsetWidth * 0.8; // Scroll 80% of visible width
             const isLeft = arrow.classList.contains('carousel-arrow-left');
-            
+
             carousel.scrollBy({
                 left: isLeft ? -scrollAmount : scrollAmount,
                 behavior: 'smooth'
@@ -2788,7 +2850,7 @@ function initCarouselArrows() {
 function initScrollReveal() {
     // Check for reduced motion preference
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    
+
     if (prefersReducedMotion) {
         // If user prefers reduced motion, show all elements immediately
         document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-stagger').forEach(el => {
@@ -2796,14 +2858,14 @@ function initScrollReveal() {
         });
         return;
     }
-    
+
     // Create Intersection Observer
     const observerOptions = {
         root: null, // viewport
         rootMargin: '0px 0px -80px 0px', // Trigger slightly before element enters viewport
         threshold: 0.1 // 10% visibility triggers animation
     };
-    
+
     const revealObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -2813,7 +2875,7 @@ function initScrollReveal() {
             }
         });
     }, observerOptions);
-    
+
     // Observe all reveal elements
     const revealElements = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-stagger, .reveal-card');
     revealElements.forEach(el => {
@@ -2832,42 +2894,42 @@ function autoAddRevealClasses() {
     if (introSection) {
         introSection.classList.add('reveal');
     }
-    
+
     // Add reveal to discover/video section
     const discoverSection = document.querySelector('.discover-video-section');
     if (discoverSection) {
         discoverSection.classList.add('reveal');
     }
-    
+
     // Add reveal to explore section title
     const exploreTitle = document.querySelector('.explore-title');
     if (exploreTitle) {
         exploreTitle.classList.add('reveal');
     }
-    
+
     // Add reveal to story sections with directional animations
     const artistLegacy = document.querySelector('#artist-legacy .story-image');
     const artistContent = document.querySelector('#artist-legacy .story-content');
     if (artistLegacy) artistLegacy.classList.add('reveal-left');
     if (artistContent) artistContent.classList.add('reveal-right');
-    
+
     const craftImage = document.querySelector('#craft-matters .story-image');
     const craftContent = document.querySelector('#craft-matters .story-content');
     if (craftImage) craftImage.classList.add('reveal-right');
     if (craftContent) craftContent.classList.add('reveal-left');
-    
+
     // Add reveal to insights section title (support both class variations)
     const insightsTitle = document.querySelector('.insights-title, .fashion-insights-title');
     if (insightsTitle) {
         insightsTitle.classList.add('reveal');
     }
-    
+
     // Add reveal-card to fashion insight cards for subtle staggered entrance
     const insightCards = document.querySelectorAll('.fashion-insight-card');
     insightCards.forEach(card => {
         card.classList.add('reveal-card');
     });
-    
+
     // Add reveal to footer
     const footer = document.querySelector('.footer-content');
     if (footer) {
@@ -2879,7 +2941,7 @@ function autoAddRevealClasses() {
 document.addEventListener('DOMContentLoaded', () => {
     // Auto-add reveal classes first
     autoAddRevealClasses();
-    
+
     // Initialize scroll reveal animations
     initScrollReveal();
 });
@@ -2930,16 +2992,16 @@ if (typeof CartManager !== 'undefined') {
 const MobileFooterAccordion = {
     init() {
         const toggles = document.querySelectorAll('.footer-accordion-toggle');
-        
+
         toggles.forEach(toggle => {
             toggle.addEventListener('click', (e) => {
                 // Prevent default behavior
                 e.preventDefault();
-                
+
                 // Get the content element
                 const content = toggle.nextElementSibling;
                 const isOpen = toggle.classList.contains('active');
-                
+
                 // Close all other sections
                 toggles.forEach(otherToggle => {
                     if (otherToggle !== toggle && otherToggle.classList.contains('active')) {
@@ -2952,7 +3014,7 @@ const MobileFooterAccordion = {
                         }
                     }
                 });
-                
+
                 // Toggle current section
                 if (isOpen) {
                     toggle.classList.remove('active');
@@ -3006,11 +3068,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
             container.innerHTML =
                 '<div style="max-width:420px;margin:60px auto;padding:0 20px;text-align:center;">' +
-                    '<h2 style="font-family:\'Pinyon Script\', cursive; font-size: 32px; margin-bottom: 20px; color: #b8860b;">Latest from the Loom</h2>' +
-                    imageHTML +
-                    '<h3 style="margin:20px 0 8px;font-family:\'Cormorant Garamond\',serif;font-size:22px;font-weight:400;letter-spacing:1px;color:#2c2c2c;text-transform:uppercase;">' + name + '</h3>' +
-                    '<span style="font-family:\'Roboto\',sans-serif;font-size:14px;letter-spacing:1px;color:#555;">₹' + price.toLocaleString('en-IN') + '</span>' +
-                    '<div>' + ctaHTML + '</div>' +
+                '<h2 style="font-family:\'Pinyon Script\', cursive; font-size: 32px; margin-bottom: 20px; color: #b8860b;">Latest from the Loom</h2>' +
+                imageHTML +
+                '<h3 style="margin:20px 0 8px;font-family:\'Cormorant Garamond\',serif;font-size:22px;font-weight:400;letter-spacing:1px;color:#2c2c2c;text-transform:uppercase;">' + name + '</h3>' +
+                '<span style="font-family:\'Roboto\',sans-serif;font-size:14px;letter-spacing:1px;color:#555;">₹' + price.toLocaleString('en-IN') + '</span>' +
+                '<div>' + ctaHTML + '</div>' +
                 '</div>';
         })
         .catch(function (err) {
@@ -3050,24 +3112,31 @@ document.addEventListener('DOMContentLoaded', function () {
                 priceEl.textContent = 'Rs.' + formatted + '/-';
             }
 
-            // 4c. Replace images
+            // 4c. Replace images with optimized versions
             var images = product.images || [];
             var img0 = document.getElementById('pdpImage0');
             var img1 = document.getElementById('pdpImage1');
             var img2 = document.getElementById('pdpImage2');
 
-            if (img0 && images[0]) {
-                img0.src = images[0];
-                img0.alt = product.name + ' - View 1';
-            }
-            if (img1 && images[1]) {
-                img1.src = images[1];
-                img1.alt = product.name + ' - View 2';
-            }
-            if (img2 && images[2]) {
-                img2.src = images[2];
-                img2.alt = product.name + ' - View 3';
-            }
+            // Helper to handle optimized source replacement
+            var setOptimizedSrc = function (el, src, width) {
+                if (!el || !src) return;
+
+                // Add shimmer to parent if not already there
+                if (el.parentElement) el.parentElement.classList.add('luxury-shimmer');
+
+                // Use ProductRenderer helper if available, otherwise fallback
+                var optimizedUrl = window.ProductRenderer
+                    ? window.ProductRenderer.getOptimizedImage(src, width)
+                    : src;
+
+                // Set the src — the onload in HTML will handle removing shimmer
+                el.src = optimizedUrl;
+            };
+
+            setOptimizedSrc(img0, images[0], 1000);
+            setOptimizedSrc(img1, images[1], 600);
+            setOptimizedSrc(img2, images[2], 600);
 
             // 4d. Update product-info data attributes (for cart/wishlist)
             var productInfo = document.querySelector('.product-info');
@@ -3075,34 +3144,61 @@ document.addEventListener('DOMContentLoaded', function () {
                 productInfo.dataset.productId = product.id;
                 productInfo.dataset.productName = product.name;
                 productInfo.dataset.productPrice = product.price;
+                productInfo.dataset.stockQuantity = product.stockQuantity ?? '';
                 if (images[0]) {
                     productInfo.dataset.productImage = images[0];
                 }
             }
 
-            // 5. Checkout Redirect Logic (Senior Move: Redirect to WooCommerce)
+            // 5. Cart Logic — enforces stock limits
             var addBtn = document.getElementById('addToCartBtn');
             if (addBtn) {
                 if (product.inStock === false) {
                     addBtn.textContent = 'OUT OF STOCK';
                     addBtn.disabled = true;
-                    addBtn.style.opacity = '0.4';
+                    addBtn.classList.add('disabled');
                 } else {
-                    // Update button text to reflect direct checkout intent
+                    // Show stock hint if managed and low
+                    var stockQty = product.stockQuantity;
+                    if (stockQty !== null && stockQty !== undefined && stockQty <= 5) {
+                        var stockHint = document.createElement('p');
+                        stockHint.className = 'product-stock-hint';
+                        stockHint.textContent = 'Only ' + stockQty + ' left in stock';
+                        stockHint.style.cssText = 'font-size:0.8rem;color:#c0392b;margin-top:6px;font-family:var(--font-body);';
+                        addBtn.parentNode.insertBefore(stockHint, addBtn.nextSibling);
+                    }
+
                     addBtn.textContent = 'BUY NOW';
-                    
-                    addBtn.addEventListener('click', function(e) {
+
+                    addBtn.addEventListener('click', function (e) {
                         e.preventDefault();
-                        
-                        // Use the checkoutUrl provided by the API
-                        var checkoutUrl = product.checkoutUrl;
-                        
-                        if (checkoutUrl) {
-                            // Show a loading state on the button
-                            addBtn.textContent = 'REDIRECTING...';
-                            window.location.href = checkoutUrl;
+
+                        // Create product object with stock info for CartManager
+                        var cartProduct = {
+                            id: product.id,
+                            name: product.name,
+                            price: product.price,
+                            image: images[0] || 'assets/images/placeholder.webp',
+                            stockQuantity: product.stockQuantity ?? null
+                        };
+
+                        // Add to cart using global CartManager (enforces stock limit)
+                        if (window.CartManager) {
+                            var result = window.CartManager.addItem(cartProduct);
+
+                            if (result && result.success) {
+                                // Show a brief feedback state
+                                addBtn.textContent = 'ADDING...';
+
+                                // Small delay to let the user see the state
+                                setTimeout(function () {
+                                    window.location.href = 'cart.html';
+                                }, 300);
+                            }
+                            // If result.success is false, CartManager already showed notification
                         } else {
-                            console.error('Checkout URL missing');
+                            console.error('CartManager not found');
+                            window.location.href = 'cart.html';
                         }
                     });
                 }
