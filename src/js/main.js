@@ -11,6 +11,7 @@ import ScrollAnimations from './modules/ScrollAnimations.js';
 import ProductService from './modules/ProductService.js';
 import ProductRenderer from './modules/ProductRenderer.js';
 import NewsletterManager from './modules/NewsletterManager.js';
+import ContactFormManager from './modules/ContactFormManager.js';
 import { AuthManager } from './modules/AuthManager.js';
 
 // Export for global access (backward compatibility)
@@ -29,6 +30,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Initialize newsletter form
   NewsletterManager.init();
+
+  // Initialize contact form (only runs on contact.html)
+  ContactFormManager.init();
 
   // Update badges on page load
   CartManager.updateBadge();
