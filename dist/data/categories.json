@@ -1,0 +1,150 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "lastUpdated": "2026-01-19"
+  },
+  "categories": [
+    {
+      "id": "silk-sarees",
+      "slug": "silk-sarees",
+      "name": "Silk Sarees",
+      "description": "Exquisite handcrafted silk sarees for every occasion. From traditional Vishnupuri to contemporary designs.",
+      "image": "/assets/images/categories/silk-sarees.jpg",
+      "placeholder": "https://placehold.co/600x400/c9a962/fff?text=Silk+Sarees",
+      "featured": true,
+      "sortOrder": 1,
+      "subcategories": [
+        {
+          "id": "vishnupuri-silk",
+          "slug": "vishnupuri-silk",
+          "name": "Vishnupuri Silk",
+          "description": "Traditional Vishnupuri silk sarees with hand-printed floral motifs.",
+          "productCount": 9
+        },
+        {
+          "id": "banarasi",
+          "slug": "banarasi",
+          "name": "Banarasi Silk",
+          "description": "Luxurious Banarasi silk sarees with gold zari work.",
+          "productCount": 1
+        },
+        {
+          "id": "designer-silk",
+          "slug": "designer-silk",
+          "name": "Designer Silk",
+          "description": "Contemporary designer silk sarees for modern women.",
+          "productCount": 2
+        },
+        {
+          "id": "printed-silk",
+          "slug": "printed-silk",
+          "name": "Printed Silk",
+          "description": "Beautiful printed silk sarees with unique patterns.",
+          "productCount": 1
+        }
+      ],
+      "seo": {
+        "title": "Silk Sarees | Loom Saga - Weaving Indian Culture",
+        "description": "Shop exquisite Silk Sarees at Loom Saga. Handcrafted Vishnupuri Silk, Tussar Silk, and more. Premium handloom sarees for every occasion.",
+        "keywords": ["silk sarees", "vishnupuri silk", "banarasi silk", "designer silk", "handloom sarees"]
+      }
+    },
+    {
+      "id": "cotton-sarees",
+      "slug": "cotton-sarees",
+      "name": "Cotton Sarees",
+      "description": "Comfortable and elegant cotton sarees for everyday wear. Handloom crafted with traditional techniques.",
+      "image": "/assets/images/categories/cotton-sarees.jpg",
+      "placeholder": "https://placehold.co/600x400/dda0dd/fff?text=Cotton+Sarees",
+      "featured": true,
+      "sortOrder": 2,
+      "subcategories": [
+        {
+          "id": "handloom-cotton",
+          "slug": "handloom-cotton",
+          "name": "Handloom Cotton",
+          "description": "Traditional handloom cotton sarees for daily elegance.",
+          "productCount": 1
+        },
+        {
+          "id": "jamdani",
+          "slug": "jamdani",
+          "name": "Jamdani",
+          "description": "Exquisite Jamdani sarees with intricate hand-woven patterns.",
+          "productCount": 1
+        }
+      ],
+      "seo": {
+        "title": "Cotton Sarees | Loom Saga - Weaving Indian Culture",
+        "description": "Shop comfortable Cotton Sarees at Loom Saga. Handloom crafted with traditional techniques for everyday elegance.",
+        "keywords": ["cotton sarees", "handloom cotton", "jamdani", "daily wear sarees"]
+      }
+    },
+    {
+      "id": "muslin-sarees",
+      "slug": "muslin-sarees",
+      "name": "Muslin Sarees",
+      "description": "Delicate and luxurious muslin sarees known for their fine texture and breathability.",
+      "image": "/assets/images/categories/muslin-sarees.jpg",
+      "placeholder": "https://placehold.co/600x400/f0ebe5/333?text=Muslin+Sarees",
+      "featured": false,
+      "sortOrder": 3,
+      "subcategories": [],
+      "seo": {
+        "title": "Muslin Sarees | Loom Saga - Weaving Indian Culture",
+        "description": "Shop delicate Muslin Sarees at Loom Saga. Fine texture and breathability for ultimate comfort.",
+        "keywords": ["muslin sarees", "delicate sarees", "breathable sarees"]
+      }
+    }
+  ],
+  "filters": {
+    "color": [
+      { "id": "red", "name": "Red", "hex": "#dc143c" },
+      { "id": "green", "name": "Green", "hex": "#228b22" },
+      { "id": "blue", "name": "Blue", "hex": "#0000cd" },
+      { "id": "black", "name": "Black", "hex": "#1a1a1a" },
+      { "id": "white", "name": "White", "hex": "#ffffff" },
+      { "id": "yellow", "name": "Yellow", "hex": "#ffd700" },
+      { "id": "pink", "name": "Pink", "hex": "#ff69b4" },
+      { "id": "grey", "name": "Grey", "hex": "#808080" },
+      { "id": "lavender", "name": "Lavender", "hex": "#e6e6fa" },
+      { "id": "orange", "name": "Orange", "hex": "#ff8c00" },
+      { "id": "brown", "name": "Brown", "hex": "#8b4513" }
+    ],
+    "fabric": [
+      { "id": "silk", "name": "Pure Silk" },
+      { "id": "cotton", "name": "Cotton" },
+      { "id": "silk-cotton", "name": "Silk-Cotton Blend" },
+      { "id": "muslin", "name": "Muslin" },
+      { "id": "tissue", "name": "Tissue Silk" },
+      { "id": "lenin", "name": "Lenin" }
+    ],
+    "craft": [
+      { "id": "handloom", "name": "Handloom Weaving" },
+      { "id": "zari", "name": "Zari Weaving" },
+      { "id": "ikat", "name": "Ikat" },
+      { "id": "kalamkari", "name": "Kalamkari" },
+      { "id": "jamdani", "name": "Jamdani Weaving" },
+      { "id": "temple-border", "name": "Temple Border" },
+      { "id": "hand-painting", "name": "Hand Painting" },
+      { "id": "block-print", "name": "Block Print" }
+    ],
+    "occasion": [
+      { "id": "wedding", "name": "Wedding" },
+      { "id": "festive", "name": "Festive" },
+      { "id": "party", "name": "Party" },
+      { "id": "daily", "name": "Daily Wear" },
+      { "id": "office", "name": "Office" },
+      { "id": "casual", "name": "Casual" },
+      { "id": "formal", "name": "Formal" },
+      { "id": "bridal", "name": "Bridal" }
+    ],
+    "priceRange": [
+      { "id": "under-3000", "name": "Under ₹3,000", "min": 0, "max": 3000 },
+      { "id": "3000-5000", "name": "₹3,000 - ₹5,000", "min": 3000, "max": 5000 },
+      { "id": "5000-7000", "name": "₹5,000 - ₹7,000", "min": 5000, "max": 7000 },
+      { "id": "7000-10000", "name": "₹7,000 - ₹10,000", "min": 7000, "max": 10000 },
+      { "id": "above-10000", "name": "Above ₹10,000", "min": 10000, "max": null }
+    ]
+  }
+}

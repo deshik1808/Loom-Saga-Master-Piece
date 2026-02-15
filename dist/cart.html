@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Meta Tags for SEO -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Shopping Cart - Loom Saga luxury handcrafted sarees" />
+  <meta name="author" content="Loom Saga" />
+
+  <title>Your Cart | Loom Saga</title>
+
+  <!-- Google Fonts - Elegant typography for luxury brand -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Montserrat:wght@300;400;500;600&family=Pinyon+Script&family=Roboto:wght@300;400;500;700&display=swap"
+    rel="stylesheet" />
+
+  <!-- Main Stylesheet -->
+  <script type="module" crossorigin src="/assets/main-C8dYEG2X.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/main-DKX0D8MR.css">
+</head>
+
+<body>
+  <!-- ==================== HEADER ==================== -->
+  <header class="header header-dark" id="header">
+    <div class="header-container">
+      <!-- Top Header Row -->
+      <div class="header-top">
+        <!-- Hamburger Menu - Mobile -->
+        <button class="hamburger" id="hamburger" aria-label="Toggle Menu" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <!-- Tagline - Left (hidden on mobile) -->
+        <p class="tagline">Weaving Indian Culture</p>
+
+        <!-- Logo - Center -->
+        <a href="index.html" class="logo" aria-label="Loom Saga Home">
+          <img src="/assets/logo-CAZJBRgj.webp" alt="Loom Saga Logo" class="logo-image" />
+          <span class="logo-text">Loom Saga</span>
+        </a>
+
+        <!-- Icons - Right -->
+        <div class="header-icons">
+          <button class="icon-btn" id="searchBtn" aria-label="Search">
+            <img src="/assets/search-CTirtJuf.png" alt="Search" width="20" height="20" />
+          </button>
+          <a href="wishlist.html" class="icon-btn" aria-label="Wishlist">
+            <img src="/assets/heart-SSPBcZ82.png" alt="Wishlist" width="20" height="20" />
+            <span class="icon-badge" id="wishlistCount">0</span>
+          </a>
+          <a href="login.html" class="icon-btn" id="accountBtn" aria-label="Account">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+          </a>
+          <a href="cart.html" class="icon-btn" id="cartTriggerBtn" aria-label="Shopping Cart">
+            <img src="/assets/cart-CU_5Odt_.png" alt="Cart" width="20" height="20" />
+            <span class="icon-badge" id="cartCount">0</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Navigation Row -->
+      <nav class="main-nav" aria-label="Main Navigation">
+        <ul class="nav-list">
+          <li class="nav-item has-dropdown">
+            <a href="#" class="nav-link"><span class="nav-link-text">New Arrivals</span> <svg class="dropdown-arrow"
+                width="8" height="5" viewBox="0 0 8 5" fill="none">
+                <path d="M1 1L4 4L7 1" stroke="currentColor" stroke-width="1.2" />
+              </svg></a>
+            <div class="mega-menu mega-menu-new-arrivals">
+              <div class="mega-menu-content new-arrivals-content">
+                <!-- Left side: Category Links -->
+                <div class="mega-menu-links">
+                  <ul class="mega-menu-list">
+                    <li><a href="vishnupuri-silk.html">Vishnupuri Silk Sarees</a></li>
+                    <li><a href="#">Muslin Sarees</a></li>
+                  </ul>
+                </div>
+                <!-- Right side: Product Images -->
+                <div class="mega-menu-images">
+                  <a href="product-detail.html" class="mega-menu-img-wrapper">
+                    <img src="/assets/Yellow%20Saree-OJsbNqwx.webp" alt="Yellow Vishnupuri Silk Saree"
+                      loading="lazy">
+                  </a>
+                  <a href="product-detail.html" class="mega-menu-img-wrapper">
+                    <img src="/assets/Golden%20Beauty-CYI9MJWT.webp" alt="Black Embroidered Saree" loading="lazy">
+                  </a>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="#" class="nav-link"><span class="nav-link-text">Collection</span> <svg class="dropdown-arrow"
+                width="8" height="5" viewBox="0 0 8 5" fill="none">
+                <path d="M1 1L4 4L7 1" stroke="currentColor" stroke-width="1.2" />
+              </svg></a>
+            <div class="mega-menu mega-menu-collection">
+              <div class="mega-menu-content collection-menu-content">
+                <div class="mega-menu-links">
+                  <ul class="mega-menu-list">
+                    <li><a href="./vishnupuri-silk.html">Vishnupuri Silk Sarees</a></li>
+                    <li><a href="#">Muslin Sarees</a></li>
+                    <li><a href="./silk-sarees.html">Modal Silk Sarees</a></li>
+                    <li><a href="#">Matka Jamdani Sarees</a></li>
+                    <li><a href="#">Tussar Jamdani Sarees</a></li>
+                    <li><a href="#">Tussar Dhakai Jamdani Sarees</a></li>
+                    <li><a href="#">Muslin Jamdani Sarees</a></li>
+                    <li><a href="#">Tissue Matka Jamdani Sarees</a></li>
+                    <li><a href="#">Silk Lenin Sarees</a></li>
+                    <li><a href="./collections.html">View All</a></li>
+                  </ul>
+                </div>
+                <div class="mega-menu-images">
+                  <!-- Re-using images based on design intent -->
+                  <a href="#" class="mega-menu-img-wrapper">
+                    <img src="/assets/Yellow%20Saree-OJsbNqwx.webp" alt="Collection 1" loading="lazy">
+                  </a>
+                  <a href="#" class="mega-menu-img-wrapper">
+                    <img src="/assets/Golden%20Beauty-CYI9MJWT.webp" alt="Collection 2" loading="lazy">
+                  </a>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="./silk-sarees.html" class="nav-link"><span class="nav-link-text">Sarees</span> <svg
+                class="dropdown-arrow" width="8" height="5" viewBox="0 0 8 5" fill="none">
+                <path d="M1 1L4 4L7 1" stroke="currentColor" stroke-width="1.2" />
+              </svg></a>
+            <div class="mega-menu mega-menu-sarees">
+              <div class="mega-menu-content sarees-menu-content">
+                <div class="mega-menu-links">
+                  <h3 class="mega-menu-heading">Shop By Fabric</h3>
+                  <ul class="mega-menu-list">
+                    <li><a href="./silk-sarees.html">Silk</a></li>
+                    <li><a href="#">Tissue Silk</a></li>
+                    <li><a href="#">Lenin</a></li>
+                    <li><a href="#">Cotton</a></li>
+                  </ul>
+                </div>
+                <div class="mega-menu-links">
+                  <h3 class="mega-menu-heading">Shop By Craft</h3>
+                  <ul class="mega-menu-list">
+                    <li><a href="#">Zari Weaving</a></li>
+                    <li><a href="#">Ikat</a></li>
+                    <li><a href="#">Handloom Weaving</a></li>
+                    <li><a href="#">Kalamkari</a></li>
+                    <li><a href="#">Jamdani Weaving</a></li>
+                    <li><a href="#">Temple Border</a></li>
+                    <li><a href="#">Hand painting</a></li>
+                  </ul>
+                </div>
+                <div class="mega-menu-links">
+                  <h3 class="mega-menu-heading">Shop By Color</h3>
+                  <ul class="mega-menu-list">
+                    <li><a href="#">Red</a></li>
+                    <li><a href="#">Yellow</a></li>
+                    <li><a href="#">Brown</a></li>
+                    <li><a href="#">Black</a></li>
+                    <li><a href="#">Blue</a></li>
+                    <li><a href="#">Pink</a></li>
+                    <li><a href="#">Green</a></li>
+                    <li><a href="#">Lavender</a></li>
+                    <li><a href="#">Orange</a></li>
+                    <li><a href="#">Sea Green</a></li>
+                    <li><a href="#">Multi Color</a></li>
+                    <li><a href="./collections.html">View All Sarees</a></li>
+                  </ul>
+                </div>
+                <div class="mega-menu-images">
+                  <a href="#" class="mega-menu-img-wrapper">
+                    <img src="/assets/Yellow%20Saree-OJsbNqwx.webp" alt="Sarees 1" loading="lazy">
+                  </a>
+                  <a href="#" class="mega-menu-img-wrapper">
+                    <img src="/assets/Golden%20Beauty-CYI9MJWT.webp" alt="Sarees 2" loading="lazy">
+                  </a>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="#" class="nav-link"><span class="nav-link-text">Crafts</span> <svg class="dropdown-arrow" width="8"
+                height="5" viewBox="0 0 8 5" fill="none">
+                <path d="M1 1L4 4L7 1" stroke="currentColor" stroke-width="1.2" />
+              </svg></a>
+            <div class="mega-menu mega-menu-crafts">
+              <div class="mega-menu-content crafts-menu-content">
+                <div class="mega-menu-links">
+                  <h3 class="mega-menu-heading">Handloom</h3>
+                  <ul class="mega-menu-list">
+                    <li><a href="handloom.html#fabrics">Fabrics</a></li>
+                    <li><a href="handloom.html#weaving">Weaving Process</a></li>
+                    <li><a href="handloom.html#techniques">Techniques & Patterns</a></li>
+                    <li><a href="handloom.html#dyes">Dyes & Paintings</a></li>
+                  </ul>
+                </div>
+                <div class="mega-menu-links">
+                  <h3 class="mega-menu-heading">Fashion Insights</h3>
+                  <ul class="mega-menu-list">
+                    <li><a href="./fashion-insights.html">Indo-Western Style: How the New-Age...</a></li>
+                    <li><a href="./fashion-insights.html">Draped for the Day: Saree Looks for...</a></li>
+                    <li><a href="./fashion-insights.html">Monsoon Saree Guide: Colours, Fabrics...</a></li>
+                    <li><a href="./fashion-insights.html">Shine Through the Rituals: Handpicked...</a></li>
+                    <li><a href="./fashion-insights.html">Festive Ready: Elegant Sarees to Gift...</a></li>
+                    <li><a href="./fashion-insights.html">Season of Love: Sarees for Valentine's...</a></li>
+                    <li><a href="./fashion-insights.html">From Loom to Drape: The Journey of an...</a></li>
+                  </ul>
+                </div>
+                <div class="mega-menu-images">
+                  <a href="#" class="mega-menu-img-wrapper">
+                    <img src="/assets/Yellow%20Saree-OJsbNqwx.webp" alt="Crafts 1" loading="lazy">
+                  </a>
+                  <a href="#" class="mega-menu-img-wrapper">
+                    <img src="/assets/Golden%20Beauty-CYI9MJWT.webp" alt="Crafts 2" loading="lazy">
+                  </a>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="#" class="nav-link"><span class="nav-link-text">About Us</span> <svg class="dropdown-arrow"
+                width="8" height="5" viewBox="0 0 8 5" fill="none">
+                <path d="M1 1L4 4L7 1" stroke="currentColor" stroke-width="1.2" />
+              </svg></a>
+            <div class="mega-menu mega-menu-about">
+              <div class="mega-menu-content about-us-content">
+                <div class="mega-menu-links">
+                  <h3 class="mega-menu-heading">About Us</h3>
+                  <ul class="mega-menu-list">
+                    <li><a href="./brand-story.html">Our Brand Story</a></li>
+                    <li><a href="./about.html">Our Founder's Story</a></li>
+                    <li><a href="#">Our Store</a></li>
+                    <li><a href="#">FAQ's</a></li>
+                    <li><a href="./contact.html">Contact Us</a></li>
+                  </ul>
+                </div>
+                <div class="mega-menu-images">
+                  <a href="#" class="mega-menu-img-wrapper">
+                    <img src="/assets/Yellow%20Saree-OJsbNqwx.webp" alt="About Us 1" loading="lazy">
+                  </a>
+                  <a href="#" class="mega-menu-img-wrapper">
+                    <img src="/assets/Golden%20Beauty-CYI9MJWT.webp" alt="About Us 2" loading="lazy">
+                  </a>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Mobile Navigation Overlay (backdrop) -->
+  <div class="nav-overlay" id="navOverlay"></div>
+
+  <!-- ==================== FULLSCREEN MOBILE MENU (Manish Malhotra Style) ==================== -->
+  <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <!-- Main Menu Panel -->
+    <div class="mobile-menu__panel mobile-menu__panel--main active" id="mobileMenuMain">
+      <div class="mobile-menu__content">
+        <!-- Primary Navigation -->
+        <nav class="mobile-menu__nav" aria-label="Mobile Navigation">
+          <ul class="mobile-menu__list">
+            <li class="mobile-menu__item">
+              <button class="mobile-menu__link" data-submenu="new-arrivals">
+                <span>NEW ARRIVALS</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M5 12h14" />
+                  <path d="M13 5l7 7-7 7" />
+                </svg>
+              </button>
+            </li>
+            <li class="mobile-menu__item">
+              <button class="mobile-menu__link" data-submenu="collection">
+                <span>COLLECTION</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M5 12h14" />
+                  <path d="M13 5l7 7-7 7" />
+                </svg>
+              </button>
+            </li>
+            <li class="mobile-menu__item">
+              <button class="mobile-menu__link" data-submenu="sarees">
+                <span>SAREES</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M5 12h14" />
+                  <path d="M13 5l7 7-7 7" />
+                </svg>
+              </button>
+            </li>
+            <li class="mobile-menu__item">
+              <button class="mobile-menu__link" data-submenu="crafts">
+                <span>CRAFTS</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M5 12h14" />
+                  <path d="M13 5l7 7-7 7" />
+                </svg>
+              </button>
+            </li>
+            <li class="mobile-menu__item">
+              <button class="mobile-menu__link" data-submenu="about">
+                <span>ABOUT US</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M5 12h14" />
+                  <path d="M13 5l7 7-7 7" />
+                </svg>
+              </button>
+            </li>
+          </ul>
+        </nav>
+
+        <!-- Secondary Actions -->
+        <div class="mobile-menu__secondary">
+          <a href="wishlist.html" class="mobile-menu__secondary-link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path
+                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+            </svg>
+            <span>WISHLIST</span>
+          </a>
+          <a href="login.html" class="mobile-menu__secondary-link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+            <span>LOG IN</span>
+          </a>
+        </div>
+
+        <!-- Social Links -->
+        <div class="mobile-menu__social">
+          <span class="mobile-menu__social-label">Find our store</span>
+          <div class="mobile-menu__social-icons">
+            <a href="#" aria-label="Instagram"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="1.5">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+              </svg></a>
+            <a href="#" aria-label="Facebook"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="1.5">
+                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+              </svg></a>
+            <a href="#" aria-label="WhatsApp"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+              </svg></a>
+            <a href="#" aria-label="YouTube"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="1.5">
+                <path
+                  d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z" />
+                <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" />
+              </svg></a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sub-Panel: New Arrivals -->
+    <div class="mobile-menu__panel mobile-menu__panel--sub" id="submenu-new-arrivals" data-panel="new-arrivals">
+      <div class="mobile-menu__subheader">
+        <button class="mobile-menu__back" data-back="main">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 12H5" />
+            <path d="M11 19l-7-7 7-7" />
+          </svg>
+          <span>Back</span>
+        </button>
+        <h2 class="mobile-menu__subtitle">NEW ARRIVALS</h2>
+      </div>
+      <ul class="mobile-menu__sublist">
+        <li><a href="vishnupuri-silk.html">Vishnupuri Silk Sarees</a></li>
+        <li><a href="#">Muslin Sarees</a></li>
+      </ul>
+    </div>
+
+    <!-- Sub-Panel: Collection -->
+    <div class="mobile-menu__panel mobile-menu__panel--sub" id="submenu-collection" data-panel="collection">
+      <div class="mobile-menu__subheader">
+        <button class="mobile-menu__back" data-back="main">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 12H5" />
+            <path d="M11 19l-7-7 7-7" />
+          </svg>
+          <span>Back</span>
+        </button>
+        <h2 class="mobile-menu__subtitle">COLLECTION</h2>
+      </div>
+      <ul class="mobile-menu__sublist">
+        <li><a href="vishnupuri-silk.html">Vishnupuri Silk Sarees</a></li>
+        <li><a href="#">Muslin Sarees</a></li>
+        <li><a href="silk-sarees.html">Modal Silk Sarees</a></li>
+        <li><a href="#">Matka Jamdani Sarees</a></li>
+        <li><a href="#">Tussar Jamdani Sarees</a></li>
+        <li><a href="#">Tussar Dhakai Jamdani Sarees</a></li>
+        <li><a href="#">Muslin Jamdani Sarees</a></li>
+        <li><a href="#">Tissue Matka Jamdani Sarees</a></li>
+        <li><a href="#">Silk Lenin Sarees</a></li>
+        <li><a href="collections.html">View All</a></li>
+      </ul>
+    </div>
+
+    <!-- Sub-Panel: Sarees -->
+    <div class="mobile-menu__panel mobile-menu__panel--sub" id="submenu-sarees" data-panel="sarees">
+      <div class="mobile-menu__subheader">
+        <button class="mobile-menu__back" data-back="main">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 12H5" />
+            <path d="M11 19l-7-7 7-7" />
+          </svg>
+          <span>Back</span>
+        </button>
+        <h2 class="mobile-menu__subtitle">SAREES</h2>
+      </div>
+      <div class="mobile-menu__subgroup">
+        <h3 class="mobile-menu__subgroup-title">Shop By Fabric</h3>
+        <ul class="mobile-menu__sublist">
+          <li><a href="silk-sarees.html">Silk</a></li>
+          <li><a href="#">Tissue Silk</a></li>
+          <li><a href="#">Lenin</a></li>
+          <li><a href="#">Cotton</a></li>
+        </ul>
+      </div>
+      <div class="mobile-menu__subgroup">
+        <h3 class="mobile-menu__subgroup-title">Shop By Craft</h3>
+        <ul class="mobile-menu__sublist">
+          <li><a href="#">Zari Weaving</a></li>
+          <li><a href="#">Ikat</a></li>
+          <li><a href="#">Handloom Weaving</a></li>
+          <li><a href="#">Kalamkari</a></li>
+          <li><a href="#">Jamdani Weaving</a></li>
+        </ul>
+      </div>
+      <div class="mobile-menu__subgroup">
+        <h3 class="mobile-menu__subgroup-title">Shop By Color</h3>
+        <ul class="mobile-menu__sublist mobile-menu__sublist--grid">
+          <li><a href="#">Red</a></li>
+          <li><a href="#">Yellow</a></li>
+          <li><a href="#">Brown</a></li>
+          <li><a href="#">Black</a></li>
+          <li><a href="#">Blue</a></li>
+          <li><a href="#">Pink</a></li>
+          <li><a href="#">Green</a></li>
+          <li><a href="#">Lavender</a></li>
+        </ul>
+      </div>
+      <a href="collections.html" class="mobile-menu__view-all">View All Sarees</a>
+    </div>
+
+    <!-- Sub-Panel: Crafts -->
+    <div class="mobile-menu__panel mobile-menu__panel--sub" id="submenu-crafts" data-panel="crafts">
+      <div class="mobile-menu__subheader">
+        <button class="mobile-menu__back" data-back="main">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 12H5" />
+            <path d="M11 19l-7-7 7-7" />
+          </svg>
+          <span>Back</span>
+        </button>
+        <h2 class="mobile-menu__subtitle">CRAFTS</h2>
+      </div>
+      <div class="mobile-menu__subgroup">
+        <h3 class="mobile-menu__subgroup-title">Handloom</h3>
+        <ul class="mobile-menu__sublist">
+          <li><a href="handloom.html#fabrics">Fabrics</a></li>
+          <li><a href="handloom.html#weaving">Weaving Process</a></li>
+          <li><a href="handloom.html#techniques">Techniques & Patterns</a></li>
+          <li><a href="handloom.html#dyes">Dyes & Paintings</a></li>
+        </ul>
+      </div>
+      <div class="mobile-menu__subgroup">
+        <h3 class="mobile-menu__subgroup-title">Fashion Insights</h3>
+        <ul class="mobile-menu__sublist">
+          <li><a href="fashion-insights.html">Indo-Western Style</a></li>
+          <li><a href="fashion-insights.html">Draped for the Day</a></li>
+          <li><a href="fashion-insights.html">Monsoon Saree Guide</a></li>
+          <li><a href="fashion-insights.html">Festive Ready</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Sub-Panel: About Us -->
+    <div class="mobile-menu__panel mobile-menu__panel--sub" id="submenu-about" data-panel="about">
+      <div class="mobile-menu__subheader">
+        <button class="mobile-menu__back" data-back="main">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 12H5" />
+            <path d="M11 19l-7-7 7-7" />
+          </svg>
+          <span>Back</span>
+        </button>
+        <h2 class="mobile-menu__subtitle">ABOUT US</h2>
+      </div>
+      <ul class="mobile-menu__sublist">
+        <li><a href="brand-story.html">Our Brand Story</a></li>
+        <li><a href="about.html">Our Founder's Story</a></li>
+        <li><a href="#">Our Store</a></li>
+        <li><a href="#">FAQ's</a></li>
+        <li><a href="contact.html">Contact Us</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ==================== PREMIUM SEARCH OVERLAY (Manish Malhotra Style) ==================== -->
+  <div class="search-overlay" id="searchOverlay" aria-hidden="true">
+    <div class="search-overlay__backdrop" id="searchBackdrop"></div>
+    <div class="search-overlay__panel">
+      <!-- Search Input Row -->
+      <div class="search-overlay__input-row">
+        <div class="search-overlay__input-container">
+          <input type="text" class="search-overlay__input" id="searchOverlayInput" placeholder="Search"
+            autocomplete="off" aria-label="Search">
+          <button class="search-overlay__clear" id="searchOverlayClear" aria-label="Clear search"
+            style="display: none;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+          <button class="search-overlay__submit" aria-label="Submit search">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </button>
+        </div>
+        <button class="search-overlay__close" id="searchOverlayClose" aria-label="Close search">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Popular Search Links -->
+      <div class="search-overlay__popular">
+        <span class="search-overlay__popular-label">POPULAR SEARCH:</span>
+        <div class="search-overlay__popular-links">
+          <a href="silk-sarees.html" class="search-overlay__popular-link">Silk Sarees</a>
+          <a href="vishnupuri-silk.html" class="search-overlay__popular-link">Vishnupuri</a>
+          <a href="collections.html" class="search-overlay__popular-link">Collections</a>
+          <a href="handloom.html" class="search-overlay__popular-link">Handloom</a>
+          <a href="fashion-insights.html" class="search-overlay__popular-link">Fashion Tips</a>
+        </div>
+      </div>
+
+      <!-- Two-Column Results Container -->
+      <div class="search-overlay__results" id="searchOverlayResults" style="display: none;">
+        <!-- Suggestions Column -->
+        <div class="search-overlay__suggestions" id="searchSuggestions">
+          <h4 class="search-overlay__column-title">SUGGESTIONS</h4>
+          <ul class="search-overlay__suggestion-list" id="suggestionList">
+            <!-- Dynamic suggestions -->
+          </ul>
+        </div>
+
+        <!-- Products Column -->
+        <div class="search-overlay__products" id="searchProducts">
+          <h4 class="search-overlay__column-title">PRODUCTS</h4>
+          <div class="search-overlay__product-list" id="productList">
+            <!-- Dynamic horizontal product cards -->
+          </div>
+        </div>
+      </div>
+
+      <!-- No Results State -->
+      <div class="search-overlay__no-results" id="searchNoResults" style="display: none;">
+        <p>No results found. Try a different search term.</p>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==================== HERO SECTION ==================== -->
+  <main class="cart-page">
+    <div class="container">
+      <!-- Cart Header -->
+      <div class="cart-header">
+        <h1 class="cart-title">YOUR CART</h1>
+        <a href="index.html" class="continue-shopping">Continue Shopping</a>
+      </div>
+
+      <!-- Cart Content -->
+      <div class="cart-content" id="cartContent">
+        <!-- Cart Table Header -->
+        <div class="cart-table-header">
+          <span class="col-product">Product</span>
+          <span class="col-quantity">Quantity</span>
+          <span class="col-total">Total</span>
+        </div>
+
+        <!-- Cart Items Container -->
+        <div class="cart-items" id="cartItems">
+          <!-- Items will be rendered by JavaScript -->
+        </div>
+
+        <!-- Cart Summary -->
+        <div class="cart-summary" id="cartSummary">
+          <div class="cart-total-row">
+            <span class="total-label">Estimated total</span>
+            <span class="total-amount" id="cartTotalAmount">Rs. 0.00</span>
+          </div>
+          <p class="cart-note">Taxes included. Discounts and shipping calculated at checkout.</p>
+          <a href="checkout.html" class="checkout-btn" id="checkoutBtn">Check out</a>
+        </div>
+      </div>
+
+      <!-- Empty Cart State -->
+      <div class="cart-empty" id="cartEmpty" style="display: none;">
+        <div class="empty-cart-icon">
+          <img src="/assets/cart-CU_5Odt_.png" alt="Empty Cart" width="80" height="80" />
+        </div>
+        <h2 class="empty-cart-title">Your bag is empty</h2>
+        <p class="empty-cart-text">Looks like you haven't added anything to your cart yet.</p>
+        <a href="index.html" class="shop-now-btn">Shop Now</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="footer" id="footer">
+    <div class="footer-pattern"></div>
+    <div class="footer-content">
+      <div class="container">
+        <div class="footer-grid">
+          <!-- Newsletter Column -->
+          <div class="footer-column footer-newsletter">
+            <h3 class="footer-heading">NEWSLETTER</h3>
+            <p class="footer-text">Subscribe to receive updates, access to exclusive deals, and more.</p>
+            <form class="newsletter-form" id="newsletterForm">
+              <input type="email" placeholder="Email" class="newsletter-input" required aria-label="Email address">
+              <button type="submit" class="newsletter-btn">Subscribe</button>
+            </form>
+
+            <h4 class="footer-subheading">Find our store</h4>
+            <div class="social-icons">
+              <a href="#" class="social-icon" aria-label="Instagram">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                </svg>
+              </a>
+              <a href="#" class="social-icon" aria-label="Facebook">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+                </svg>
+              </a>
+              <a href="#" class="social-icon" aria-label="WhatsApp">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                    d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                </svg>
+              </a>
+              <a href="#" class="social-icon" aria-label="YouTube">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path
+                    d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z" />
+                  <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" />
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <!-- The Company Column -->
+          <div class="footer-column">
+            <button class="footer-heading footer-accordion-toggle" aria-expanded="false">
+              <span>THE COMPANY</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14" />
+                <path d="M13 5l7 7-7 7" />
+              </svg>
+            </button>
+            <div class="footer-accordion-content">
+              <ul class="footer-links">
+                <li><a href="#">New Arrivals</a></li>
+                <li><a href="#">Collection</a></li>
+                <li><a href="#">Sarees</a></li>
+                <li><a href="#">Crafts</a></li>
+                <li><a href="#">About Us</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Need Help Column -->
+          <div class="footer-column">
+            <button class="footer-heading footer-accordion-toggle" aria-expanded="false">
+              <span>NEED HELP</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14" />
+                <path d="M13 5l7 7-7 7" />
+              </svg>
+            </button>
+            <div class="footer-accordion-content">
+              <ul class="footer-links">
+                <li><a href="./contact.html">Contact Us</a></li>
+                <li><a href="#">Book an Appointment</a></li>
+                <li><a href="#">Shipping</a></li>
+                <li><a href="#">FAQ's</a></li>
+                <li><a href="#">Track Order</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Legal Column -->
+          <div class="footer-column">
+            <button class="footer-heading footer-accordion-toggle" aria-expanded="false">
+              <span>LEGAL</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14" />
+                <path d="M13 5l7 7-7 7" />
+              </svg>
+            </button>
+            <div class="footer-accordion-content">
+              <ul class="footer-links">
+                <li><a href="#">Privacy & Cookies</a></li>
+                <li><a href="#">Fees And Payment</a></li>
+                <li><a href="#">Term And Condition</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer Bottom -->
+      <div class="footer-bottom">
+        <div class="footer-separator"></div>
+        <p class="footer-copyright">© 2026, Loom Saga</p>
+      </div>
+    </div>
+  </footer>
+
+
+
+  <!-- Off-Canvas Cart Drawer -->
+  <div class="cart-overlay" id="cartOverlay"></div>
+  <div class="cart-drawer" id="cartDrawer">
+    <div class="cart-drawer-header">
+      <h2 class="drawer-title">MAIN CART</h2>
+      <button class="drawer-close" id="drawerClose" aria-label="Close Cart">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <div class="cart-drawer-subheader">
+      <span>PRODUCT</span>
+      <span>TOTAL</span>
+    </div>
+
+    <div class="cart-drawer-content" id="cartDrawerItems">
+      <!-- Cart items will be injected here -->
+    </div>
+
+    <div class="cart-drawer-footer" id="cartDrawerFooter">
+      <div class="drawer-total-row">
+        <span class="drawer-total-label">Estimated total</span>
+        <span class="drawer-total-amount" id="drawerTotalAmount">Rs. 0.00</span>
+      </div>
+      <p class="drawer-note">Taxes, Discounts and shipping calculated at checkout</p>
+
+      <button class="drawer-checkout-btn" onclick="window.location.href='checkout.html'">CHECK OUT</button>
+      <button class="drawer-view-cart-btn" onclick="window.location.href='cart.html'">VIEW MY CART</button>
+    </div>
+
+    <!-- Empty Cart State -->
+    <div class="cart-drawer-empty" id="cartDrawerEmpty" style="display: none;">
+      <div class="empty-drawer-icon">
+        <img src="/assets/cart-CU_5Odt_.png" alt="Empty Cart" width="60" height="60" style="opacity: 0.5;">
+      </div>
+      <h2 class="empty-drawer-title">Your bag is empty</h2>
+      <p class="empty-drawer-text">Looks like you haven't added anything to your cart yet.</p>
+      <button class="shop-now-btn" onclick="window.location.href='collections.html'">Shop Now</button>
+    </div>
+  </div>
+  <!-- JavaScript -->
+  <script src="js/main.js"></script>
+</body>
+
+</html>

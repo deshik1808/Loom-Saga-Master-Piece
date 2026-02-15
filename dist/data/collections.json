@@ -1,0 +1,152 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "lastUpdated": "2026-01-19"
+  },
+  "collections": [
+    {
+      "id": "new-arrivals",
+      "slug": "new-arrivals",
+      "name": "New Arrivals",
+      "description": "Discover our latest additions to the Loom Saga collection. Fresh designs that blend tradition with modern elegance.",
+      "image": "/assets/images/collections/new-arrivals.jpg",
+      "placeholder": "https://placehold.co/800x400/c9a962/fff?text=New+Arrivals",
+      "featured": true,
+      "sortOrder": 1,
+      "productIds": ["LS-VSK-001", "LS-VSK-002", "LS-VSK-004", "LS-VSK-006", "LS-VSK-007", "LS-VSK-008", "LS-HLM-002"],
+      "displayLimit": 8,
+      "showOnHomepage": true,
+      "seo": {
+        "title": "New Arrivals | Loom Saga - Latest Saree Collections",
+        "description": "Discover our newest saree arrivals. Fresh designs blending tradition with modern elegance.",
+        "keywords": ["new sarees", "latest sarees", "new arrivals", "fresh designs"]
+      }
+    },
+    {
+      "id": "festive-collection",
+      "slug": "festive-collection",
+      "name": "Festive Collection",
+      "description": "Celebrate special occasions with our curated festive collection. Vibrant colors and intricate designs for every celebration.",
+      "image": "/assets/images/collections/festive.jpg",
+      "placeholder": "https://placehold.co/800x400/d4a017/fff?text=Festive+Collection",
+      "featured": true,
+      "sortOrder": 2,
+      "productIds": ["LS-VSK-001", "LS-VSK-004", "LS-VSK-005"],
+      "displayLimit": 6,
+      "showOnHomepage": true,
+      "seo": {
+        "title": "Festive Collection | Loom Saga - Sarees for Celebrations",
+        "description": "Shop our festive saree collection. Vibrant colors and intricate designs for every celebration.",
+        "keywords": ["festive sarees", "celebration sarees", "diwali sarees", "puja sarees"]
+      }
+    },
+    {
+      "id": "wedding-collection",
+      "slug": "wedding-collection",
+      "name": "Wedding Collection",
+      "description": "Make your special day unforgettable with our exquisite wedding collection. Bridal reds, rich silks, and timeless elegance.",
+      "image": "/assets/images/collections/wedding.jpg",
+      "placeholder": "https://placehold.co/800x400/8b0000/fff?text=Wedding+Collection",
+      "featured": true,
+      "sortOrder": 3,
+      "productIds": ["LS-WED-001", "LS-VSK-005"],
+      "displayLimit": 6,
+      "showOnHomepage": true,
+      "seo": {
+        "title": "Wedding Collection | Loom Saga - Bridal Sarees",
+        "description": "Shop our wedding saree collection. Bridal reds, rich silks, and timeless elegance for your special day.",
+        "keywords": ["wedding sarees", "bridal sarees", "banarasi wedding", "red bridal saree"]
+      }
+    },
+    {
+      "id": "silk-sarees",
+      "slug": "silk-sarees",
+      "name": "Silk Sarees",
+      "description": "Explore our premium silk saree collection. From Vishnupuri to Banarasi, handcrafted luxury for every occasion.",
+      "image": "/assets/images/collections/silk-sarees.jpg",
+      "placeholder": "https://placehold.co/800x400/9acd32/fff?text=Silk+Sarees",
+      "featured": true,
+      "sortOrder": 4,
+      "productIds": ["LS-VSK-001", "LS-VSK-002", "LS-VSK-003", "LS-VSK-004", "LS-VSK-005", "LS-VSK-006", "LS-VSK-007", "LS-VSK-008", "LS-VSK-009", "LS-WED-001"],
+      "displayLimit": 12,
+      "showOnHomepage": false,
+      "seo": {
+        "title": "Silk Sarees | Loom Saga - Premium Handcrafted Collection",
+        "description": "Explore our premium silk saree collection. Vishnupuri, Banarasi, and designer silks.",
+        "keywords": ["silk sarees", "vishnupuri silk", "banarasi silk", "designer silk"]
+      }
+    },
+    {
+      "id": "handloom",
+      "slug": "handloom",
+      "name": "Handloom Heritage",
+      "description": "Celebrate the art of Indian handloom. Each piece tells a story of skilled artisans and centuries-old traditions.",
+      "image": "/assets/images/collections/handloom.jpg",
+      "placeholder": "https://placehold.co/800x400/dda0dd/fff?text=Handloom+Heritage",
+      "featured": false,
+      "sortOrder": 5,
+      "productIds": ["LS-HLM-001", "LS-HLM-002", "LS-VSK-001", "LS-VSK-002", "LS-VSK-003"],
+      "displayLimit": 6,
+      "showOnHomepage": false,
+      "seo": {
+        "title": "Handloom Heritage | Loom Saga - Artisan Crafted Sarees",
+        "description": "Celebrate Indian handloom heritage. Artisan crafted sarees with centuries-old traditions.",
+        "keywords": ["handloom sarees", "artisan sarees", "heritage sarees", "traditional weaving"]
+      }
+    },
+    {
+      "id": "evening-wear",
+      "slug": "evening-wear",
+      "name": "Evening Elegance",
+      "description": "Sophisticated sarees for evening occasions. Deep colors and designer finishes for memorable nights.",
+      "image": "/assets/images/collections/evening.jpg",
+      "placeholder": "https://placehold.co/800x400/2f4f4f/fff?text=Evening+Elegance",
+      "featured": false,
+      "sortOrder": 6,
+      "productIds": ["LS-VSK-003", "LS-VSK-009"],
+      "displayLimit": 4,
+      "showOnHomepage": false,
+      "seo": {
+        "title": "Evening Elegance | Loom Saga - Sarees for Evening Occasions",
+        "description": "Sophisticated sarees for evening occasions. Deep colors and designer finishes.",
+        "keywords": ["evening sarees", "cocktail sarees", "formal sarees", "designer evening wear"]
+      }
+    },
+    {
+      "id": "designer",
+      "slug": "designer",
+      "name": "Designer Edit",
+      "description": "Contemporary designs for the modern woman. Bold patterns and innovative styling that make a statement.",
+      "image": "/assets/images/collections/designer.jpg",
+      "placeholder": "https://placehold.co/800x400/f5f5f5/333?text=Designer+Edit",
+      "featured": false,
+      "sortOrder": 7,
+      "productIds": ["LS-VSK-007", "LS-VSK-009"],
+      "displayLimit": 4,
+      "showOnHomepage": false,
+      "seo": {
+        "title": "Designer Edit | Loom Saga - Contemporary Saree Designs",
+        "description": "Contemporary designer sarees for modern women. Bold patterns and innovative styling.",
+        "keywords": ["designer sarees", "modern sarees", "contemporary sarees", "statement sarees"]
+      }
+    },
+    {
+      "id": "daily-wear",
+      "slug": "daily-wear",
+      "name": "Everyday Elegance",
+      "description": "Comfortable yet elegant sarees for everyday wear. Light fabrics and easy drape for all-day comfort.",
+      "image": "/assets/images/collections/daily-wear.jpg",
+      "placeholder": "https://placehold.co/800x400/90ee90/333?text=Everyday+Elegance",
+      "featured": false,
+      "sortOrder": 8,
+      "productIds": ["LS-HLM-001", "LS-VSK-002", "LS-VSK-006", "LS-VSK-008"],
+      "displayLimit": 6,
+      "showOnHomepage": false,
+      "seo": {
+        "title": "Everyday Elegance | Loom Saga - Daily Wear Sarees",
+        "description": "Comfortable yet elegant sarees for everyday wear. Light fabrics and easy drape.",
+        "keywords": ["daily wear sarees", "office sarees", "casual sarees", "comfortable sarees"]
+      }
+    }
+  ]
+}
