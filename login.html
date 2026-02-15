@@ -585,16 +585,16 @@
         <h1 class="auth-title">LOGIN</h1>
         <p class="auth-subtitle">Welcome back! Sign in to explore our exquisite collection of handcrafted sarees.</p>
 
-        <form class="auth-form" id="loginForm">
+        <form class="auth-form" id="loginForm" novalidate>
           <!-- Email Field -->
           <div class="auth-field">
-            <input type="email" id="email" name="email" class="auth-input" placeholder="Email" required
+            <input type="email" id="loginEmail" name="email" class="auth-input" placeholder="Email" required
               autocomplete="email">
           </div>
 
           <!-- Password Field -->
           <div class="auth-field">
-            <input type="password" id="password" name="password" class="auth-input" placeholder="Password" required
+            <input type="password" id="loginPassword" name="password" class="auth-input" placeholder="Password" required
               autocomplete="current-password">
           </div>
 
@@ -603,12 +603,14 @@
 
           <!-- Terms Checkbox -->
           <div class="auth-checkbox">
-            <input type="checkbox" id="terms" name="terms" checked>
-            <label for="terms">I agree with Terms and conditions</label>
+            <input type="checkbox" id="loginTerms" name="terms" checked>
+            <label for="loginTerms">I agree with Terms and conditions</label>
           </div>
 
+          <p class="auth-feedback" id="loginFeedback" role="alert" aria-live="polite"></p>
+
           <!-- Sign In Button -->
-          <button type="submit" class="auth-btn auth-btn-primary">SIGN IN</button>
+          <button type="submit" class="auth-btn auth-btn-primary" id="loginSubmitBtn">SIGN IN</button>
 
           <!-- Create Account Button -->
           <a href="register.html" class="auth-btn auth-btn-secondary">CREATE ACCOUNT</a>
@@ -776,6 +778,76 @@
   <!-- JavaScript -->
   <script src="js/main.js"></script>
   <script type="module" src="src/js/main.js"></script>
+  <script type="module">
+    import { AuthManager } from './src/js/modules/AuthManager.js';
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const loginForm = document.getElementById('loginForm');
+      if (!loginForm) return;
+
+      const feedbackEl = document.getElementById('loginFeedback');
+      const submitBtn = document.getElementById('loginSubmitBtn');
+      const emailInput = document.getElementById('loginEmail');
+      const passwordInput = document.getElementById('loginPassword');
+      const termsCheckbox = document.getElementById('loginTerms');
+
+      function showFeedback(message, type) {
+        if (!feedbackEl) return;
+        feedbackEl.textContent = message;
+        feedbackEl.classList.remove('auth-feedback--error', 'auth-feedback--success');
+        feedbackEl.classList.add('auth-feedback--' + type, 'is-visible');
+      }
+
+      function clearFeedback() {
+        if (!feedbackEl) return;
+        feedbackEl.textContent = '';
+        feedbackEl.classList.remove('auth-feedback--error', 'auth-feedback--success', 'is-visible');
+      }
+
+      function setLoading(isLoading) {
+        if (!submitBtn) return;
+        submitBtn.disabled = isLoading;
+        submitBtn.textContent = isLoading ? 'SIGNING IN...' : 'SIGN IN';
+        submitBtn.style.opacity = isLoading ? '0.7' : '';
+      }
+
+      loginForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        clearFeedback();
+
+        const email = (emailInput?.value || '').trim();
+        const password = passwordInput?.value || '';
+
+        if (!email || !password) {
+          showFeedback('Please enter your email and password.', 'error');
+          return;
+        }
+
+        if (termsCheckbox && !termsCheckbox.checked) {
+          showFeedback('Please accept the terms and conditions to continue.', 'error');
+          return;
+        }
+
+        setLoading(true);
+
+        try {
+          const result = await AuthManager.login(email, password);
+
+          if (result.success) {
+            showFeedback('Welcome back, ' + (result.user.firstName || result.user.displayName) + '!', 'success');
+            setTimeout(() => { window.location.href = 'index.html'; }, 1200);
+          } else {
+            showFeedback(result.error, 'error');
+            setLoading(false);
+          }
+        } catch (err) {
+          console.error('Login error:', err);
+          showFeedback('An unexpected error occurred. Please try again.', 'error');
+          setLoading(false);
+        }
+      });
+    });
+  </script>
 </body>
 
 </html>

@@ -966,6 +966,10 @@ const SearchOverlayManager = {
 
         this.productList.innerHTML = displayProducts.map(product => {
             var imgSrc = product.image;
+            var regularPrice = Number(product.regularPrice) || 0;
+            var salePrice = Number(product.salePrice) || 0;
+            var hasSale = salePrice > 0 && regularPrice > salePrice;
+            var currentPrice = hasSale ? salePrice : (Number(product.price) || 0);
             // Use ProductRenderer image optimization if available
             if (window.ProductRenderer && window.ProductRenderer.getOptimizedImage) {
                 imgSrc = window.ProductRenderer.getOptimizedImage(product.image, 200);
@@ -975,7 +979,10 @@ const SearchOverlayManager = {
                 <img src="${imgSrc}" alt="${product.name}" class="search-overlay__product-image" loading="lazy">
                 <div class="search-overlay__product-info">
                     <div class="search-overlay__product-name">${this.highlightMatch(product.name, query)}</div>
-                    <div class="search-overlay__product-price">Rs.${product.price.toLocaleString('en-IN')}/-</div>
+                    <div class="search-overlay__product-price">
+                      ${hasSale ? `<span class="search-overlay__product-price-regular">Rs.${regularPrice.toLocaleString('en-IN')}/-</span>` : ''}
+                      <span class="search-overlay__product-price-current${hasSale ? ' search-overlay__product-price-current--sale' : ''}">Rs.${currentPrice.toLocaleString('en-IN')}/-</span>
+                    </div>
                 </div>
             </a>
         `;
@@ -1207,26 +1214,44 @@ const CartManager = {
 
     /**
      * Add item to cart
-     * @param {Object} product - Product object
+     * Respects stockQuantity — will not add beyond available stock.
+     * @param {Object} product - Product object with id, name, price, image, stockQuantity
+     * @returns {{ success: boolean, message: string }}
      */
     addItem(product) {
         const items = this.getItems();
-        const existingIndex = items.findIndex(item => item.id === product.id);
+        const existingIndex = items.findIndex(item => String(item.id) === String(product.id));
+
+        const currentQty = existingIndex > -1 ? items[existingIndex].quantity : 0;
+        const maxStock = product.stockQuantity ?? null; // null = unlimited
+
+        // Stock-limit guard
+        if (maxStock !== null && currentQty >= maxStock) {
+            this.showNotification(
+                maxStock === 0
+                    ? `${product.name} is out of stock`
+                    : `Maximum available quantity (${maxStock}) already in cart`
+            );
+            return { success: false, message: 'Stock limit reached' };
+        }
 
         if (existingIndex > -1) {
             // Increase quantity if item exists
             items[existingIndex].quantity += 1;
+            // Keep stockQuantity up-to-date in the cart entry
+            items[existingIndex].stockQuantity = maxStock;
         } else {
             // Add new item with quantity 1
             items.push({
                 ...product,
-                quantity: 1
+                quantity: 1,
+                stockQuantity: maxStock
             });
         }
 
         this.saveItems(items);
         this.showNotification(`${product.name} added to cart`);
-        return items;
+        return { success: true, message: 'Added' };
     },
 
     /**
@@ -1241,18 +1266,25 @@ const CartManager = {
     },
 
     /**
-     * Update item quantity
+     * Update item quantity (respects stock limits)
      * @param {string} productId - Product ID
-     * @param {number} quantity - New quantity
+     * @param {number} quantity - Desired new quantity
+     * @returns {{ success: boolean, message: string }}
      */
     updateQuantity(productId, quantity) {
         const items = this.getItems();
-        const itemIndex = items.findIndex(item => item.id === productId);
+        const itemIndex = items.findIndex(item => String(item.id) === String(productId));
 
         if (itemIndex > -1) {
+            const maxStock = items[itemIndex].stockQuantity ?? null;
+
             if (quantity <= 0) {
                 // Remove item if quantity is 0 or less
                 items.splice(itemIndex, 1);
+            } else if (maxStock !== null && quantity > maxStock) {
+                // Cap at stock limit
+                this.showNotification(`Only ${maxStock} available`);
+                items[itemIndex].quantity = maxStock;
             } else {
                 items[itemIndex].quantity = quantity;
             }
@@ -1260,7 +1292,7 @@ const CartManager = {
 
         this.saveItems(items);
         this.renderCart();
-        return items;
+        return { success: true, message: 'Updated' };
     },
 
     /**
@@ -1373,7 +1405,7 @@ const CartManager = {
                     <div class="quantity-control">
                         <button class="quantity-btn quantity-minus" data-id="${item.id}" aria-label="Decrease quantity">−</button>
                         <span class="quantity-value">${item.quantity}</span>
-                        <button class="quantity-btn quantity-plus" data-id="${item.id}" aria-label="Increase quantity">+</button>
+                        <button class="quantity-btn quantity-plus" data-id="${item.id}" aria-label="Increase quantity"${item.stockQuantity != null && item.quantity >= item.stockQuantity ? ' disabled title="Stock limit reached"' : ''}>+</button>
                     </div>
                     <button class="remove-btn" data-id="${item.id}" aria-label="Remove item">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1531,7 +1563,7 @@ const CartManager = {
                          <div class="drawer-quantity">
                             <button class="drawer-qty-btn drawer-minus" data-id="${item.id}">−</button>
                             <span class="drawer-qty-val">${item.quantity}</span>
-                            <button class="drawer-qty-btn drawer-plus" data-id="${item.id}">+</button>
+                            <button class="drawer-qty-btn drawer-plus" data-id="${item.id}"${item.stockQuantity != null && item.quantity >= item.stockQuantity ? ' disabled title="Stock limit reached"' : ''}>+</button>
                         </div>
                         <button class="drawer-remove-btn" data-id="${item.id}">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1629,6 +1661,8 @@ const WishlistManager = {
                 id: product.id,
                 name: product.name,
                 price: product.price,
+                regularPrice: product.regularPrice || 0,
+                salePrice: product.salePrice || 0,
                 image: product.image,
                 addedAt: new Date().toISOString()
             });
@@ -1796,8 +1830,14 @@ const WishlistPageManager = {
         const pageItems = items.slice(startIndex, endIndex);
 
         // Render items
-        wishlistGrid.innerHTML = pageItems.map(item => `
-            <article class="wishlist-card" data-product-id="${item.id}" data-product-name="${item.name}" data-product-price="${item.price}" data-product-image="${item.image}">
+        wishlistGrid.innerHTML = pageItems.map(item => {
+            const regularPrice = Number(item.regularPrice) || 0;
+            const salePrice = Number(item.salePrice) || 0;
+            const hasSale = salePrice > 0 && regularPrice > salePrice;
+            const currentPrice = Number(item.price) || 0;
+
+            return `
+            <article class="wishlist-card" data-product-id="${item.id}" data-product-name="${item.name}" data-product-price="${currentPrice}" data-product-regular-price="${regularPrice}" data-product-sale-price="${salePrice}" data-product-image="${item.image}">
                 <a href="product-detail.html" class="wishlist-card-link">
                     <div class="wishlist-card-image">
                         <img src="${item.image}" alt="${item.name}" loading="lazy">
@@ -1807,12 +1847,16 @@ const WishlistPageManager = {
                     </div>
                     <div class="wishlist-card-info">
                         <h2 class="wishlist-card-name">${item.name}</h2>
-                        <p class="wishlist-card-price">Rs.${item.price.toLocaleString('en-IN')}/-</p>
+                        <p class="wishlist-card-price">
+                          ${hasSale ? `<span class="wishlist-card-price-regular">Rs.${regularPrice.toLocaleString('en-IN')}/-</span>` : ''}
+                          <span class="wishlist-card-price-current${hasSale ? ' wishlist-card-price-current--sale' : ''}">Rs.${currentPrice.toLocaleString('en-IN')}/-</span>
+                        </p>
                     </div>
                 </a>
                 <button class="wishlist-add-btn" data-id="${item.id}">Add To Bag</button>
             </article>
-        `).join('');
+        `;
+        }).join('');
 
         // Render pagination
         this.renderPagination();
@@ -2434,8 +2478,8 @@ const FilterSortManager = {
         products.sort((a, b) => {
             const nameA = a.querySelector('.product-card-name, .collection-card-name')?.textContent || '';
             const nameB = b.querySelector('.product-card-name, .collection-card-name')?.textContent || '';
-            const priceA = this.extractPrice(a.querySelector('.product-card-price')?.textContent);
-            const priceB = this.extractPrice(b.querySelector('.product-card-price')?.textContent);
+            const priceA = this.extractPrice(a.querySelector('.product-card-price'));
+            const priceB = this.extractPrice(b.querySelector('.product-card-price'));
 
             switch (sortType) {
                 case 'price-low':
@@ -2459,9 +2503,19 @@ const FilterSortManager = {
         CartManager.showNotification(`Sorted by: ${this.getSortLabel(sortType)}`);
     },
 
-    extractPrice(priceText) {
-        if (!priceText) return 0;
-        return parseInt(priceText.replace(/[^0-9]/g, '')) || 0;
+    extractPrice(priceSource) {
+        if (!priceSource) return 0;
+
+        // Prefer the explicit current/sale node when available.
+        if (typeof priceSource !== 'string') {
+            const activePrice =
+                priceSource.querySelector('.product-card-price-current')?.textContent ||
+                priceSource.textContent ||
+                '';
+            return parseInt(activePrice.replace(/[^0-9]/g, '')) || 0;
+        }
+
+        return parseInt(priceSource.replace(/[^0-9]/g, '')) || 0;
     },
 
     getSortLabel(sortType) {
@@ -2507,7 +2561,7 @@ const FilterSortManager = {
 
         products?.forEach(product => {
             const name = product.querySelector('.product-card-name')?.textContent.toLowerCase() || '';
-            const price = this.extractPrice(product.querySelector('.product-card-price')?.textContent);
+            const price = this.extractPrice(product.querySelector('.product-card-price'));
 
             let matchesColor = selectedColors.length === 0 ||
                 selectedColors.some(color => name.includes(color));
@@ -2579,6 +2633,8 @@ function initWishlistButtons() {
                     id: card.dataset.productId || generateStableId(productName),
                     name: productName,
                     price: parseFloat(card.dataset.productPrice) || 0,
+                    regularPrice: parseFloat(card.dataset.productRegularPrice) || 0,
+                    salePrice: parseFloat(card.dataset.productSalePrice) || 0,
                     image: card.dataset.productImage || card.querySelector('img')?.src || ''
                 };
 
@@ -3055,7 +3111,10 @@ document.addEventListener('DOMContentLoaded', function () {
             var product = products[0];
             var image = product.primaryImage;
             var name = product.name;
-            var price = product.price;
+            var regularPrice = Number(product.regularPrice) || 0;
+            var salePrice = Number(product.salePrice) || 0;
+            var hasSale = salePrice > 0 && regularPrice > salePrice;
+            var currentPrice = hasSale ? salePrice : (Number(product.price) || 0);
             var inStock = product.inStock;
 
             var imageHTML = image
@@ -3071,7 +3130,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 '<h2 style="font-family:\'Pinyon Script\', cursive; font-size: 32px; margin-bottom: 20px; color: #b8860b;">Latest from the Loom</h2>' +
                 imageHTML +
                 '<h3 style="margin:20px 0 8px;font-family:\'Cormorant Garamond\',serif;font-size:22px;font-weight:400;letter-spacing:1px;color:#2c2c2c;text-transform:uppercase;">' + name + '</h3>' +
-                '<span style="font-family:\'Roboto\',sans-serif;font-size:14px;letter-spacing:1px;color:#555;">₹' + price.toLocaleString('en-IN') + '</span>' +
+                '<div style="display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;">' +
+                (hasSale
+                    ? '<span style="font-family:\'Roboto\',sans-serif;font-size:13px;letter-spacing:1px;color:#8a8a8a;text-decoration:line-through;">₹' + regularPrice.toLocaleString('en-IN') + '</span>'
+                    : '') +
+                '<span style="font-family:\'Roboto\',sans-serif;font-size:14px;letter-spacing:1px;color:' + (hasSale ? '#b42d1d' : '#555') + ';">₹' + currentPrice.toLocaleString('en-IN') + '</span>' +
+                '</div>' +
                 '<div>' + ctaHTML + '</div>' +
                 '</div>';
         })
@@ -3108,15 +3172,25 @@ document.addEventListener('DOMContentLoaded', function () {
             // 4b. Replace price
             var priceEl = document.getElementById('pdpPrice');
             if (priceEl) {
-                var formatted = product.price.toLocaleString('en-IN');
-                priceEl.textContent = 'Rs.' + formatted + '/-';
+                var currentPrice = Number(product.price) || 0;
+                var regularPrice = Number(product.regularPrice) || 0;
+                var salePrice = Number(product.salePrice) || 0;
+                var hasSale = salePrice > 0 && regularPrice > salePrice;
+
+                if (hasSale) {
+                    priceEl.innerHTML =
+                        '<span class="product-price-regular">Rs.' + regularPrice.toLocaleString('en-IN') + '/-</span>' +
+                        '<span class="product-price-current product-price-current--sale">Rs.' + salePrice.toLocaleString('en-IN') + '/-</span>';
+                } else {
+                    priceEl.innerHTML =
+                        '<span class="product-price-current">Rs.' + currentPrice.toLocaleString('en-IN') + '/-</span>';
+                }
             }
 
-            // 4c. Replace images with optimized versions
+            // 4c. Replace images with optimized versions - DYNAMIC GALLERY
             var images = product.images || [];
-            var img0 = document.getElementById('pdpImage0');
-            var img1 = document.getElementById('pdpImage1');
-            var img2 = document.getElementById('pdpImage2');
+            var img0 = document.getElementById('pdpImage0'); // Hero image
+            var galleryGrid = document.getElementById('pdpGalleryGrid'); // Grid container
 
             // Helper to handle optimized source replacement
             var setOptimizedSrc = function (el, src, width) {
@@ -3134,9 +3208,62 @@ document.addEventListener('DOMContentLoaded', function () {
                 el.src = optimizedUrl;
             };
 
-            setOptimizedSrc(img0, images[0], 1000);
-            setOptimizedSrc(img1, images[1], 600);
-            setOptimizedSrc(img2, images[2], 600);
+            // Set hero image (first image)
+            if (images[0]) {
+                setOptimizedSrc(img0, images[0], 1000);
+            }
+
+            // Fill ALL existing placeholder slots first (pdpImage1, pdpImage2, pdpImage3...)
+            // then add extra images below if there are more than 4
+            var galleryImages = document.querySelector('.gallery-images');
+            if (images.length > 1) {
+                // 1. Fill existing hardcoded slots by ID: pdpImage1, pdpImage2, pdpImage3, ...
+                var imgIndex = 1;
+                var existingImg;
+                while (imgIndex < images.length) {
+                    existingImg = document.getElementById('pdpImage' + imgIndex);
+                    if (existingImg) {
+                        // Fill the existing placeholder
+                        setOptimizedSrc(existingImg, images[imgIndex], imgIndex === 3 ? 1000 : 600);
+                        imgIndex++;
+                    } else {
+                        // No more existing slots — break out to add extras
+                        break;
+                    }
+                }
+
+                // 2. If more images remain beyond placeholders, add them dynamically
+                if (imgIndex < images.length && galleryImages) {
+                    for (; imgIndex < images.length; imgIndex++) {
+                        var imageWrapper = document.createElement('div');
+                        imageWrapper.className = 'gallery-image luxury-shimmer';
+                        imageWrapper.dataset.index = imgIndex;
+
+                        var imgEl = document.createElement('img');
+                        imgEl.id = 'pdpImage' + imgIndex;
+                        imgEl.alt = 'Product view ' + (imgIndex + 1);
+                        imgEl.loading = 'lazy';
+                        imgEl.onload = function () {
+                            this.parentElement.classList.remove('luxury-shimmer');
+                            this.style.opacity = '1';
+                        };
+
+                        imageWrapper.appendChild(imgEl);
+                        galleryImages.appendChild(imageWrapper);
+
+                        setOptimizedSrc(imgEl, images[imgIndex], 600);
+                    }
+                }
+
+                // 3. Hide any unused placeholder slots beyond available images
+                var nextSlotIdx = images.length;
+                while (true) {
+                    var unusedSlot = document.getElementById('pdpImage' + nextSlotIdx);
+                    if (!unusedSlot) break;
+                    unusedSlot.parentElement.style.display = 'none';
+                    nextSlotIdx++;
+                }
+            }
 
             // 4d. Update product-info data attributes (for cart/wishlist)
             var productInfo = document.querySelector('.product-info');
@@ -3202,6 +3329,102 @@ document.addEventListener('DOMContentLoaded', function () {
                         }
                     });
                 }
+            }
+
+            // 6. Populate PDP Accordion Descriptions from ACF custom fields
+            if (product.acf) {
+                // Helper: convert plain-text newlines to HTML paragraphs/breaks
+                // Mimics WordPress wpautop() for content from WYSIWYG editor
+                var autoParagraph = function (text) {
+                    if (!text || typeof text !== 'string') return '';
+                    // If content already has block-level HTML, just clean up newlines
+                    if (/<(p|ul|ol|h[1-6]|div|table|blockquote)\b/i.test(text)) {
+                        // Replace double newlines with paragraph breaks where no HTML blocks exist
+                        return text
+                            .replace(/\r\n/g, '\n')
+                            .replace(/\n{2,}/g, '</p>\n<p>')
+                            .replace(/(?<!\>)\n(?!\<)/g, '<br>\n');
+                    }
+                    // Pure text: wrap in paragraphs
+                    var paragraphs = text
+                        .replace(/\r\n/g, '\n')
+                        .split(/\n{2,}/)
+                        .filter(function (p) { return p.trim(); })
+                        .map(function (p) { return '<p>' + p.replace(/\n/g, '<br>') + '</p>'; });
+                    return paragraphs.join('\n');
+                };
+
+                // Description & Fit — with "Read More" truncation
+                if (product.acf.fabricComposition) {
+                    var descEl = document.getElementById('pdpAccordionDescription');
+                    if (descEl) {
+                        var fullHTML = autoParagraph(product.acf.fabricComposition);
+                        // Strip HTML for character counting
+                        var tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = fullHTML;
+                        var plainText = tempDiv.textContent || tempDiv.innerText || '';
+
+                        var CHAR_LIMIT = 200;
+
+                        if (plainText.length > CHAR_LIMIT) {
+                            // Build truncated preview: cut at limit, find last space
+                            var truncated = plainText.substring(0, CHAR_LIMIT);
+                            var lastSpace = truncated.lastIndexOf(' ');
+                            if (lastSpace > 100) truncated = truncated.substring(0, lastSpace);
+                            truncated += '…';
+
+                            // Build the DOM structure
+                            descEl.innerHTML = '';
+
+                            // Preview (visible by default)
+                            var previewEl = document.createElement('div');
+                            previewEl.className = 'desc-preview';
+                            previewEl.innerHTML = '<p>' + truncated + '</p>';
+                            descEl.appendChild(previewEl);
+
+                            // Full content (hidden by default)
+                            var fullEl = document.createElement('div');
+                            fullEl.className = 'desc-full';
+                            fullEl.innerHTML = fullHTML;
+                            descEl.appendChild(fullEl);
+
+                            // Read More / Read Less toggle
+                            var toggleBtn = document.createElement('button');
+                            toggleBtn.className = 'accordion-read-more';
+                            toggleBtn.type = 'button';
+                            toggleBtn.textContent = 'Read More';
+                            toggleBtn.addEventListener('click', function () {
+                                var isExpanded = descEl.classList.contains('desc-expanded');
+                                descEl.classList.toggle('desc-expanded');
+                                toggleBtn.textContent = isExpanded ? 'Read More' : 'Read Less';
+                            });
+                            descEl.appendChild(toggleBtn);
+                        } else {
+                            // Short content — show without truncation
+                            descEl.innerHTML = fullHTML;
+                        }
+                    }
+                }
+
+                // Materials
+                if (product.acf.materialDetails) {
+                    var matEl = document.getElementById('pdpAccordionMaterials');
+                    if (matEl) matEl.innerHTML = autoParagraph(product.acf.materialDetails);
+                }
+
+                // Care Guide
+                if (product.acf.careInstructions) {
+                    var careEl = document.getElementById('pdpAccordionCare');
+                    if (careEl) careEl.innerHTML = autoParagraph(product.acf.careInstructions);
+                }
+
+                // Delivery, Payment and Returns
+                if (product.acf.deliveryInfo) {
+                    var delEl = document.getElementById('pdpAccordionDelivery');
+                    if (delEl) delEl.innerHTML = autoParagraph(product.acf.deliveryInfo);
+                }
+
+                console.log('PDP: Accordion descriptions populated from WooCommerce ACF fields');
             }
         })
         .catch(function (err) {

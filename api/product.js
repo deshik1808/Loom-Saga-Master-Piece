@@ -1,3 +1,13 @@
+/**
+ * Safely extract a value from WooCommerce meta_data array.
+ * ACF custom fields are stored as meta entries: [{key, value}, ...]
+ */
+function getMetaValue(metaArray, key) {
+  if (!Array.isArray(metaArray)) return '';
+  const entry = metaArray.find(m => m.key === key);
+  return entry?.value || '';
+}
+
 export default async function handler(req, res) {
   const { WC_API_URL, WC_CONSUMER_KEY, WC_CONSUMER_SECRET } = process.env;
 
@@ -73,6 +83,14 @@ export default async function handler(req, res) {
 
       // Tags
       tags: product.tags?.map(t => t.name) || [],
+
+      // ACF Custom Fields (PDP Accordion Descriptions)
+      acf: {
+        fabricComposition: getMetaValue(product.meta_data, 'fabric_composition'),
+        materialDetails: getMetaValue(product.meta_data, 'materail_details'),
+        careInstructions: getMetaValue(product.meta_data, 'care_instructions'),
+        deliveryInfo: getMetaValue(product.meta_data, 'delivery_info'),
+      },
 
       // Checkout
       checkoutUrl: `${WC_API_URL}/cart/?add-to-cart=${product.id}`

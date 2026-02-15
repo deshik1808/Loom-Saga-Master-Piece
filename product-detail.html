@@ -700,11 +700,14 @@
               </div>
             </div>
 
-            <!-- Optional: Additional full-width image -->
-            <div class="gallery-image gallery-image--full" data-index="5">
-              <img src="https://placehold.co/800x600/4caf50/333333?text=Detail+Shot" alt="Product detail view"
-                loading="lazy">
+            <!-- Additional full-width image -->
+            <div class="gallery-image gallery-image--full luxury-shimmer" data-index="3">
+              <img id="pdpImage3" src="https://placehold.co/800x600/4caf50/333333?text=Detail+Shot"
+                alt="Product detail view" loading="lazy"
+                onload="this.parentElement.classList.remove('luxury-shimmer'); this.style.opacity='1';">
             </div>
+
+            <!-- Extra gallery images are added dynamically by js/main.js -->
           </div>
         </div>
 
@@ -782,7 +785,7 @@
                 <img src="assets/icons/minus.png" alt="" class="accordion-icon-minus">
                 <img src="assets/icons/plus.png" alt="" class="accordion-icon-plus">
               </button>
-              <div class="product-accordion-content">
+              <div class="product-accordion-content" id="pdpAccordionDescription">
                 <h4 class="accordion-subtitle">New Arrival — Handcrafted Luxury Saree</h4>
                 <p>A premium handloom saree crafted in a refreshing lotus-green tone, featuring intricate floral motifs
                   in soft white and rose-pink. Woven by skilled artisans, this saree blends tradition with modern
@@ -861,7 +864,7 @@
                 <img src="assets/icons/minus.png" alt="" class="accordion-icon-minus">
                 <img src="assets/icons/plus.png" alt="" class="accordion-icon-plus">
               </button>
-              <div class="product-accordion-content">
+              <div class="product-accordion-content" id="pdpAccordionMaterials">
                 <p><strong>Fabric Composition:</strong> 60% Silk, 40% Cotton (Handloom Silk-Cotton Blend)</p>
                 <p><strong>Zari:</strong> Copper-toned zari threading on pallu and border</p>
                 <p><strong>Dyes:</strong> Eco-friendly, azo-free dyes ensuring skin safety</p>
@@ -876,7 +879,7 @@
                 <img src="assets/icons/minus.png" alt="" class="accordion-icon-minus">
                 <img src="assets/icons/plus.png" alt="" class="accordion-icon-plus">
               </button>
-              <div class="product-accordion-content">
+              <div class="product-accordion-content" id="pdpAccordionCare">
                 <ul class="accordion-list">
                   <li>Dry clean recommended for first wash</li>
                   <li>Hand wash separately in cold water with mild detergent</li>
@@ -895,7 +898,7 @@
                 <img src="assets/icons/minus.png" alt="" class="accordion-icon-minus">
                 <img src="assets/icons/plus.png" alt="" class="accordion-icon-plus">
               </button>
-              <div class="product-accordion-content">
+              <div class="product-accordion-content" id="pdpAccordionDelivery">
                 <h4 class="accordion-subtitle">Delivery</h4>
                 <ul class="accordion-list">
                   <li>Free shipping on orders above Rs.999</li>

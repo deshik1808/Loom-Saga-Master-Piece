@@ -4,7 +4,7 @@ import { resolve } from 'path';
 export default defineConfig({
   // Root is the project root
   root: '.',
-  
+
   // Build options
   build: {
     outDir: 'dist',
@@ -21,6 +21,7 @@ export default defineConfig({
         'forgot-password': resolve(__dirname, 'forgot-password.html'),
         handloom: resolve(__dirname, 'handloom.html'),
         login: resolve(__dirname, 'login.html'),
+        'my-account': resolve(__dirname, 'my-account.html'),
         'order-confirmation': resolve(__dirname, 'order-confirmation.html'),
         'product-detail': resolve(__dirname, 'product-detail.html'),
         register: resolve(__dirname, 'register.html'),
@@ -36,7 +37,7 @@ export default defineConfig({
     // Use esbuild for minification (built-in, no extra dependency)
     minify: 'esbuild',
   },
-  
+
   // Dev server options
   server: {
     host: '0.0.0.0',
@@ -48,12 +49,12 @@ export default defineConfig({
       clientPort: 443,
     },
   },
-  
+
   // CSS options
   css: {
     devSourcemap: true,
   },
-  
+
   // Optimize deps
   optimizeDeps: {
     include: [],

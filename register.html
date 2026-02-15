@@ -586,55 +586,48 @@
         <p class="auth-subtitle">Begin your journey into timeless elegance. Create an account to unlock exclusive
           collections and member benefits.</p>
 
-        <form class="auth-form" id="registerForm">
-          <!-- Full Name Field -->
+        <form class="auth-form" id="registerForm" novalidate>
+          <!-- First Name -->
           <div class="auth-field">
-            <input type="text" id="fullName" name="fullName" class="auth-input" placeholder="Full Name" required
-              autocomplete="name" minlength="2">
+            <input type="text" id="regFirstName" name="firstName" class="auth-input" placeholder="First Name"
+              autocomplete="given-name">
+          </div>
+
+          <!-- Last Name -->
+          <div class="auth-field">
+            <input type="text" id="regLastName" name="lastName" class="auth-input" placeholder="Last Name"
+              autocomplete="family-name">
           </div>
 
           <!-- Email Field -->
           <div class="auth-field">
-            <input type="email" id="email" name="email" class="auth-input" placeholder="Email" required
+            <input type="email" id="regEmail" name="email" class="auth-input" placeholder="Email Address" required
               autocomplete="email">
-          </div>
-
-          <!-- Phone Number Field (Optional) -->
-          <div class="auth-field">
-            <input type="tel" id="phone" name="phone" class="auth-input" placeholder="Phone Number (Optional)"
-              autocomplete="tel" pattern="[0-9]{10}" title="Please enter a valid 10-digit phone number">
           </div>
 
           <!-- Password Field -->
           <div class="auth-field">
-            <input type="password" id="password" name="password" class="auth-input" placeholder="Password" required
-              autocomplete="new-password" minlength="8" title="Password must be at least 8 characters">
+            <input type="password" id="regPassword" name="password" class="auth-input"
+              placeholder="Password (min. 6 characters)" required autocomplete="new-password" minlength="6">
           </div>
 
-          <!-- Confirm Password Field -->
+          <!-- Confirm Password -->
           <div class="auth-field">
-            <input type="password" id="confirmPassword" name="confirmPassword" class="auth-input"
-              placeholder="Confirm Password" required autocomplete="new-password">
+            <input type="password" id="regConfirmPassword" name="confirmPassword" class="auth-input"
+              placeholder="Confirm Password" required autocomplete="new-password" minlength="6">
           </div>
-
-          <!-- Password Requirements Info -->
-          <p class="auth-password-hint">Password must be at least 8 characters long</p>
 
           <!-- Terms Checkbox -->
-          <div class="auth-checkbox">
-            <input type="checkbox" id="terms" name="terms" required>
-            <label for="terms">I agree to the <a href="#" class="auth-link">Terms & Conditions</a> and <a href="#"
+          <div class="auth-checkbox auth-checkbox-spaced">
+            <input type="checkbox" id="regTerms" name="terms" required>
+            <label for="regTerms">I agree to the <a href="#" class="auth-link">Terms & Conditions</a> and <a href="#"
                 class="auth-link">Privacy Policy</a></label>
           </div>
 
-          <!-- Newsletter Checkbox -->
-          <div class="auth-checkbox">
-            <input type="checkbox" id="newsletter" name="newsletter" checked>
-            <label for="newsletter">Subscribe to our newsletter for exclusive offers</label>
-          </div>
+          <p class="auth-feedback" id="registerFeedback" role="alert" aria-live="polite"></p>
 
           <!-- Create Account Button -->
-          <button type="submit" class="auth-btn auth-btn-primary">CREATE ACCOUNT</button>
+          <button type="submit" class="auth-btn auth-btn-primary" id="registerSubmitBtn">CREATE ACCOUNT</button>
 
           <!-- Already have account -->
           <p class="auth-switch-text">Already have an account? <a href="login.html" class="auth-link">Sign In</a></p>
@@ -779,35 +772,102 @@
   <!-- JavaScript -->
   <script src="js/main.js"></script>
   <script type="module" src="src/js/main.js"></script>
-  <script>
+  <script type="module">
+    import { AuthManager } from './src/js/modules/AuthManager.js';
+
     document.addEventListener('DOMContentLoaded', function () {
       const registerForm = document.getElementById('registerForm');
+      if (!registerForm) return;
 
-      if (registerForm) {
-        registerForm.addEventListener('submit', function (e) {
-          e.preventDefault();
+      const feedbackEl = document.getElementById('registerFeedback');
+      const submitBtn = document.getElementById('registerSubmitBtn');
+      const firstNameInput = document.getElementById('regFirstName');
+      const lastNameInput = document.getElementById('regLastName');
+      const emailInput = document.getElementById('regEmail');
+      const passwordInput = document.getElementById('regPassword');
+      const confirmPasswordInput = document.getElementById('regConfirmPassword');
+      const termsCheckbox = document.getElementById('regTerms');
 
-          const password = document.getElementById('password').value;
-          const confirmPassword = document.getElementById('confirmPassword').value;
-
-          // Check if passwords match
-          if (password !== confirmPassword) {
-            alert('Passwords do not match. Please try again.');
-            return;
-          }
-
-          // Check password length
-          if (password.length < 8) {
-            alert('Password must be at least 8 characters long.');
-            return;
-          }
-
-          // If validation passes, show success message
-          // In production, this would send data to your backend
-          alert('Account created successfully! Redirecting to login...');
-          window.location.href = 'login.html';
-        });
+      function showFeedback(message, type) {
+        if (!feedbackEl) return;
+        feedbackEl.textContent = message;
+        feedbackEl.classList.remove('auth-feedback--error', 'auth-feedback--success');
+        feedbackEl.classList.add('auth-feedback--' + type, 'is-visible');
       }
+
+      function clearFeedback() {
+        if (!feedbackEl) return;
+        feedbackEl.textContent = '';
+        feedbackEl.classList.remove('auth-feedback--error', 'auth-feedback--success', 'is-visible');
+      }
+
+      function setLoading(isLoading) {
+        if (!submitBtn) return;
+        submitBtn.disabled = isLoading;
+        submitBtn.textContent = isLoading ? 'CREATING ACCOUNT...' : 'CREATE ACCOUNT';
+        submitBtn.style.opacity = isLoading ? '0.7' : '';
+      }
+
+      registerForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        clearFeedback();
+
+        const email = (emailInput?.value || '').trim();
+        const password = passwordInput?.value || '';
+        const confirmPassword = confirmPasswordInput?.value || '';
+        const firstName = (firstNameInput?.value || '').trim();
+        const lastName = (lastNameInput?.value || '').trim();
+
+        // Validation
+        if (!email) {
+          showFeedback('Please enter your email address.', 'error');
+          emailInput?.focus();
+          return;
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+          showFeedback('Please enter a valid email address.', 'error');
+          emailInput?.focus();
+          return;
+        }
+
+        if (!password || password.length < 6) {
+          showFeedback('Password must be at least 6 characters long.', 'error');
+          passwordInput?.focus();
+          return;
+        }
+
+        if (password !== confirmPassword) {
+          showFeedback('Passwords do not match. Please re-enter.', 'error');
+          confirmPasswordInput?.focus();
+          return;
+        }
+
+        if (termsCheckbox && !termsCheckbox.checked) {
+          showFeedback('Please accept the Terms & Conditions to continue.', 'error');
+          return;
+        }
+
+        setLoading(true);
+
+        try {
+          const result = await AuthManager.register({ email, password, firstName, lastName });
+
+          if (result.success) {
+            const name = result.user?.firstName || result.user?.displayName || 'there';
+            showFeedback('Welcome, ' + name + '! Your account has been created.', 'success');
+            setTimeout(() => { window.location.href = 'index.html'; }, 1500);
+          } else {
+            showFeedback(result.error, 'error');
+            setLoading(false);
+          }
+        } catch (err) {
+          console.error('Registration error:', err);
+          showFeedback('An unexpected error occurred. Please try again.', 'error');
+          setLoading(false);
+        }
+      });
     });
   </script>
 </body>

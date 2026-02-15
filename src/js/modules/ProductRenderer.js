@@ -22,9 +22,10 @@ class ProductRenderer {
     const isRemote = url.startsWith('http') && !url.includes(window.location.hostname);
 
     if (isRemote) {
-      // Use Statically.io - a free, high-performance CDN for WordPress/GitHub
-      const cleanUrl = url.replace(/^https?:\/\//, '');
-      return `https://p.statically.io/img/${cleanUrl}?w=${width}&f=webp&q=${quality}`;
+      // DISABLED: Statically.io proxy causes ERR_NAME_NOT_RESOLVED
+      // Subdomain 'p.statically.io' is invalid. Use 'cdn.statically.io' if needed in future.
+      // For now, WordPress images are accessible and optimized enough.
+      return url;
     }
 
     // 3. Local images - return as is
@@ -45,12 +46,18 @@ class ProductRenderer {
     const imageUrl = this.getOptimizedImage(primaryUrl, 600);
     const loadingAttr = lazy ? 'loading="lazy"' : 'loading="eager"';
     const isOutOfStock = product.inStock === false;
+    const regularPrice = Number(product.regularPrice) || 0;
+    const salePrice = Number(product.salePrice) || 0;
+    const hasSale = salePrice > 0 && regularPrice > salePrice;
+    const currentPrice = hasSale ? salePrice : (Number(product.price) || 0);
 
     return `
       <article class="product-card${isOutOfStock ? ' product-card--out-of-stock' : ''}" 
         data-product-id="${product.id}" 
         data-product-name="${this.escapeHtml(product.name)}" 
-        data-product-price="${product.price}" 
+        data-product-price="${currentPrice}" 
+        data-product-regular-price="${regularPrice}"
+        data-product-sale-price="${salePrice}"
         data-product-image="${imageUrl}"
         data-stock-quantity="${product.stockQuantity ?? ''}"
         data-in-stock="${product.inStock !== false}">
@@ -61,12 +68,15 @@ class ProductRenderer {
                  ${loadingAttr}
                  onload="this.parentElement.classList.remove('luxury-shimmer')">
             ${isOutOfStock ? '<span class="product-badge product-badge--oos">Out of Stock</span>' : ''}
-            ${product.salePrice && product.salePrice > 0 ? '<span class="product-badge product-badge--sale">Sale</span>' : ''}
+            ${hasSale ? '<span class="product-badge product-badge--sale">Sale</span>' : ''}
             ${showWishlist ? this.renderWishlistButton() : ''}
           </div>
           <div class="product-card-info">
             <h2 class="product-card-name">${this.escapeHtml(product.name)}</h2>
-            <p class="product-card-price">${this.formatPrice(product.price)}</p>
+            <p class="product-card-price">
+              ${hasSale ? `<span class="product-card-price-regular">${this.formatPrice(regularPrice)}</span>` : ''}
+              <span class="product-card-price-current${hasSale ? ' product-card-price-current--sale' : ''}">${this.formatPrice(currentPrice)}</span>
+            </p>
           </div>
         </a>
       </article>
@@ -133,15 +143,20 @@ class ProductRenderer {
    */
   static renderHorizontalCard(product) {
     const imageUrl = product.images?.thumbnail || product.images?.placeholder || product.images?.primary || product.primaryImage;
+    const regularPrice = Number(product.regularPrice) || 0;
+    const salePrice = Number(product.salePrice) || 0;
+    const hasSale = salePrice > 0 && regularPrice > salePrice;
+    const currentPrice = hasSale ? salePrice : (Number(product.price) || 0);
 
     return `
       <a href="product-detail.html?id=${product.id}" class="search-product-card">
-        <div class="search-product-image">
-          <img src="${imageUrl}" alt="${this.escapeHtml(product.name)}" loading="lazy">
-        </div>
-        <div class="search-product-info">
-          <p class="search-product-name">${this.escapeHtml(product.name)}</p>
-          <p class="search-product-price">${this.formatPrice(product.price)}</p>
+        <img src="${imageUrl}" alt="${this.escapeHtml(product.name)}" class="search-product-card__image" loading="lazy">
+        <div class="search-product-card__info">
+          <p class="search-product-card__name">${this.escapeHtml(product.name)}</p>
+          <p class="search-product-card__price">
+            ${hasSale ? `<span class="search-product-card__price-regular">${this.formatPrice(regularPrice)}</span>` : ''}
+            <span class="search-product-card__price-current${hasSale ? ' search-product-card__price-current--sale' : ''}">${this.formatPrice(currentPrice)}</span>
+          </p>
         </div>
       </a>
     `;
@@ -316,18 +331,22 @@ class ProductRenderer {
           id: card.dataset.productId,
           name: card.dataset.productName,
           price: parseFloat(card.dataset.productPrice),
+          regularPrice: parseFloat(card.dataset.productRegularPrice) || 0,
+          salePrice: parseFloat(card.dataset.productSalePrice) || 0,
           image: card.dataset.productImage
         };
 
         // Use WishlistManager if available
         if (window.WishlistManager) {
-          const isInWishlist = window.WishlistManager.isInWishlist(productData.id);
-          if (isInWishlist) {
-            window.WishlistManager.remove(productData.id);
-            btn.classList.remove('active');
-          } else {
-            window.WishlistManager.add(productData);
-            btn.classList.add('active');
+          // Module WishlistManager uses toggle(), legacy uses toggleItem()
+          const toggleFn = window.WishlistManager.toggle || window.WishlistManager.toggleItem;
+          if (toggleFn) {
+            const isAdded = toggleFn.call(window.WishlistManager, productData);
+            if (isAdded) {
+              btn.classList.add('active');
+            } else {
+              btn.classList.remove('active');
+            }
           }
         }
       });

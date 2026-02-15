@@ -12,24 +12,22 @@
   --color-text: #2a2a2a;
   --color-text-light: #5a5a5a;
   --color-text-muted: #8a8a8a;
+  --color-sale-price: #1a1a1a;
+  --color-sale-badge-bg: rgba(20, 18, 14, 0.76);
+  --color-sale-badge-text: #f3e7ca;
+  --color-sale-badge-border: rgba(221, 187, 110, 0.7);
 
   /* Premium Gradients */
-  --gradient-gold: linear-gradient(
-    135deg,
-    #c9a962 0%,
-    #ddb96f 50%,
-    #c9a962 100%
-  );
-  --gradient-dark: linear-gradient(
-    180deg,
-    rgba(26, 26, 26, 0.95) 0%,
-    rgba(26, 26, 26, 0.85) 100%
-  );
-  --gradient-overlay: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.5) 0%,
-    transparent 60%
-  );
+  --gradient-gold: linear-gradient(135deg,
+      #c9a962 0%,
+      #ddb96f 50%,
+      #c9a962 100%);
+  --gradient-dark: linear-gradient(180deg,
+      rgba(26, 26, 26, 0.95) 0%,
+      rgba(26, 26, 26, 0.85) 100%);
+  --gradient-overlay: linear-gradient(to top,
+      rgba(0, 0, 0, 0.5) 0%,
+      transparent 60%);
 
   /* Typography - Refined Weights for Luxury */
   --font-heading: "Helvetica Neue", Helvetica, Roboto, sans-serif;
@@ -65,17 +63,26 @@
   --line-height-loose: 2.2;
 
   /* Spacing - LUXURY SCALE (More Generous) */
-  --spacing-2xs: 0.25rem; /* 4px */
-  --spacing-xs: 0.5rem; /* 8px */
-  --spacing-sm: 1rem; /* 16px */
-  --spacing-md: 2rem; /* 32px - INCREASED from 1.25rem */
-  --spacing-lg: 4rem; /* 64px - INCREASED from 2rem */
-  --spacing-xl: 6rem; /* 96px - INCREASED from 3rem */
-  --spacing-2xl: 10rem; /* 160px - NEW for hero sections */
-  --spacing-3xl: 14rem; /* 224px - NEW for major section breaks */
+  --spacing-2xs: 0.25rem;
+  /* 4px */
+  --spacing-xs: 0.5rem;
+  /* 8px */
+  --spacing-sm: 1rem;
+  /* 16px */
+  --spacing-md: 2rem;
+  /* 32px - INCREASED from 1.25rem */
+  --spacing-lg: 4rem;
+  /* 64px - INCREASED from 2rem */
+  --spacing-xl: 6rem;
+  /* 96px - INCREASED from 3rem */
+  --spacing-2xl: 10rem;
+  /* 160px - NEW for hero sections */
+  --spacing-3xl: 14rem;
+  /* 224px - NEW for major section breaks */
 
   /* Home Page Section Rhythm - Luxury Vertical Spacing */
-  --section-rhythm: 5rem; /* 80px - Authoritative section gap for home page */
+  --section-rhythm: 5rem;
+  /* 80px - Authoritative section gap for home page */
 
   /* Motion - Premium Easing Curves */
   --transition-instant: 0.1s ease;
@@ -114,7 +121,8 @@
 /* Mobile: More compact section rhythm for better content density */
 @media (max-width: 767px) {
   :root {
-    --section-rhythm: 3.2rem; /* Reduced from 4rem for tighter section flow */
+    --section-rhythm: 3.2rem;
+    /* Reduced from 4rem for tighter section flow */
   }
 }
 
@@ -162,16 +170,21 @@ a {
 
 /* Explicitly override generic link transition for logo to verify inheritance/sync */
 .logo {
-  transition: transform 0.4s ease; /* No color transition */
+  transition: transform 0.4s ease;
+  /* No color transition */
 }
 
 img {
-  width: 100%; /* Fixed width instead of max-width for zoom stability */
+  width: 100%;
+  /* Fixed width instead of max-width for zoom stability */
   height: auto;
   display: block;
-  object-fit: cover; /* Maintain aspect ratio and fill container */
-  image-rendering: -webkit-optimize-contrast; /* Crisp images at all zoom levels */
-  image-rendering: crisp-edges; /* Fallback for other browsers */
+  object-fit: cover;
+  /* Maintain aspect ratio and fill container */
+  image-rendering: -webkit-optimize-contrast;
+  /* Crisp images at all zoom levels */
+  image-rendering: crisp-edges;
+  /* Fallback for other browsers */
 }
 
 button {
@@ -207,7 +220,7 @@ ul {
 }
 
 /* Staggered reveal for multiple items */
-.reveal-stagger > * {
+.reveal-stagger>* {
   opacity: 0;
   transform: translateY(20px);
   transition:
@@ -215,26 +228,31 @@ ul {
     transform var(--transition-elegant);
 }
 
-.reveal-stagger.revealed > *:nth-child(1) {
+.reveal-stagger.revealed>*:nth-child(1) {
   transition-delay: 0s;
 }
-.reveal-stagger.revealed > *:nth-child(2) {
+
+.reveal-stagger.revealed>*:nth-child(2) {
   transition-delay: 0.1s;
 }
-.reveal-stagger.revealed > *:nth-child(3) {
+
+.reveal-stagger.revealed>*:nth-child(3) {
   transition-delay: 0.2s;
 }
-.reveal-stagger.revealed > *:nth-child(4) {
+
+.reveal-stagger.revealed>*:nth-child(4) {
   transition-delay: 0.3s;
 }
-.reveal-stagger.revealed > *:nth-child(5) {
+
+.reveal-stagger.revealed>*:nth-child(5) {
   transition-delay: 0.4s;
 }
-.reveal-stagger.revealed > *:nth-child(6) {
+
+.reveal-stagger.revealed>*:nth-child(6) {
   transition-delay: 0.5s;
 }
 
-.reveal-stagger.revealed > * {
+.reveal-stagger.revealed>* {
   opacity: 1;
   transform: translateY(0);
 }
@@ -321,12 +339,10 @@ ul {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.1),
-    transparent
-  );
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.1),
+      transparent);
   transition: left var(--transition-slow);
 }
 
@@ -361,8 +377,10 @@ ul {
 .premium-image-container img {
   transition: transform var(--transition-slow);
   will-change: transform;
-  object-fit: cover; /* Ensure consistent fill at all zoom levels */
-  min-height: 100%; /* Prevent gaps during zoom */
+  object-fit: cover;
+  /* Ensure consistent fill at all zoom levels */
+  min-height: 100%;
+  /* Prevent gaps during zoom */
 }
 
 .premium-image-container:hover img {
@@ -398,9 +416,12 @@ ul {
 .collection-card,
 .discovery-section,
 .story-section {
-  min-width: 0; /* Prevent overflow */
-  overflow: hidden; /* Clip any excess */
-  position: relative; /* For absolute image positioning if needed */
+  min-width: 0;
+  /* Prevent overflow */
+  overflow: hidden;
+  /* Clip any excess */
+  position: relative;
+  /* For absolute image positioning if needed */
 }
 
 /* Ensure all images within containers fill properly at all zoom levels */
@@ -457,6 +478,7 @@ ul {
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -468,6 +490,7 @@ ul {
     opacity: 0;
     transform: scale(0.95);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
@@ -477,31 +500,37 @@ ul {
 /* Product Grid Page Load Animation */
 .product-grid-animated .product-card {
   opacity: 0;
-  animation: fadeInUp var(--motion-duration-slow) var(--motion-ease-out)
-    forwards;
+  animation: fadeInUp var(--motion-duration-slow) var(--motion-ease-out) forwards;
 }
 
 .product-grid-animated .product-card:nth-child(1) {
   animation-delay: 0s;
 }
+
 .product-grid-animated .product-card:nth-child(2) {
   animation-delay: 0.08s;
 }
+
 .product-grid-animated .product-card:nth-child(3) {
   animation-delay: 0.16s;
 }
+
 .product-grid-animated .product-card:nth-child(4) {
   animation-delay: 0.24s;
 }
+
 .product-grid-animated .product-card:nth-child(5) {
   animation-delay: 0.32s;
 }
+
 .product-grid-animated .product-card:nth-child(6) {
   animation-delay: 0.4s;
 }
+
 .product-grid-animated .product-card:nth-child(7) {
   animation-delay: 0.48s;
 }
+
 .product-grid-animated .product-card:nth-child(8) {
   animation-delay: 0.56s;
 }
@@ -529,6 +558,7 @@ ul {
   0% {
     background-position: -200% 0;
   }
+
   100% {
     background-position: 200% 0;
   }
@@ -556,13 +586,11 @@ ul {
   bottom: 0;
   left: 0;
   transform: translateX(-100%);
-  background: linear-gradient(
-    90deg,
-    rgba(201, 169, 98, 0) 0,
-    rgba(201, 169, 98, 0.05) 20%,
-    rgba(201, 169, 98, 0.1) 60%,
-    rgba(201, 169, 98, 0)
-  );
+  background: linear-gradient(90deg,
+      rgba(201, 169, 98, 0) 0,
+      rgba(201, 169, 98, 0.05) 20%,
+      rgba(201, 169, 98, 0.1) 60%,
+      rgba(201, 169, 98, 0));
   animation: luxury-shimmer 2s infinite;
 }
 
@@ -777,7 +805,8 @@ ul {
 /* FIX: Standardize SVG icon (Login) to use EXACT same filter logic as images 
    Instead of relying on 'currentColor', we force it Black and use Invert filter. */
 .icon-btn svg {
-  stroke: var(--color-black) !important; /* Force native color to Black */
+  stroke: var(--color-black) !important;
+  /* Force native color to Black */
   /* Default State: Inverted (White) */
   /* Default State: Inverted (White) */
   filter: brightness(0) invert(1);
@@ -843,8 +872,7 @@ ul {
   max-width: 320px;
   height: 100vh;
   background: #fffff5;
-  padding: calc(var(--header-height) + var(--spacing-lg)) var(--spacing-md)
-    var(--spacing-lg);
+  padding: calc(var(--header-height) + var(--spacing-lg)) var(--spacing-md) var(--spacing-lg);
   transition: left var(--transition-smooth);
   z-index: 999;
   box-shadow: 5px 0 30px rgba(0, 0, 0, 0.15);
@@ -976,6 +1004,7 @@ ul {
       opacity: 0;
       transform: translateY(-5px);
     }
+
     to {
       opacity: 1;
       transform: translateY(0);
@@ -990,9 +1019,11 @@ ul {
 .hero {
   position: relative;
   width: 100%;
-  height: 100svh; /* Default/Base height */
+  height: 100svh;
+  /* Default/Base height */
   min-height: 550px;
-  max-height: 1200px; /* Increased for large screens/zoom-out */
+  max-height: 1200px;
+  /* Increased for large screens/zoom-out */
   aspect-ratio: 1920 / 1080;
   overflow: hidden;
 }
@@ -1000,23 +1031,28 @@ ul {
 /* Mobile Hero Height Fix (≤768px): Reduce height to visually reveal content below */
 @media (max-width: 768px) {
   .hero {
-    height: 80svh; /* Mobile specific height */
-    min-height: 450px; /* adjusted for smaller screens */
-    aspect-ratio: unset; /* Allow height to control dimensions */
+    height: 80svh;
+    /* Mobile specific height */
+    min-height: 450px;
+    /* adjusted for smaller screens */
+    aspect-ratio: unset;
+    /* Allow height to control dimensions */
     max-height: none;
   }
 }
 
 .hero-image-container {
   position: absolute;
-  inset: 0; /* Modern shorthand for top/right/bottom/left: 0 */
+  inset: 0;
+  /* Modern shorthand for top/right/bottom/left: 0 */
 }
 
 .hero-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 20%; /* Focus on upper portion for model faces */
+  object-position: center 20%;
+  /* Focus on upper portion for model faces */
 }
 
 /* Hero Content Overlay */
@@ -1106,7 +1142,8 @@ ul {
 
 /* ==================== INTRO SECTION (Mobile First) ==================== */
 .intro-section {
-  padding: 0 0 var(--spacing-md); /* Bottom padding only; margin-top handles gap */
+  padding: 0 0 var(--spacing-md);
+  /* Bottom padding only; margin-top handles gap */
   background-color: transparent;
   text-align: center;
   max-width: var(--max-width);
@@ -1137,7 +1174,8 @@ ul {
 
 /* ==================== VIDEO SECTION ==================== */
 .video-section-full {
-  padding: 0 var(--spacing-md) var(--spacing-md); /* Bottom padding only; margin-top handles gap */
+  padding: 0 var(--spacing-md) var(--spacing-md);
+  /* Bottom padding only; margin-top handles gap */
   max-width: var(--max-width);
   margin-left: auto;
   margin-right: auto;
@@ -1491,9 +1529,31 @@ input[type="text"]::-ms-clear {
 }
 
 .search-overlay__product-price {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
   font-family: var(--font-body);
   font-size: 0.8rem;
   color: var(--color-text-light);
+}
+
+.search-overlay__product-price-regular {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+  text-decoration-color: rgba(42, 42, 42, 0.55);
+}
+
+.search-overlay__product-price-current {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.search-overlay__product-price-current--sale {
+  color: var(--color-sale-price);
 }
 
 /* No Results State */
@@ -1558,6 +1618,7 @@ input[type="text"]::-ms-clear {
 
 /* ==================== SEARCH OVERLAY - DESKTOP REFINEMENTS ==================== */
 @media (min-width: 768px) {
+
   /* 1. Search Input & Close Icon - Tighter grouping */
   .search-overlay__input-row {
     gap: 6px;
@@ -1578,13 +1639,15 @@ input[type="text"]::-ms-clear {
 .search-modal {
   display: none;
 }
+
 .atelier-search {
   display: none;
 }
 
 /* ==================== INTRO SECTION (Mobile First) ==================== */
 .intro-section {
-  padding-top: 2.5rem; /* 40px - Optical: Tighter coupling to Hero */
+  padding-top: 2.5rem;
+  /* 40px - Optical: Tighter coupling to Hero */
   padding-bottom: var(--section-rhythm);
 }
 
@@ -1604,7 +1667,8 @@ input[type="text"]::-ms-clear {
 
 .discover-grid {
   display: grid;
-  grid-template-columns: 1fr; /* Mobile: Stacked */
+  grid-template-columns: 1fr;
+  /* Mobile: Stacked */
   gap: var(--spacing-sm);
   max-width: var(--max-width);
   margin: 0 auto;
@@ -1612,7 +1676,8 @@ input[type="text"]::-ms-clear {
 
 @media (min-width: 768px) {
   .discover-grid {
-    grid-template-columns: 1fr 1fr; /* Desktop: Two columns */
+    grid-template-columns: 1fr 1fr;
+    /* Desktop: Two columns */
   }
 }
 
@@ -1627,7 +1692,8 @@ input[type="text"]::-ms-clear {
 .discover-image-wrapper {
   position: relative;
   width: 100%;
-  aspect-ratio: 4 / 5; /* Portrait aspect ratio */
+  aspect-ratio: 4 / 5;
+  /* Portrait aspect ratio */
   overflow: hidden;
 }
 
@@ -1652,7 +1718,8 @@ input[type="text"]::-ms-clear {
   right: 0;
   padding: var(--spacing-md);
   background: linear-gradient(to top, rgba(0, 0, 0, 0.4), transparent);
-  pointer-events: none; /* Let clicks pass through */
+  pointer-events: none;
+  /* Let clicks pass through */
 }
 
 .discover-text {
@@ -1795,7 +1862,8 @@ input[type="text"]::-ms-clear {
   flex: 0 0 auto;
   width: calc(25% - 1.5rem);
   min-width: 280px;
-  max-width: 400px; /* Prevent over-expansion at zoom-out */
+  max-width: 400px;
+  /* Prevent over-expansion at zoom-out */
   display: block;
   overflow: hidden;
   border-radius: 4px;
@@ -1808,9 +1876,11 @@ input[type="text"]::-ms-clear {
 
 .product-card img {
   width: 100%;
-  aspect-ratio: 7 / 10; /* Enforced portrait ratio */
+  aspect-ratio: 7 / 10;
+  /* Enforced portrait ratio */
   object-fit: cover;
-  object-position: center top; /* Focus on model faces/garment top */
+  object-position: center top;
+  /* Focus on model faces/garment top */
   transition: transform 0.6s ease;
 }
 
@@ -1828,7 +1898,8 @@ input[type="text"]::-ms-clear {
 .story-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 0; /* LOCKED: Zero gap between Artist's Legacy and Our Craft Matters */
+  gap: 0;
+  /* LOCKED: Zero gap between Artist's Legacy and Our Craft Matters */
   width: 100%;
   margin-left: 0;
   margin-right: 0;
@@ -1855,7 +1926,8 @@ input[type="text"]::-ms-clear {
 .story-image {
   width: 100%;
   overflow: hidden;
-  aspect-ratio: 4 / 5; /* Enforce consistent portrait ratio */
+  aspect-ratio: 4 / 5;
+  /* Enforce consistent portrait ratio */
 }
 
 .story-image img {
@@ -1988,7 +2060,8 @@ section.fashion-insights-section {
 
 .fashion-insights-grid {
   display: grid;
-  grid-template-columns: 1fr; /* Mobile First: Stacked */
+  grid-template-columns: 1fr;
+  /* Mobile First: Stacked */
   /* Gap matches Discover/Video gap logic (approx 16px) */
   gap: var(--spacing-sm) !important;
   padding: 0;
@@ -2006,7 +2079,8 @@ section.fashion-insights-section {
   width: 100%;
   /* Removed lift/shadow to match Binal Patel reference */
   transition: transform var(--transition-smooth);
-  position: relative; /* For clickable overlay */
+  position: relative;
+  /* For clickable overlay */
   cursor: pointer;
 }
 
@@ -2135,7 +2209,8 @@ section.fashion-insights-section {
 /* View More Link Styles */
 .fashion-insights-view-more {
   text-align: center;
-  margin-top: 4rem; /* Spacing from grid */
+  margin-top: 4rem;
+  /* Spacing from grid */
 }
 
 .view-more-link {
@@ -2195,9 +2270,12 @@ section.fashion-insights-section {
   bottom: 0;
   background-image: url("../assets/images/footer-pattern.png");
   background-repeat: repeat;
-  background-size: 950px auto; /* "Zoomed" look preserved */
-  background-position: 0 0; /* Safer alignment for fixed backgrounds */
-  background-attachment: fixed; /* Parallax effect restored */
+  background-size: 950px auto;
+  /* "Zoomed" look preserved */
+  background-position: 0 0;
+  /* Safer alignment for fixed backgrounds */
+  background-attachment: fixed;
+  /* Parallax effect restored */
   opacity: 0.08;
   filter: invert(1);
   pointer-events: none;
@@ -2343,7 +2421,8 @@ section.fashion-insights-section {
 /* Social Icons - Touch Friendly */
 .social-icons {
   display: flex;
-  gap: 10px; /* Further reduced gap as requested */
+  gap: 10px;
+  /* Further reduced gap as requested */
   align-items: center;
 }
 
@@ -2424,8 +2503,10 @@ section.fashion-insights-section {
 /* Form Section */
 /* Form Section */
 .contact-form-section {
-  padding: var(--spacing-lg) 0; /* Reduced from xl */
-  padding-bottom: var(--spacing-md); /* Greatly reduced spacing after form */
+  padding: var(--spacing-lg) 0;
+  /* Reduced from xl */
+  padding-bottom: var(--spacing-md);
+  /* Greatly reduced spacing after form */
   text-align: center;
   background-color: var(--color-cream);
 }
@@ -2499,11 +2580,13 @@ section.fashion-insights-section {
 }
 
 .contact-submit-btn {
-  padding: 0.75rem 5rem; /* Narrower vertically, longer horizontally */
+  padding: 0.75rem 5rem;
+  /* Narrower vertically, longer horizontally */
   font-family: var(--font-body);
   font-size: 0.85rem;
   font-weight: 500;
-  letter-spacing: 0.15em; /* Increased spacing for premium feel */
+  letter-spacing: 0.15em;
+  /* Increased spacing for premium feel */
   color: #ffffff;
   background-color: var(--color-black);
   border: none;
@@ -2520,7 +2603,8 @@ section.fashion-insights-section {
 
 /* Info Section */
 .contact-info-section {
-  padding: var(--spacing-md) 0; /* Reduced from xl to md to bring it closer */
+  padding: var(--spacing-md) 0;
+  /* Reduced from xl to md to bring it closer */
   text-align: center;
   background-color: var(--color-cream);
 }
@@ -2546,8 +2630,10 @@ section.fashion-insights-section {
 
 /* Details Section */
 .contact-details-section {
-  padding: var(--spacing-md) 0; /* Reduced top padding */
-  padding-bottom: var(--spacing-lg); /* Reduced bottom padding */
+  padding: var(--spacing-md) 0;
+  /* Reduced top padding */
+  padding-bottom: var(--spacing-lg);
+  /* Reduced bottom padding */
   background-color: var(--color-cream);
 }
 
@@ -2574,7 +2660,8 @@ section.fashion-insights-section {
 .contact-image img {
   width: 100%;
   height: auto;
-  aspect-ratio: 1/1; /* Square or consistent aspect ratio */
+  aspect-ratio: 1/1;
+  /* Square or consistent aspect ratio */
   object-fit: cover;
 }
 
@@ -2899,7 +2986,8 @@ section.fashion-insights-section {
 .insights-hero {
   padding: var(--spacing-lg) 0 var(--spacing-sm) 0;
   text-align: center;
-  background-color: var(--color-white); /* Keep white as previously set */
+  background-color: var(--color-white);
+  /* Keep white as previously set */
 }
 
 .insights-title {
@@ -2924,14 +3012,16 @@ section.fashion-insights-section {
 
 /* Articles Grid */
 .insights-grid-section {
-  padding: var(--spacing-md) 0 var(--spacing-md) 0; /* Reduced bottom padding */
+  padding: var(--spacing-md) 0 var(--spacing-md) 0;
+  /* Reduced bottom padding */
   background-color: var(--color-white);
 }
 
 .insights-grid {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
-  gap: 24px; /* Reduced gap to prevent overflow on smaller screens */
+  gap: 24px;
+  /* Reduced gap to prevent overflow on smaller screens */
   width: 100%;
 }
 
@@ -2943,10 +3033,9 @@ section.fashion-insights-section {
 
 @media (min-width: 1024px) {
   .insights-grid {
-    grid-template-columns: repeat(
-      2,
-      1fr
-    ); /* Stay at 2 columns for 1024px - 1280px */
+    grid-template-columns: repeat(2,
+        1fr);
+    /* Stay at 2 columns for 1024px - 1280px */
   }
 }
 
@@ -2960,7 +3049,8 @@ section.fashion-insights-section {
 .insight-card {
   background-color: var(--color-white);
   overflow: hidden;
-  min-width: 0; /* CRITICAL: Allows grid item to shrink below content size */
+  min-width: 0;
+  /* CRITICAL: Allows grid item to shrink below content size */
   transition:
     transform var(--transition-fast),
     box-shadow var(--transition-fast);
@@ -3048,8 +3138,10 @@ section.fashion-insights-section {
   justify-content: center;
   align-items: center;
   gap: var(--spacing-sm);
-  margin-top: var(--spacing-sm); /* Reduced from xl */
-  padding-top: 0; /* Reduced from lg */
+  margin-top: var(--spacing-sm);
+  /* Reduced from xl */
+  padding-top: 0;
+  /* Reduced from lg */
 }
 
 .pagination-numbers {
@@ -3279,7 +3371,8 @@ section.fashion-insights-section {
 
 /* Article Sections */
 .article-section {
-  margin-bottom: 8vh; /* Increased spacing between sections */
+  margin-bottom: 8vh;
+  /* Increased spacing between sections */
 }
 
 .article-section-number {
@@ -3304,22 +3397,28 @@ section.fashion-insights-section {
 /* Article Block Image - Portrait Orientation per Approved Design */
 .article-block-image {
   width: 100%;
-  max-width: 65vw; /* Narrower width as per approved design */
+  max-width: 65vw;
+  /* Narrower width as per approved design */
   margin: 0 auto;
 }
 
 .article-block-image img {
   width: 100%;
-  height: 75vh; /* Taller height for portrait orientation */
-  max-height: 700px; /* Safety cap for very tall screens */
-  min-height: 400px; /* Safety cap for very short screens */
+  height: 75vh;
+  /* Taller height for portrait orientation */
+  max-height: 700px;
+  /* Safety cap for very tall screens */
+  min-height: 400px;
+  /* Safety cap for very short screens */
   object-fit: cover;
-  object-position: center top; /* Focus on top of image */
+  object-position: center top;
+  /* Focus on top of image */
 }
 
 .article-block-content {
   padding: 2vh 0;
-  max-width: 55vw; /* Narrower text width for readability */
+  max-width: 55vw;
+  /* Narrower text width for readability */
   margin: 0 auto;
 }
 
@@ -3423,13 +3522,15 @@ section.fashion-insights-section {
 /* Article Figure - Consistent with article-block-image */
 .article-figure {
   margin: 4vh auto;
-  max-width: 65vw; /* Match article-block-image width */
+  max-width: 65vw;
+  /* Match article-block-image width */
   width: 100%;
 }
 
 .article-figure img {
   width: 100%;
-  height: 75vh; /* Match article-block-image height */
+  height: 75vh;
+  /* Match article-block-image height */
   max-height: 700px;
   min-height: 400px;
   object-fit: cover;
@@ -3457,13 +3558,15 @@ section.fashion-insights-section {
 .article-figure-hero {
   position: relative;
   width: 100%;
-  max-width: 65vw; /* Match article-block-image */
+  max-width: 65vw;
+  /* Match article-block-image */
   margin: 0 auto;
 }
 
 .article-figure-hero img {
   width: 100%;
-  height: 75vh; /* Match other section images */
+  height: 75vh;
+  /* Match other section images */
   max-height: 700px;
   min-height: 400px;
   object-fit: cover;
@@ -4349,11 +4452,36 @@ section.fashion-insights-section {
 }
 
 .product-price {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
   font-family: var(--font-body);
   font-size: 1.1rem;
   font-weight: var(--font-weight-semibold);
   color: var(--color-black);
   margin-bottom: var(--spacing-xs);
+}
+
+.product-price-regular {
+  font-size: 0.95rem;
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text-muted);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+  text-decoration-color: rgba(42, 42, 42, 0.55);
+  letter-spacing: 0.03em;
+}
+
+.product-price-current {
+  font-size: 1.12rem;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-black);
+  letter-spacing: 0.02em;
+}
+
+.product-price-current--sale {
+  color: var(--color-sale-price);
 }
 
 .product-tax-note {
@@ -4503,7 +4631,7 @@ section.fashion-insights-section {
 
 .product-accordion-content p {
   font-family: var(--font-body);
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: var(--color-text);
   line-height: 1.7;
   margin-bottom: var(--spacing-sm);
@@ -4555,15 +4683,131 @@ section.fashion-insights-section {
 
 .accordion-read-more {
   font-family: var(--font-body);
-  font-size: 0.85rem;
-  font-weight: 500;
+  font-size: 0.8rem;
+  font-weight: var(--font-weight-semibold);
   color: var(--color-black);
   text-decoration: none;
+  border: none;
   border-bottom: 1px solid var(--color-black);
+  background: none;
+  padding: 0;
+  cursor: pointer;
   transition: opacity var(--transition-fast);
+  margin-top: var(--spacing-xs);
+  display: inline-block;
 }
 
 .accordion-read-more:hover {
+  opacity: 0.7;
+}
+
+/* Description Read More / Read Less truncation */
+.desc-preview {
+  display: block;
+}
+
+.desc-full {
+  display: none;
+}
+
+.desc-expanded .desc-preview {
+  display: none;
+}
+
+.desc-expanded .desc-full {
+  display: block;
+}
+
+/* ── WordPress WYSIWYG Content Normalization ──
+   These rules ensure any HTML from the WordPress editor
+   (without custom classes) matches the premium design system. */
+
+/* Base text normalization - all elements inherit the design system */
+.product-accordion-content,
+.product-accordion-content * {
+  font-family: var(--font-body);
+}
+
+/* Paragraphs - consistent sizing whether from WYSIWYG or hardcoded */
+.product-accordion-content p {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text);
+  line-height: 1.7;
+  margin: 0 0 var(--spacing-sm) 0;
+}
+
+/* Headings inside accordion (h3, h4, h5 from WYSIWYG) */
+.product-accordion-content h3,
+.product-accordion-content h4,
+.product-accordion-content h5,
+.product-accordion-content .accordion-subtitle {
+  font-family: var(--font-body);
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-black);
+  margin: var(--spacing-sm) 0 var(--spacing-xs) 0;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+}
+
+/* Bold text - consistent weight */
+/* Bold text - consistent weight */
+.product-accordion-content strong,
+.product-accordion-content b {
+  font-weight: 700;
+  color: var(--color-black);
+}
+
+/* All lists (ul, ol) - both with and without .accordion-list class */
+.product-accordion-content ul,
+.product-accordion-content ol,
+.product-accordion-content .accordion-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--spacing-sm) 0;
+}
+
+/* All list items - consistent styling */
+.product-accordion-content li {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text);
+  line-height: 1.7;
+  padding-left: 14px;
+  position: relative;
+}
+
+/* Bullet dots for all list items */
+.product-accordion-content li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 9px;
+  width: 4px;
+  height: 4px;
+  background-color: var(--color-text-light);
+  border-radius: 50%;
+}
+
+/* Remove extra spacing from last paragraph/list */
+.product-accordion-content p:last-child,
+.product-accordion-content ul:last-child,
+.product-accordion-content ol:last-child {
+  margin-bottom: 0;
+}
+
+/* Links inside accordion */
+.product-accordion-content a {
+  color: var(--color-black);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: opacity var(--transition-fast);
+}
+
+.product-accordion-content a:hover {
   opacity: 0.7;
 }
 
@@ -4736,7 +4980,7 @@ section.fashion-insights-section {
   background-color: var(--color-cream);
 }
 
-.wishlist-page > .container {
+.wishlist-page>.container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -4842,10 +5086,34 @@ section.fashion-insights-section {
 }
 
 .wishlist-card-price {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
   font-family: var(--font-body);
   font-size: 0.85rem;
   font-weight: 400;
   color: var(--color-text-light);
+}
+
+.wishlist-card-price-regular {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+  text-decoration-color: rgba(42, 42, 42, 0.55);
+  letter-spacing: 0.03em;
+}
+
+.wishlist-card-price-current {
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--color-text);
+  letter-spacing: 0.03em;
+}
+
+.wishlist-card-price-current--sale {
+  color: var(--color-sale-price);
 }
 
 /* Add To Bag Button */
@@ -5218,8 +5486,10 @@ section.fashion-insights-section {
 /* Products Grid - Premium tight spacing like Manish Malhotra */
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* Mobile: 2 columns */
-  gap: 45px 25px; /* Vertical 30px, Horizontal 20px */
+  grid-template-columns: repeat(2, 1fr);
+  /* Mobile: 2 columns */
+  gap: 45px 25px;
+  /* Vertical 30px, Horizontal 20px */
 }
 
 /* Product Card */
@@ -5307,10 +5577,35 @@ section.fashion-insights-section {
 }
 
 .product-card-price {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
   font-family: var(--font-body);
   font-size: 0.85rem;
   font-weight: 400;
   color: var(--color-text-light);
+}
+
+.product-card-price-regular {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+  text-decoration-color: rgba(42, 42, 42, 0.55);
+  letter-spacing: 0.03em;
+}
+
+.product-card-price-current {
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--color-text);
+  letter-spacing: 0.03em;
+}
+
+.product-card-price-current--sale {
+  color: var(--color-sale-price);
+  font-weight: 400;
 }
 
 /* ── Product Badges (Out of Stock / Sale) ── */
@@ -5327,6 +5622,7 @@ section.fashion-insights-section {
   line-height: 1;
   z-index: 2;
   pointer-events: none;
+  border-radius: 2px;
 }
 
 .product-badge--oos {
@@ -5335,8 +5631,12 @@ section.fashion-insights-section {
 }
 
 .product-badge--sale {
-  background-color: #c0392b;
-  color: #fff;
+  background-color: var(--color-sale-badge-bg);
+  color: var(--color-sale-badge-text);
+  border: 1px solid var(--color-sale-badge-border);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
   left: auto;
   right: var(--spacing-sm);
 }
@@ -5348,7 +5648,8 @@ section.fashion-insights-section {
 }
 
 .product-card--out-of-stock:hover .product-card-image img {
-  transform: none; /* Disable zoom on OOS */
+  transform: none;
+  /* Disable zoom on OOS */
 }
 
 .product-card--out-of-stock .product-card-name,
@@ -5498,7 +5799,8 @@ section.fashion-insights-section {
   grid-column: 2;
   display: flex;
   align-items: center;
-  justify-content: space-between; /* Spread controls on mobile or keep left? Standard is usually left or spread. */
+  justify-content: space-between;
+  /* Spread controls on mobile or keep left? Standard is usually left or spread. */
   gap: var(--spacing-sm);
 }
 
@@ -5531,6 +5833,13 @@ section.fashion-insights-section {
 
 .quantity-btn:hover {
   background-color: rgba(0, 0, 0, 0.05);
+}
+
+.quantity-btn:disabled,
+.drawer-qty-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 .quantity-value {
@@ -5715,7 +6024,8 @@ section.fashion-insights-section {
   }
 
   .cart-table-header .col-product {
-    flex: 0 0 45%; /* Slightly more than 40 to accommodate long names, balanced with total */
+    flex: 0 0 45%;
+    /* Slightly more than 40 to accommodate long names, balanced with total */
     text-align: left;
   }
 
@@ -5725,15 +6035,18 @@ section.fashion-insights-section {
   }
 
   .cart-table-header .col-total {
-    flex: 0 0 35%; /* Remaining space */
+    flex: 0 0 35%;
+    /* Remaining space */
     text-align: right;
   }
 
   /* Cart item uses flex layout on desktop to align with headers */
   .cart-item {
     display: flex;
-    align-items: center; /* Center everything vertically by default or override */
-    gap: 0; /* Remove gap, use internal padding/widths */
+    align-items: center;
+    /* Center everything vertically by default or override */
+    gap: 0;
+    /* Remove gap, use internal padding/widths */
     position: relative;
     padding-right: 0;
   }
@@ -5792,7 +6105,8 @@ section.fashion-insights-section {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 0; /* Match design square look if needed, or keep generic */
+    border-radius: 0;
+    /* Match design square look if needed, or keep generic */
   }
 }
 
@@ -5923,8 +6237,10 @@ section.fashion-insights-section {
     /* Updated Padding: adjusted to 0.75rem for balance */
     padding: 0.5rem 0 0.75rem;
     gap: 0.35rem;
-    position: relative; /* Ensure z-index applies */
-    z-index: 10001; /* Fix: High z-index to stay above mega menu */
+    position: relative;
+    /* Ensure z-index applies */
+    z-index: 10001;
+    /* Fix: High z-index to stay above mega menu */
   }
 
   /* Enable underline animation on desktop */
@@ -6172,15 +6488,18 @@ section.fashion-insights-section {
   }
 
   .article-block-image {
-    max-width: 60vw; /* Slightly narrower on larger screens */
+    max-width: 60vw;
+    /* Slightly narrower on larger screens */
   }
 
   .article-block-image img {
-    height: 70vh; /* Adjusted for desktop viewports */
+    height: 70vh;
+    /* Adjusted for desktop viewports */
   }
 
   .article-block-content {
-    max-width: 50vw; /* Narrower text on desktop for elegance */
+    max-width: 50vw;
+    /* Narrower text on desktop for elegance */
   }
 
   .article-block-content p {
@@ -6189,11 +6508,13 @@ section.fashion-insights-section {
 
   /* Article Figure Hero - Match article-block-image desktop sizing */
   .article-figure-hero {
-    max-width: 60vw; /* Match article-block-image desktop width */
+    max-width: 60vw;
+    /* Match article-block-image desktop width */
   }
 
   .article-figure-hero img {
-    height: 70vh; /* Match article-block-image img desktop height */
+    height: 70vh;
+    /* Match article-block-image img desktop height */
   }
 
   /* About Block - Two Column on Desktop */
@@ -6234,12 +6555,14 @@ section.fashion-insights-section {
 
   /* Brand Story Blocks - Two Column on Desktop */
   .brand-block {
-    grid-template-columns: 0.85fr 1.15fr; /* Image column slightly smaller */
+    grid-template-columns: 0.85fr 1.15fr;
+    /* Image column slightly smaller */
     gap: var(--spacing-xl);
   }
 
   .brand-block-reverse {
-    grid-template-columns: 1.15fr 0.85fr; /* Text column first, then smaller image column */
+    grid-template-columns: 1.15fr 0.85fr;
+    /* Text column first, then smaller image column */
   }
 
   .brand-block-reverse .brand-block-content {
@@ -6437,7 +6760,7 @@ section.fashion-insights-section {
     direction: rtl;
   }
 
-  .craft-block-reverse > * {
+  .craft-block-reverse>* {
     direction: ltr;
   }
 
@@ -6509,6 +6832,7 @@ section.fashion-insights-section {
       opacity: 0;
       transform: translateY(10px);
     }
+
     to {
       opacity: 1;
       transform: translateY(0);
@@ -6527,7 +6851,8 @@ section.fashion-insights-section {
   .mega-menu-links {
     padding-left: 0;
     width: 100%;
-    max-width: 400px; /* Constrain width for readability */
+    max-width: 400px;
+    /* Constrain width for readability */
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -6576,14 +6901,16 @@ section.fashion-insights-section {
   /* New Arrivals Menu - Client Approved Design */
   /* New Arrivals Menu - Client Approved Design */
   .mega-menu.mega-menu-new-arrivals {
-    padding: 0 !important; /* Remove giant default padding */
+    padding: 0 !important;
+    /* Remove giant default padding */
   }
 
   .new-arrivals-content {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    padding: 1.5rem 3rem; /* Very compact now */
+    padding: 1.5rem 3rem;
+    /* Very compact now */
     gap: 2rem;
     max-width: var(--max-width);
     margin: 0 auto;
@@ -6591,11 +6918,13 @@ section.fashion-insights-section {
 
   .new-arrivals-content .mega-menu-links {
     flex: 0 0 200px;
-    padding-top: 0.15rem; /* Fine-tuned alignment for text vs images */
+    padding-top: 0.15rem;
+    /* Fine-tuned alignment for text vs images */
   }
 
   .new-arrivals-content .mega-menu-list {
-    gap: 0.6rem; /* Tighter list spacing */
+    gap: 0.6rem;
+    /* Tighter list spacing */
   }
 
   .new-arrivals-content .mega-menu-list a {
@@ -6612,13 +6941,16 @@ section.fashion-insights-section {
   }
 
   .new-arrivals-content .mega-menu-images {
-    flex: 1; /* Allow to grow to push images to the right */
+    flex: 1;
+    /* Allow to grow to push images to the right */
     display: flex !important;
     flex-direction: row !important;
-    justify-content: flex-end; /* Align images to the far right */
+    justify-content: flex-end;
+    /* Align images to the far right */
     align-items: flex-start;
     gap: 1.5rem;
-    padding: 0 !important; /* Ensure no internal padding affects alignment */
+    padding: 0 !important;
+    /* Ensure no internal padding affects alignment */
   }
 
   .new-arrivals-content .mega-menu-img-wrapper {
@@ -7080,7 +7412,8 @@ section.fashion-insights-section {
     height: 100%;
     align-items: center;
     justify-content: flex-start;
-    gap: 0; /* No gap, we use negative margin for overlap */
+    gap: 0;
+    /* No gap, we use negative margin for overlap */
   }
 
   /* Both wrappers need flex-shrink: 0 to maintain size */
@@ -7117,14 +7450,16 @@ section.fashion-insights-section {
   }
 
   .mega-menu-images {
-    display: none; /* Hide images on mobile to save space or stack them? Design usually hides mega menu images on mobile */
+    display: none;
+    /* Hide images on mobile to save space or stack them? Design usually hides mega menu images on mobile */
   }
 
   .mega-menu-heading {
     font-size: 1.1rem;
     padding-left: 0;
     margin-bottom: var(--spacing-sm);
-    display: none; /* Hide redundant heading on mobile */
+    display: none;
+    /* Hide redundant heading on mobile */
   }
 
   .mega-menu-list {
@@ -7238,12 +7573,12 @@ section.fashion-insights-section {
 /* ==================== AUTH PAGES (Login, Register, Forgot Password) ==================== */
 .auth-page {
   min-height: 100vh;
-  padding-top: calc(var(--header-height) + 1.5rem);
-  padding-bottom: var(--spacing-lg);
+  padding-top: calc(var(--header-height) + 5rem);
+  padding-bottom: var(--spacing-xl);
   background-color: var(--color-cream);
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
 }
 
 .auth-container {
@@ -7330,6 +7665,11 @@ section.fashion-insights-section {
   gap: 10px;
 }
 
+.auth-checkbox-spaced {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
 .auth-checkbox input[type="checkbox"] {
   width: 18px;
   height: 18px;
@@ -7408,6 +7748,38 @@ section.fashion-insights-section {
   margin-top: var(--spacing-sm);
 }
 
+.auth-feedback {
+  display: none;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  padding: 10px 12px;
+  font-family: var(--font-body);
+  font-size: 0.84rem;
+  line-height: 1.4;
+  border-radius: 4px;
+}
+
+.auth-feedback.is-visible {
+  display: block;
+}
+
+.auth-feedback--error {
+  color: #7a2f2f;
+  background-color: rgba(193, 89, 89, 0.12);
+  border: 1px solid rgba(193, 89, 89, 0.3);
+}
+
+.auth-feedback--success {
+  color: #1e5b3f;
+  background-color: rgba(41, 122, 83, 0.12);
+  border: 1px solid rgba(41, 122, 83, 0.3);
+}
+
+.auth-btn[disabled] {
+  opacity: 0.75;
+  cursor: not-allowed;
+}
+
 /* Auth Page Responsive */
 @media (min-width: 768px) {
   .auth-container {
@@ -7454,6 +7826,238 @@ section.fashion-insights-section {
   line-height: 1.6;
   margin-bottom: var(--spacing-lg);
 }
+
+/* ==================== MY ACCOUNT PAGE ==================== */
+
+/* Two-column grid layout */
+.account-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .account-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+  }
+}
+
+.account-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.account-card {
+  background-color: #ffffff;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.account-avatar {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1.25rem;
+  border-radius: 50%;
+  background-color: var(--color-cream);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-light);
+}
+
+.account-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.account-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.account-label {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-text-light);
+}
+
+.account-value {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 400;
+  color: var(--color-black);
+  letter-spacing: 0.02em;
+}
+
+.account-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-bottom: 1.5rem;
+}
+
+.account-link-item {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 1rem 1.25rem;
+  background-color: #ffffff;
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  transition: all var(--transition-fast);
+}
+
+.account-link-item:first-child {
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.account-link-item:hover {
+  background-color: var(--color-cream);
+  color: var(--color-black);
+}
+
+.account-link-arrow {
+  margin-left: auto;
+  opacity: 0.3;
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+}
+
+.account-link-item:hover .account-link-arrow {
+  opacity: 0.7;
+  transform: translateX(3px);
+}
+
+.account-logout-btn {
+  margin-top: 0.5rem;
+  background-color: transparent;
+  color: var(--color-black);
+  border: 1px solid var(--color-black);
+}
+
+.account-logout-btn:hover {
+  background-color: var(--color-black);
+  color: var(--color-white);
+}
+
+/* Account Sections (Order History, Address Details) */
+.account-section {
+  background-color: #ffffff;
+  margin-bottom: 1.5rem;
+}
+
+.account-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.account-section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-black);
+  margin: 0;
+}
+
+.account-action-btn {
+  background: none;
+  border: none;
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-light);
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  opacity: 0.7;
+  transition: opacity var(--transition-fast);
+}
+
+.account-action-btn:hover {
+  opacity: 1;
+  color: var(--color-black);
+}
+
+.account-section-title svg {
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+
+.account-section-body {
+  padding: 1.5rem;
+}
+
+.account-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.5rem 0;
+  text-align: center;
+}
+
+.account-empty-state svg {
+  opacity: 0.2;
+  margin-bottom: 0.25rem;
+}
+
+.account-empty-state p {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--color-text-light);
+  margin: 0;
+}
+
+.account-section-cta {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-black);
+  text-decoration: none;
+  padding: 0.65rem 1.75rem;
+  border: 1px solid var(--color-black);
+  margin-top: 0.25rem;
+  transition: all var(--transition-fast);
+}
+
+.account-section-cta:hover {
+  background-color: var(--color-black);
+  color: var(--color-white);
+}
+
+.account-section-hint {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  color: var(--color-text-light);
+  opacity: 0.7;
+}
+
 
 /* ==================== CHECKOUT PAGE ==================== */
 .checkout-page {
@@ -7638,9 +8242,11 @@ section.fashion-insights-section {
 .pincode-status.loading {
   color: var(--color-text-light);
 }
+
 .pincode-status.success {
   color: #27ae60;
 }
+
 .pincode-status.error {
   color: #e74c3c;
 }
@@ -8413,9 +9019,31 @@ section.fashion-insights-section {
 }
 
 .search-product-card__price {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
   font-family: var(--font-body);
   font-size: 0.85rem;
   color: var(--color-text-light);
+}
+
+.search-product-card__price-regular {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+  text-decoration-color: rgba(42, 42, 42, 0.55);
+}
+
+.search-product-card__price-current {
+  font-size: 0.86rem;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.search-product-card__price-current--sale {
+  color: var(--color-sale-price);
 }
 
 /* No Results State */
@@ -8456,7 +9084,8 @@ section.fashion-insights-section {
 /* ==================== EXPLORE SWIPER ==================== */
 .explore-swiper {
   width: 100%;
-  padding-bottom: 50px; /* Space for pagination */
+  padding-bottom: 50px;
+  /* Space for pagination */
   overflow: hidden;
 }
 
@@ -8484,11 +9113,13 @@ section.fashion-insights-section {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle premium shadow */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  /* Subtle premium shadow */
   transition:
     transform 0.3s ease,
     background-color 0.3s ease;
-  color: var(--color-black); /* Arrow icon color */
+  color: var(--color-black);
+  /* Arrow icon color */
 }
 
 .explore-swiper .swiper-button-next::after,
@@ -8500,7 +9131,8 @@ section.fashion-insights-section {
 .explore-swiper .swiper-button-next:hover,
 .explore-swiper .swiper-button-prev:hover {
   transform: scale(1.1);
-  background-color: var(--color-white); /* Ensure it stays white on hover */
+  background-color: var(--color-white);
+  /* Ensure it stays white on hover */
 }
 
 /* ==================== OFF-CANVAS CART DRAWER ==================== */
@@ -8510,7 +9142,8 @@ section.fashion-insights-section {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(26, 26, 26, 0.6); /* Premium dark overlay */
+  background-color: rgba(26, 26, 26, 0.6);
+  /* Premium dark overlay */
   z-index: 9998;
   opacity: 0;
   visibility: hidden;
@@ -8553,10 +9186,12 @@ section.fashion-insights-section {
   width: 100%;
   max-width: 450px;
   height: 100vh;
-  background-color: var(--color-bg); /* Use page background #fffff5 */
+  background-color: var(--color-bg);
+  /* Use page background #fffff5 */
   z-index: 9999;
   transform: translateX(100%);
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); /* Smooth bezel-like slide */
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  /* Smooth bezel-like slide */
   box-shadow: -5px 0 30px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
@@ -8577,7 +9212,8 @@ section.fashion-insights-section {
 .drawer-title {
   font-family: var(--font-heading);
   font-size: 1.5rem;
-  font-weight: 400; /* Regular weight */
+  font-weight: 400;
+  /* Regular weight */
   color: var(--color-black);
   letter-spacing: 0.05em;
   margin: 0;
@@ -8715,6 +9351,7 @@ section.fashion-insights-section {
   justify-content: center;
   padding: 4px;
 }
+
 .drawer-remove-btn svg {
   width: 18px;
   height: 18px;
@@ -8758,7 +9395,8 @@ section.fashion-insights-section {
 .drawer-checkout-btn,
 .drawer-view-cart-btn {
   width: 100%;
-  padding: 0.75rem; /* Reduced from 1rem for narrower look */
+  padding: 0.75rem;
+  /* Reduced from 1rem for narrower look */
   border: none;
   font-family: var(--font-body);
   font-size: 0.9rem;
@@ -8784,6 +9422,7 @@ section.fashion-insights-section {
   color: var(--color-white);
   margin-bottom: 0;
 }
+
 .drawer-view-cart-btn:hover {
   background-color: #333;
 }
@@ -8858,10 +9497,13 @@ section.fashion-insights-section {
   display: inline-block;
   background-color: var(--color-black);
   color: var(--color-white);
-  padding: 0.6rem 3.5rem; /* Vertically narrower, horizontally wider */
+  padding: 0.6rem 3.5rem;
+  /* Vertically narrower, horizontally wider */
   font-family: var(--font-body);
-  font-size: 0.85rem; /* Slightly smaller text for premium feel */
-  letter-spacing: 0.15em; /* Increased letter spacing */
+  font-size: 0.85rem;
+  /* Slightly smaller text for premium feel */
+  letter-spacing: 0.15em;
+  /* Increased letter spacing */
   text-transform: uppercase;
   border: 1px solid var(--color-black);
   transition: all 0.3s ease;
@@ -8873,6 +9515,7 @@ section.fashion-insights-section {
   background-color: transparent;
   color: var(--color-black);
 }
+
 /* ==================== MOBILE HEADER REFINEMENTS ==================== */
 /* 
    Scopes: Mobile Only (max-width: 768px)
@@ -8880,15 +9523,19 @@ section.fashion-insights-section {
 */
 
 @media screen and (max-width: 768px) {
+
   /* 1. Structure & Background */
   .header,
   .header.scrolled,
   .header:hover {
     background-color: var(--color-white) !important;
     backdrop-filter: none !important;
-    height: 76px; /* Premium breathing room for brand dominance */
-    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04) !important; /* Subtle divider */
-    transition: transform var(--transition-luxury); /* Keep slide transition only */
+    height: 76px;
+    /* Premium breathing room for brand dominance */
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04) !important;
+    /* Subtle divider */
+    transition: transform var(--transition-luxury);
+    /* Keep slide transition only */
   }
 
   /* Reset container padding for balanced layout */
@@ -8903,8 +9550,10 @@ section.fashion-insights-section {
     width: 100%;
     height: 100%;
     padding: 0;
-    position: relative; /* For absolute logo centering */
-    justify-content: space-between; /* Hamburger Left, Icons Right */
+    position: relative;
+    /* For absolute logo centering */
+    justify-content: space-between;
+    /* Hamburger Left, Icons Right */
     align-items: center;
   }
 
@@ -8920,22 +9569,28 @@ section.fashion-insights-section {
     width: auto;
     flex-direction: column;
     align-items: center;
-    gap: 6px; /* Visible spacing between logo mark and brand name */
+    gap: 6px;
+    /* Visible spacing between logo mark and brand name */
   }
 
   .logo-image {
-    height: 38px; /* Dominant visual anchor */
+    height: 38px;
+    /* Dominant visual anchor */
     width: auto;
-    filter: none !important; /* Always black/original, never white/inverted */
+    filter: none !important;
+    /* Always black/original, never white/inverted */
   }
 
   .logo-text {
-    display: block; /* Show brand name on mobile */
+    display: block;
+    /* Show brand name on mobile */
     font-family: var(--font-script);
-    font-size: 0.95rem; /* Elegant, legible brand presence */
+    font-size: 0.95rem;
+    /* Elegant, legible brand presence */
     letter-spacing: 0.03em;
     color: var(--color-black);
-    opacity: 1; /* Full presence for brand identity */
+    opacity: 1;
+    /* Full presence for brand identity */
     line-height: 1;
   }
 
@@ -8945,7 +9600,8 @@ section.fashion-insights-section {
     height: 40px;
     padding: 0;
     z-index: 20;
-    order: 1; /* Left side */
+    order: 1;
+    /* Left side */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -8985,8 +9641,10 @@ section.fashion-insights-section {
 
   /* 4. Icons - Curated Selection with Better Spacing */
   .header-icons {
-    gap: 12px; /* Subtle, refined spacing */
-    order: 3; /* Right side */
+    gap: 12px;
+    /* Subtle, refined spacing */
+    order: 3;
+    /* Right side */
     z-index: 20;
   }
 
@@ -8999,7 +9657,8 @@ section.fashion-insights-section {
   .icon-btn svg {
     width: 20px;
     height: 20px;
-    filter: none !important; /* Always black */
+    filter: none !important;
+    /* Always black */
     stroke: var(--color-black) !important;
   }
 
@@ -9015,7 +9674,8 @@ section.fashion-insights-section {
     right: 4px;
     width: 14px;
     height: 14px;
-    background-color: var(--color-gold); /* Premium color accent */
+    background-color: var(--color-gold);
+    /* Premium color accent */
     color: var(--color-white);
     font-size: 8px;
   }
@@ -9029,13 +9689,16 @@ section.fashion-insights-section {
   .hamburger.active span {
     background-color: var(--color-black);
   }
+
   .hamburger.active span:nth-child(1) {
     transform: rotate(45deg) translate(5px, 5px);
   }
+
   .hamburger.active span:nth-child(2) {
     opacity: 0;
     transform: scaleX(0);
   }
+
   .hamburger.active span:nth-child(3) {
     transform: rotate(-45deg) translate(5px, -5px);
   }
@@ -9050,15 +9713,18 @@ section.fashion-insights-section {
 @media screen and (max-width: 768px) {
   .mobile-menu {
     position: fixed;
-    top: 76px; /* Below header */
+    top: 76px;
+    /* Below header */
     left: 0;
     right: 0;
-    bottom: 0; /* Explicitly anchor to bottom to prevent content bleeding */
+    bottom: 0;
+    /* Explicitly anchor to bottom to prevent content bleeding */
     /* Use dynamic viewport height to handle mobile address bar toggle properly */
     height: calc(100vh - 76px);
     height: calc(100dvh - 76px);
     background-color: var(--color-white);
-    z-index: 999; /* Above nav-overlay (998) */
+    z-index: 999;
+    /* Above nav-overlay (998) */
     opacity: 0;
     visibility: hidden;
     transition:
@@ -9084,48 +9750,52 @@ section.fashion-insights-section {
     height: 100%;
     background-color: var(--color-white);
     overflow-y: auto;
-    overscroll-behavior: contain; /* Prevent scroll chaining to page below */
+    overscroll-behavior: contain;
+    /* Prevent scroll chaining to page below */
     -webkit-overflow-scrolling: touch;
     padding: 0 24px 40px;
-    
+
     /* Child panels slide in from right */
     transform: translateX(100%);
-    
+
     /* Physical border defined to prevent 'ghost' text effect against white background */
-    border-left: 1px solid rgba(0,0,0,0.1) !important;
-    
+    border-left: 1px solid rgba(0, 0, 0, 0.1) !important;
+
     /* Luxurious Apple-style spring easing */
-    transition: 
-      transform 0.5s cubic-bezier(0.19, 1, 0.22, 1), 
+    transition:
+      transform 0.5s cubic-bezier(0.19, 1, 0.22, 1),
       visibility 0.5s,
-      z-index 0.01s 0.5s, /* Delay z-index drop until after slide */
+      z-index 0.01s 0.5s,
+      /* Delay z-index drop until after slide */
       filter 0.5s ease,
       border-radius 0.5s ease;
-      
+
     visibility: hidden;
     z-index: 1;
-    
+
     /* Strong shadow for distinct layering */
     box-shadow: -20px 0 40px rgba(0, 0, 0, 0.15);
   }
 
   /* Main panel - starts in position, just not visible */
   .mobile-menu__panel--main {
-    transform: translateX(0); /* Default Main is centered but hidden */
+    transform: translateX(0);
+    /* Default Main is centered but hidden */
     visibility: hidden;
-    box-shadow: none; /* Main panel is base, no shadow needed */
+    box-shadow: none;
+    /* Main panel is base, no shadow needed */
     border-left: none !important;
   }
 
   /* Active state - instant z-index rise and reset filters */
   .mobile-menu__panel.active {
-    transition: 
-      transform 0.5s cubic-bezier(0.19, 1, 0.22, 1), 
+    transition:
+      transform 0.5s cubic-bezier(0.19, 1, 0.22, 1),
       visibility 0s,
       z-index 0s 0s,
       filter 0.5s ease,
       border-radius 0.5s ease;
-      
+
     filter: brightness(1) contrast(1);
     border-radius: 0;
     transform: translateX(0) scale(1);
@@ -9139,7 +9809,8 @@ section.fashion-insights-section {
 
   /* Level-2 panels - slide over main, revealing main underneath when going back */
   .mobile-menu__panel--sub {
-    z-index: 3; /* Always above main when visible */
+    z-index: 3;
+    /* Always above main when visible */
   }
 
   .mobile-menu__panel--sub.active {
@@ -9150,7 +9821,8 @@ section.fashion-insights-section {
 
   /* Level-3 panels - slide over level-2, revealing level-2 underneath when going back */
   .mobile-menu__panel--level3 {
-    z-index: 4; /* Always above level-2 when visible */
+    z-index: 4;
+    /* Always above level-2 when visible */
   }
 
   .mobile-menu__panel--level3.active {
@@ -9165,21 +9837,23 @@ section.fashion-insights-section {
     transform: translateX(0) scale(0.93) !important;
     transform-origin: center center;
     visibility: visible !important;
-    
+
     /* Dimming to push into background */
     filter: brightness(0.95) contrast(0.95) grayscale(0.1);
-    
+
     /* Round corners to look like a card in the stack */
     border-radius: 12px;
-    overflow: hidden; 
+    overflow: hidden;
   }
 
   .mobile-menu__panel--main.panel-underneath {
-    z-index: 1 !important; /* Below active child */
+    z-index: 1 !important;
+    /* Below active child */
   }
 
   .mobile-menu__panel--sub.panel-underneath {
-    z-index: 2 !important; /* Below active level-3 */
+    z-index: 2 !important;
+    /* Below active level-3 */
   }
 
   /* Subgroup navigation button (styled like main links) */
@@ -9234,7 +9908,8 @@ section.fashion-insights-section {
   }
 
   .mobile-menu__item {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06); /* Lighter separation between items */
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    /* Lighter separation between items */
   }
 
   /* Allow border on last item so all items have lines below them */
@@ -9258,7 +9933,8 @@ section.fashion-insights-section {
     cursor: pointer;
     font-family: var(--font-body);
     font-size: 0.875rem;
-    font-weight: 500; /* Normalized weight across all rows */
+    font-weight: 500;
+    /* Normalized weight across all rows */
     letter-spacing: 0.1em;
     color: var(--color-black);
     text-align: left;
@@ -9293,7 +9969,8 @@ section.fashion-insights-section {
     padding: 12px 0;
     font-family: var(--font-body);
     font-size: 0.85rem;
-    font-weight: 500; /* Stronger text */
+    font-weight: 500;
+    /* Stronger text */
     letter-spacing: 0.1em;
     color: var(--color-black);
     text-decoration: none;
@@ -9301,13 +9978,15 @@ section.fashion-insights-section {
   }
 
   .mobile-menu__secondary-link svg {
-    opacity: 0.85; /* Stronger icons */
+    opacity: 0.85;
+    /* Stronger icons */
     stroke-width: 1.8;
   }
 
   /* Social Links - Reduced top spacing */
   .mobile-menu__social {
-    padding: 12px 0 0; /* Reduced from 24px */
+    padding: 12px 0 0;
+    /* Reduced from 24px */
     text-align: center;
   }
 
@@ -9329,12 +10008,14 @@ section.fashion-insights-section {
 
   .mobile-menu__social-icons a {
     color: var(--color-black);
-    opacity: 0.85; /* Stronger visibility */
+    opacity: 0.85;
+    /* Stronger visibility */
     -webkit-tap-highlight-color: transparent;
   }
 
   .mobile-menu__social-icons a svg {
-    stroke-width: 1.8; /* Consistent bold stroke */
+    stroke-width: 1.8;
+    /* Consistent bold stroke */
   }
 
   .mobile-menu__social-icons a:active {
@@ -9360,7 +10041,8 @@ section.fashion-insights-section {
     cursor: pointer;
     font-family: var(--font-body);
     font-size: 0.875rem;
-    font-weight: 500; /* Match other menu rows */
+    font-weight: 500;
+    /* Match other menu rows */
     letter-spacing: 0.05em;
     color: var(--color-black);
     padding: 12px 0;
@@ -9382,7 +10064,8 @@ section.fashion-insights-section {
     margin: 0;
     flex: 1;
     text-align: center;
-    padding-right: 80px; /* Balance wider back button */
+    padding-right: 80px;
+    /* Balance wider back button */
   }
 
   .mobile-menu__sublist {
@@ -9400,7 +10083,8 @@ section.fashion-insights-section {
     padding: 16px 0;
     font-family: var(--font-body);
     font-size: 0.875rem;
-    font-weight: 500; /* Match other menu rows */
+    font-weight: 500;
+    /* Match other menu rows */
     letter-spacing: 0.05em;
     color: var(--color-black);
     text-decoration: none;
@@ -9463,6 +10147,7 @@ section.fashion-insights-section {
 
 /* ==================== PHASE 1: MOBILE CONTENT LAYOUT & DENSITY REFINEMENT ==================== */
 @media screen and (max-width: 768px) {
+
   /* 1. DISCOVER SECTION - Horizontal Editorial Curation */
   .discover-grid {
     display: flex !important;
@@ -9470,25 +10155,31 @@ section.fashion-insights-section {
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     gap: var(--spacing-sm);
-    padding-right: var(--spacing-md); /* Peek area */
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE/Edge */
+    padding-right: var(--spacing-md);
+    /* Peek area */
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE/Edge */
     /* Ensure cards take up enough width to show ~1.2 at a time */
   }
 
   .discover-grid::-webkit-scrollbar {
-    display: none; /* Chrome/Safari */
+    display: none;
+    /* Chrome/Safari */
   }
 
   .discover-card {
-    min-width: 85%; /* 1.2 cards visible */
+    min-width: 85%;
+    /* 1.2 cards visible */
     scroll-snap-align: start;
     flex-shrink: 0;
   }
 
   .discover-section {
     padding: 0 var(--spacing-md);
-    overflow: hidden; /* Prevent horizontal page scroll */
+    overflow: hidden;
+    /* Prevent horizontal page scroll */
   }
 
   /* 2. SECTION SPACING & ALIGNMENT OPTIMIZATION */
@@ -9514,7 +10205,8 @@ section.fashion-insights-section {
   }
 
   .fashion-insights-title {
-    margin-bottom: 2rem !important; /* Reduced from 3rem */
+    margin-bottom: 2rem !important;
+    /* Reduced from 3rem */
   }
 
   /* ==================== PHASE 2: VISUAL ELEVATION & SECTION EMPHASIS ==================== */
@@ -9523,7 +10215,8 @@ section.fashion-insights-section {
   .video-wrapper-full {
     /* Soft, premium shadow: Large blur, low opacity, no harsh edges */
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
-    border-radius: 4px; /* Refined, intentional edges */
+    border-radius: 4px;
+    /* Refined, intentional edges */
     /* Ensure shadow doesn't get clipped */
     overflow: visible;
     /* Fix for overflow:visible breaking border-radius clipping on image */
@@ -9545,7 +10238,8 @@ section.fashion-insights-section {
   */
 
   .video-wrapper-full {
-    overflow: hidden; /* Keep hidden to clip image to border-radius */
+    overflow: hidden;
+    /* Keep hidden to clip image to border-radius */
     /* Box shadow on an element with overflow:hidden DOES work for outer shadow in modern browsers. */
     /* Let's double check. Yes, box-shadow is drawn outside the border box. overflow: hidden clips CONTENT, not shadow. */
   }
@@ -9557,7 +10251,8 @@ section.fashion-insights-section {
   .fashion-insight-image-wrapper {
     border-radius: 0;
     box-shadow: none !important;
-    filter: none; /* Ensure no erratic sharpness filters */
+    filter: none;
+    /* Ensure no erratic sharpness filters */
   }
 
   /* 3. VISUAL HIERARCHY - Depth Discipline */
@@ -9573,27 +10268,36 @@ section.fashion-insights-section {
   .fashion-insights-grid {
     display: flex !important;
     overflow-x: auto;
-    scroll-snap-type: x mandatory; /* Snap for clean browsing */
+    scroll-snap-type: x mandatory;
+    /* Snap for clean browsing */
     gap: var(--spacing-sm) !important;
-    padding-bottom: var(--spacing-md); /* Optical balance */
-    padding-right: var(--spacing-md); /* Peek separation */
-    -webkit-overflow-scrolling: touch; /* Momentum scrolling */
+    padding-bottom: var(--spacing-md);
+    /* Optical balance */
+    padding-right: var(--spacing-md);
+    /* Peek separation */
+    -webkit-overflow-scrolling: touch;
+    /* Momentum scrolling */
 
     /* Hide scrollbar for premium look */
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE/Edge */
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE/Edge */
   }
 
   .fashion-insights-grid::-webkit-scrollbar {
-    display: none; /* Chrome/Safari */
+    display: none;
+    /* Chrome/Safari */
   }
 
   .fashion-insight-card {
-    flex: 0 0 85%; /* Shows full card + 15% preview of next */
+    flex: 0 0 85%;
+    /* Shows full card + 15% preview of next */
     width: 85%;
     max-width: 320px;
     scroll-snap-align: start;
-    margin-right: 0; /* Reset margins if any */
+    margin-right: 0;
+    /* Reset margins if any */
   }
 
   /* Ensure images fill correctly in flex layout */
@@ -9621,9 +10325,11 @@ section.fashion-insights-section {
   .fashion-insight-card:nth-child(1) {
     transition-delay: 0.1s;
   }
+
   .fashion-insight-card:nth-child(2) {
     transition-delay: 0.2s;
   }
+
   .fashion-insight-card:nth-child(3) {
     transition-delay: 0.3s;
   }
@@ -9635,7 +10341,8 @@ section.fashion-insights-section {
     text-decoration: underline;
     text-decoration-thickness: 1px;
     text-underline-offset: 3px;
-    text-decoration-color: currentColor; /* Same as text color (white) */
+    text-decoration-color: currentColor;
+    /* Same as text color (white) */
   }
 
   /* 2. STORY SECTIONS — CTA UNDERLINE */
@@ -9662,7 +10369,8 @@ section.fashion-insights-section {
 
   /* 4. VIEW ALL — SPACING & CTA REFINEMENT */
   .fashion-insights-view-more {
-    margin-top: 1.5rem; /* Reduced from 4rem default */
+    margin-top: 1.5rem;
+    /* Reduced from 4rem default */
     text-align: center;
   }
 
@@ -9729,7 +10437,8 @@ section.fashion-insights-section {
   /* 5. Story Wrapper (Contains the Locked Pair) */
   .story-wrapper {
     margin-bottom: 100px;
-    gap: 0; /* Ensure container adds no gap */
+    gap: 0;
+    /* Ensure container adds no gap */
     /* Uniform Horizontal Margins */
     width: 90%;
     margin-left: auto;
@@ -9767,26 +10476,32 @@ section.fashion-insights-section {
 
 /* ==================== DESKTOP MICRO-POLISH (New) ==================== */
 @media (min-width: 1024px) {
+
   /* Restrained Premium Hover for Header Icons */
   .header-icons .icon-btn {
     transition: opacity var(--transition-fast);
   }
 
   .header-icons .icon-btn:hover {
-    opacity: 0.6 !important; /* Manish Malhotra Style: Simple opacity fade */
-    filter: none !important; /* Remove any gold or shadow filters */
-    transform: none !important; /* Ensure no movement */
+    opacity: 0.6 !important;
+    /* Manish Malhotra Style: Simple opacity fade */
+    filter: none !important;
+    /* Remove any gold or shadow filters */
+    transform: none !important;
+    /* Ensure no movement */
   }
 
   .header-icons .icon-btn:hover img,
   .header-icons .icon-btn:hover svg {
-    filter: inherit !important; /* Inherit the removal of filters */
+    filter: inherit !important;
+    /* Inherit the removal of filters */
   }
 }
 
 /* ==================== CRITICAL: FORCE COMPACT SEARCH OVERLAY ==================== */
 /* Adding high-specificity override to ensure search box compaction is visible */
 @media screen and (min-width: 320px) {
+
   .search-overlay__input-row,
   .search-overlay__popular,
   .search-overlay__results,
@@ -9810,7 +10525,8 @@ section.fashion-insights-section {
 /* Mobile: Subtle reduction of section gaps to prevent "emptiness" */
 @media screen and (max-width: 767px) {
   :root {
-    --section-gap: 45px; /* Reduced from 60px (90px total gap vs 120px) */
+    --section-gap: 45px;
+    /* Reduced from 60px (90px total gap vs 120px) */
   }
 }
 
@@ -9930,12 +10646,15 @@ section.fashion-insights-section {
 #artist-legacy .story-image {
   order: 1 !important;
 }
+
 #artist-legacy .story-content {
   order: 2 !important;
 }
+
 #craft-matters .story-content {
   order: 3 !important;
 }
+
 #craft-matters .story-image {
   order: 4 !important;
 }
@@ -9946,14 +10665,15 @@ section.fashion-insights-section {
 
 /* 1. Hero → Intro: 120px Gap */
 #hero {
-  padding-bottom: 0 !important; /* Padding was absorbed/ineffective */
-  margin-bottom: var(
-    --section-gap
-  ) !important; /* Use variable to sync with mobile reduction */
+  padding-bottom: 0 !important;
+  /* Padding was absorbed/ineffective */
+  margin-bottom: var(--section-gap) !important;
+  /* Use variable to sync with mobile reduction */
   /* Ensure height calculations don't collapse */
   display: block !important;
   position: relative !important;
 }
+
 #intro {
   margin-top: 0 !important;
   padding-top: var(--section-gap) !important;
@@ -9973,6 +10693,7 @@ section.fashion-insights-section {
   padding-bottom: var(--section-gap) !important;
   margin-bottom: 0 !important;
 }
+
 .story-wrapper {
   margin-top: 0 !important;
   padding-top: var(--section-gap) !important;
@@ -9983,6 +10704,7 @@ section.fashion-insights-section {
   padding-bottom: var(--section-gap) !important;
   margin-bottom: 0 !important;
 }
+
 #fashion-insights {
   margin-top: 0 !important;
   padding-top: var(--section-gap) !important;
@@ -9994,15 +10716,18 @@ section.fashion-insights-section {
   padding-bottom: var(--section-gap) !important;
   margin-bottom: 0 !important;
 }
+
 #footer {
   margin-top: 0 !important;
-  padding-top: 40px !important; /* Slight buffer for footer content */
+  padding-top: 40px !important;
+  /* Slight buffer for footer content */
 }
 
 /* 5. Explore → Story: Internal Swiper Padding Reduction */
 /* Reduces excess "air" below the card carousel within the Explore section */
 .explore-swiper {
-  padding-bottom: 20px !important; /* Reduced from 50px to match global rhythm */
+  padding-bottom: 20px !important;
+  /* Reduced from 50px to match global rhythm */
 }
 
 /* ==================== SEARCH OVERLAY LUXURY REFINEMENTS ==================== */
@@ -10010,7 +10735,8 @@ section.fashion-insights-section {
 
 /* 1. Tighten gap between search input container and close button */
 .search-overlay__input-row {
-  gap: 4px !important; /* Extremely tight grouping */
+  gap: 4px !important;
+  /* Extremely tight grouping */
   justify-content: center !important;
   align-items: center !important;
 }
@@ -10030,14 +10756,16 @@ section.fashion-insights-section {
 
 /* 2. Reduce space between "POPULAR SEARCH:" label and navbar items */
 .search-overlay__popular-label {
-  margin-bottom: 3px !important; /* Reduced from 5px */
+  margin-bottom: 3px !important;
+  /* Reduced from 5px */
 }
 
 /* 3. Popular links - Match header navbar hover effect exactly */
 /* Base style - ensure proper positioning for underline animation */
 .search-overlay__popular-link {
   font-family: var(--font-body) !important;
-  font-weight: 500 !important; /* Match nav-link weight */
+  font-weight: 500 !important;
+  /* Match nav-link weight */
   color: var(--color-black) !important;
   text-decoration: none !important;
   position: relative !important;
@@ -10061,7 +10789,8 @@ section.fashion-insights-section {
 
 /* Hover state - Keep text BLACK (no gold), only animate underline */
 .search-overlay__popular-link:hover {
-  color: var(--color-black) !important; /* Prevent text color change */
+  color: var(--color-black) !important;
+  /* Prevent text color change */
 }
 
 .search-overlay__popular-link:hover::after {
@@ -10071,7 +10800,8 @@ section.fashion-insights-section {
 
 /* 4. Reduce bottom padding on navbar items section */
 .search-overlay__popular {
-  margin-bottom: 8px !important; /* Reduced from 14px, matching header rhythm */
+  margin-bottom: 8px !important;
+  /* Reduced from 14px, matching header rhythm */
   padding-bottom: 0 !important;
 }
 
@@ -10083,7 +10813,8 @@ section.fashion-insights-section {
 
 /* Input row margin - tighter coupling to popular search */
 .search-overlay__input-row {
-  margin-bottom: 8px !important; /* Reduced from 10px */
+  margin-bottom: 8px !important;
+  /* Reduced from 10px */
 }
 
 /* ==================== CART PAGE ==================== */
@@ -10106,6 +10837,7 @@ section.fashion-insights-section {
 /* Implementing strict ID-based layout rules to ensure perfect image/text order */
 
 @media screen and (min-width: 1024px) {
+
   /* Global Flex Setup - Override grid with flex */
   .craft-block {
     display: flex !important;
@@ -10241,7 +10973,8 @@ section.fashion-insights-section {
 /* Hero Image Section */
 .handloom-hero-image {
   width: 100%;
-  margin-bottom: var(--spacing-xl); /* Increased gap between hero and intro */
+  margin-bottom: var(--spacing-xl);
+  /* Increased gap between hero and intro */
 }
 
 .handloom-hero-image img {
@@ -10532,6 +11265,7 @@ section.fashion-insights-section {
 }
 
 @media (max-width: 1024px) {
+
   .related-articles .related-grid,
   .related-grid {
     grid-template-columns: repeat(2, 1fr) !important;
@@ -10539,6 +11273,7 @@ section.fashion-insights-section {
 }
 
 @media (max-width: 600px) {
+
   .related-articles .related-grid,
   .related-grid {
     grid-template-columns: 1fr !important;
@@ -10559,6 +11294,200 @@ section.fashion-insights-section {
    unlike 'hidden' which can cause scroll resistance on mobile devices. */
 
 @media screen and (max-width: 768px) {
+
+  /* Disable smooth scrolling on mobile - it causes scroll resistance on touch devices */
+  html {
+    scroll-behavior: auto;
+    overflow-x: clip;
+    width: 100%;
+  }
+
+  body {
+    overflow-x: clip;
+    width: 100%;
+  }
+
+  /* Mobile menu must be contained to prevent transform overflow */
+
+}
+
+.insight-card:hover {
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+.insight-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.insight-card-link:hover {
+  box-shadow: none !important;
+}
+
+/* Square Image Container (1:1 Aspect Ratio) */
+.insight-card-image {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background-color: var(--color-cream);
+}
+
+.insight-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Card Content */
+.insight-card-content {
+  padding: var(--spacing-sm) 0;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.insight-card-category {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+  color: var(--color-gold);
+  margin-bottom: 0.5rem;
+}
+
+.insight-card-title {
+  font-family: var(--font-heading);
+  font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+  font-weight: 500;
+  color: var(--color-black);
+  line-height: 1.4;
+  margin-bottom: 0.5rem;
+}
+
+.insight-card-excerpt {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--color-text-light);
+  line-height: 1.6;
+  margin-bottom: 0.75rem;
+  flex-grow: 1;
+  /* Limit to 3 lines */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.insight-card-date {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  letter-spacing: 0.02em;
+}
+
+/* Responsive: Tablet (2 columns) */
+@media (max-width: 1024px) {
+  .insights-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+  }
+}
+
+/* Responsive: Mobile (1 column) */
+@media (max-width: 600px) {
+  .insights-page .container {
+    padding-left: 5%;
+    padding-right: 5%;
+  }
+
+  .insights-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+
+  .insight-card-image {
+    aspect-ratio: 1 / 1;
+  }
+}
+
+/* ==================== ARTICLE PAGE STYLES ==================== */
+/* Section headings styling for article pages */
+
+.article-section-number {
+  font-family: var(--font-heading);
+  font-size: clamp(1.15rem, 2.5vw, 1.35rem);
+  font-weight: 600;
+  color: var(--color-black);
+  letter-spacing: 0.02em;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+/* Image constraints to match Handloom Section 1 */
+.article-block-image,
+.article-figure-hero {
+  width: 100%;
+  max-width: 600px;
+  margin: 8px auto 16px auto;
+}
+
+.article-block-image img,
+.article-figure-hero img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+}
+
+/* Related Articles Grid - Reduced Gap (High Specificity) */
+.related-articles .related-grid,
+.related-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  column-gap: 16px !important;
+  row-gap: 24px !important;
+  margin-top: 24px !important;
+}
+
+@media (max-width: 1024px) {
+
+  .related-articles .related-grid,
+  .related-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 600px) {
+
+  .related-articles .related-grid,
+  .related-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Force cards to fill grid columns */
+.related-articles .related-grid .insight-card,
+.related-grid .insight-card {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+}
+
+/* ==================== MOBILE HORIZONTAL OVERFLOW PREVENTION ==================== */
+/* MINIMAL FIX: Using overflow-x: clip instead of hidden.
+   The 'clip' value prevents horizontal overflow without affecting touch scroll behavior,
+   unlike 'hidden' which can cause scroll resistance on mobile devices. */
+
+@media screen and (max-width: 768px) {
+
   /* Disable smooth scrolling on mobile - it causes scroll resistance on touch devices */
   html {
     scroll-behavior: auto;
@@ -10575,4 +11504,283 @@ section.fashion-insights-section {
   .mobile-menu {
     overflow: hidden;
   }
+}
+
+/* Newsletter Success State - Premium Refinement */
+.newsletter-success-premium {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  color: #000;
+  font-family: var(--font-heading);
+  letter-spacing: 0.12em;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.success-tick {
+  color: #000;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: dash 0.8s ease-in-out 0.2s forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.newsletter-success-premium.fade-out {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+/* ==================== FULLSCREEN MOBILE MENU (Manish Malhotra Style) ==================== */
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  /* Fallback */
+  height: 100svh;
+  z-index: 2000;
+  pointer-events: none;
+  visibility: hidden;
+  overflow: hidden;
+}
+
+.mobile-menu.active {
+  pointer-events: auto;
+  visibility: visible;
+}
+
+.mobile-menu__panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-white);
+  padding: calc(var(--header-height) + 20px) var(--spacing-md) var(--spacing-xl);
+  overflow-y: auto;
+  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+  transform: translateX(100%);
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+}
+
+.mobile-menu__panel.active {
+  transform: translateX(0);
+  z-index: 2;
+}
+
+.mobile-menu__panel.panel-underneath {
+  transform: translateX(-25%);
+  filter: brightness(0.9);
+  z-index: 1;
+}
+
+.mobile-menu__panel--main.active {
+  transform: translateX(0);
+}
+
+/* Content Layout */
+.mobile-menu__content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+}
+
+.mobile-menu__nav {
+  margin-bottom: auto;
+}
+
+.mobile-menu__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.mobile-menu__item {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.mobile-menu__link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 18px 0;
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  color: var(--color-black);
+  text-transform: uppercase;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.mobile-menu__link:hover {
+  color: var(--color-gold-dark);
+}
+
+.mobile-menu__link svg {
+  transition: transform 0.3s ease;
+}
+
+.mobile-menu__link:hover svg {
+  transform: translateX(5px);
+}
+
+/* Secondary Actions (Wishlist/Login) */
+.mobile-menu__secondary {
+  display: flex;
+  gap: 20px;
+  margin-top: 40px;
+  padding-top: 30px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.mobile-menu__secondary-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-black);
+}
+
+/* Social Icons */
+.mobile-menu__social {
+  margin-top: 30px;
+}
+
+.mobile-menu__social-label {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  margin-bottom: 12px;
+  color: var(--color-text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.mobile-menu__social-icons {
+  display: flex;
+  gap: 20px;
+}
+
+.mobile-menu__social-icons a {
+  color: var(--color-black);
+  transition: opacity 0.3s ease;
+}
+
+.mobile-menu__social-icons a:hover {
+  opacity: 0.6;
+}
+
+/* Sub-Panel Headers */
+.mobile-menu__subheader {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.mobile-menu__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-text-light);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.mobile-menu__subtitle {
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  color: var(--color-black);
+  margin: 0;
+}
+
+/* Sub-lists */
+.mobile-menu__sublist {
+  list-style: none;
+  margin-bottom: 30px;
+}
+
+.mobile-menu__sublist li a {
+  display: block;
+  padding: 12px 0;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--color-text);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+.mobile-menu__subgroup {
+  margin-bottom: 30px;
+}
+
+.mobile-menu__subgroup-title {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-gold-dark);
+  margin-bottom: 15px;
+}
+
+.mobile-menu__view-all {
+  display: inline-block;
+  margin-top: 20px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* Grid for colors */
+.mobile-menu__sublist--grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 20px;
+}
+
+.mobile-menu__sublist--grid li a {
+  border-bottom: none;
+  padding: 8px 0;
 }
