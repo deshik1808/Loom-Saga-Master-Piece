@@ -914,10 +914,15 @@
     <!-- JavaScript -->
     <script src="js/main.js"></script>
     <script type="module" src="src/js/main.js"></script>
-    <script type="module">
-        import { AuthManager } from './src/js/modules/AuthManager.js';
+    <script>
+        // Wait for AuthManager to be available (set by main.js)
+        function initAccountPage() {
+            const AuthManager = window.AuthManager;
+            if (!AuthManager) {
+                setTimeout(initAccountPage, 50);
+                return;
+            }
 
-        document.addEventListener('DOMContentLoaded', function () {
             // Check if user is logged in — redirect to login if not
             if (!AuthManager.isLoggedIn()) {
                 window.location.href = 'login.html';
@@ -960,7 +965,14 @@
                     window.location.href = 'login.html'; // Redirect to login after logout
                 });
             }
-        });
+        }
+
+        // Start initialization
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initAccountPage);
+        } else {
+            initAccountPage();
+        }
     </script>
 </body>
 

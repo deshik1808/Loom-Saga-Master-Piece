@@ -19,9 +19,8 @@
     rel="stylesheet" />
 
   <!-- Main Stylesheet -->
-  <script type="module" crossorigin src="/assets/login-DrrLX_Fg.js"></script>
-  <link rel="modulepreload" crossorigin href="/assets/main-C8dYEG2X.js">
-  <link rel="stylesheet" crossorigin href="/assets/main-DInMtror.css">
+  <script type="module" crossorigin src="/assets/main-Df3Wt6Mn.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/main-DU6YCpfR.css">
 </head>
 
 <body>
@@ -778,7 +777,90 @@
     </div>
   </div>
   <!-- JavaScript -->
-  <script src="js/main.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    // Wait for AuthManager to be available (set by main.js)
+    function initLoginForm() {
+      const AuthManager = window.AuthManager;
+      if (!AuthManager) {
+        // main.js module hasn't finished yet, wait and retry
+        setTimeout(initLoginForm, 50);
+        return;
+      }
+
+      const loginForm = document.getElementById('loginForm');
+      if (!loginForm) return;
+
+      const feedbackEl = document.getElementById('loginFeedback');
+      const submitBtn = document.getElementById('loginSubmitBtn');
+      const emailInput = document.getElementById('loginEmail');
+      const passwordInput = document.getElementById('loginPassword');
+      const termsCheckbox = document.getElementById('loginTerms');
+
+      function showFeedback(message, type) {
+        if (!feedbackEl) return;
+        feedbackEl.textContent = message;
+        feedbackEl.classList.remove('auth-feedback--error', 'auth-feedback--success');
+        feedbackEl.classList.add('auth-feedback--' + type, 'is-visible');
+      }
+
+      function clearFeedback() {
+        if (!feedbackEl) return;
+        feedbackEl.textContent = '';
+        feedbackEl.classList.remove('auth-feedback--error', 'auth-feedback--success', 'is-visible');
+      }
+
+      function setLoading(isLoading) {
+        if (!submitBtn) return;
+        submitBtn.disabled = isLoading;
+        submitBtn.textContent = isLoading ? 'SIGNING IN...' : 'SIGN IN';
+        submitBtn.style.opacity = isLoading ? '0.7' : '';
+      }
+
+      loginForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        clearFeedback();
+
+        const email = (emailInput?.value || '').trim();
+        const password = passwordInput?.value || '';
+
+        if (!email || !password) {
+          showFeedback('Please enter your email and password.', 'error');
+          return;
+        }
+
+        if (termsCheckbox && !termsCheckbox.checked) {
+          showFeedback('Please accept the terms and conditions to continue.', 'error');
+          return;
+        }
+
+        setLoading(true);
+
+        try {
+          const result = await AuthManager.login(email, password);
+
+          if (result.success) {
+            showFeedback('Welcome back, ' + (result.user.firstName || result.user.displayName) + '!', 'success');
+            setTimeout(() => { window.location.href = 'index.html'; }, 1200);
+          } else {
+            showFeedback(result.error, 'error');
+            setLoading(false);
+          }
+        } catch (err) {
+          console.error('Login error:', err);
+          showFeedback('An unexpected error occurred. Please try again.', 'error');
+          setLoading(false);
+        }
+      });
+    }
+
+    // Start initialization
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initLoginForm);
+    } else {
+      initLoginForm();
+    }
+  </script>
 </body>
 
 </html>

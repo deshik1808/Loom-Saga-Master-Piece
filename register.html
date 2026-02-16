@@ -772,10 +772,16 @@
   <!-- JavaScript -->
   <script src="js/main.js"></script>
   <script type="module" src="src/js/main.js"></script>
-  <script type="module">
-    import { AuthManager } from './src/js/modules/AuthManager.js';
+  <script>
+    // Wait for AuthManager to be available (set by main.js)
+    function initRegisterForm() {
+      const AuthManager = window.AuthManager;
+      if (!AuthManager) {
+        // main.js module hasn't finished yet, wait and retry
+        setTimeout(initRegisterForm, 50);
+        return;
+      }
 
-    document.addEventListener('DOMContentLoaded', function () {
       const registerForm = document.getElementById('registerForm');
       if (!registerForm) return;
 
@@ -868,7 +874,14 @@
           setLoading(false);
         }
       });
-    });
+    }
+
+    // Start initialization
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initRegisterForm);
+    } else {
+      initRegisterForm();
+    }
   </script>
 </body>
 

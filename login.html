@@ -778,10 +778,16 @@
   <!-- JavaScript -->
   <script src="js/main.js"></script>
   <script type="module" src="src/js/main.js"></script>
-  <script type="module">
-    import { AuthManager } from './src/js/modules/AuthManager.js';
+  <script>
+    // Wait for AuthManager to be available (set by main.js)
+    function initLoginForm() {
+      const AuthManager = window.AuthManager;
+      if (!AuthManager) {
+        // main.js module hasn't finished yet, wait and retry
+        setTimeout(initLoginForm, 50);
+        return;
+      }
 
-    document.addEventListener('DOMContentLoaded', function () {
       const loginForm = document.getElementById('loginForm');
       if (!loginForm) return;
 
@@ -846,7 +852,14 @@
           setLoading(false);
         }
       });
-    });
+    }
+
+    // Start initialization
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initLoginForm);
+    } else {
+      initLoginForm();
+    }
   </script>
 </body>
 

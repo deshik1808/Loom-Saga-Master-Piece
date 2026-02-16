@@ -19,9 +19,8 @@
     rel="stylesheet" />
 
   <!-- Main Stylesheet -->
-  <script type="module" crossorigin src="/assets/register-ChMtRY-w.js"></script>
-  <link rel="modulepreload" crossorigin href="/assets/main-C8dYEG2X.js">
-  <link rel="stylesheet" crossorigin href="/assets/main-DInMtror.css">
+  <script type="module" crossorigin src="/assets/main-Df3Wt6Mn.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/main-DU6YCpfR.css">
 </head>
 
 <body>
@@ -772,7 +771,118 @@
   </div>
 
   <!-- JavaScript -->
-  <script src="js/main.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    // Wait for AuthManager to be available (set by main.js)
+    function initRegisterForm() {
+      const AuthManager = window.AuthManager;
+      if (!AuthManager) {
+        // main.js module hasn't finished yet, wait and retry
+        setTimeout(initRegisterForm, 50);
+        return;
+      }
+
+      const registerForm = document.getElementById('registerForm');
+      if (!registerForm) return;
+
+      const feedbackEl = document.getElementById('registerFeedback');
+      const submitBtn = document.getElementById('registerSubmitBtn');
+      const firstNameInput = document.getElementById('regFirstName');
+      const lastNameInput = document.getElementById('regLastName');
+      const emailInput = document.getElementById('regEmail');
+      const passwordInput = document.getElementById('regPassword');
+      const confirmPasswordInput = document.getElementById('regConfirmPassword');
+      const termsCheckbox = document.getElementById('regTerms');
+
+      function showFeedback(message, type) {
+        if (!feedbackEl) return;
+        feedbackEl.textContent = message;
+        feedbackEl.classList.remove('auth-feedback--error', 'auth-feedback--success');
+        feedbackEl.classList.add('auth-feedback--' + type, 'is-visible');
+      }
+
+      function clearFeedback() {
+        if (!feedbackEl) return;
+        feedbackEl.textContent = '';
+        feedbackEl.classList.remove('auth-feedback--error', 'auth-feedback--success', 'is-visible');
+      }
+
+      function setLoading(isLoading) {
+        if (!submitBtn) return;
+        submitBtn.disabled = isLoading;
+        submitBtn.textContent = isLoading ? 'CREATING ACCOUNT...' : 'CREATE ACCOUNT';
+        submitBtn.style.opacity = isLoading ? '0.7' : '';
+      }
+
+      registerForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        clearFeedback();
+
+        const email = (emailInput?.value || '').trim();
+        const password = passwordInput?.value || '';
+        const confirmPassword = confirmPasswordInput?.value || '';
+        const firstName = (firstNameInput?.value || '').trim();
+        const lastName = (lastNameInput?.value || '').trim();
+
+        // Validation
+        if (!email) {
+          showFeedback('Please enter your email address.', 'error');
+          emailInput?.focus();
+          return;
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+          showFeedback('Please enter a valid email address.', 'error');
+          emailInput?.focus();
+          return;
+        }
+
+        if (!password || password.length < 6) {
+          showFeedback('Password must be at least 6 characters long.', 'error');
+          passwordInput?.focus();
+          return;
+        }
+
+        if (password !== confirmPassword) {
+          showFeedback('Passwords do not match. Please re-enter.', 'error');
+          confirmPasswordInput?.focus();
+          return;
+        }
+
+        if (termsCheckbox && !termsCheckbox.checked) {
+          showFeedback('Please accept the Terms & Conditions to continue.', 'error');
+          return;
+        }
+
+        setLoading(true);
+
+        try {
+          const result = await AuthManager.register({ email, password, firstName, lastName });
+
+          if (result.success) {
+            const name = result.user?.firstName || result.user?.displayName || 'there';
+            showFeedback('Welcome, ' + name + '! Your account has been created.', 'success');
+            setTimeout(() => { window.location.href = 'index.html'; }, 1500);
+          } else {
+            showFeedback(result.error, 'error');
+            setLoading(false);
+          }
+        } catch (err) {
+          console.error('Registration error:', err);
+          showFeedback('An unexpected error occurred. Please try again.', 'error');
+          setLoading(false);
+        }
+      });
+    }
+
+    // Start initialization
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initRegisterForm);
+    } else {
+      initRegisterForm();
+    }
+  </script>
 </body>
 
 </html>

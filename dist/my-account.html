@@ -19,9 +19,8 @@
         rel="stylesheet" />
 
     <!-- Main Stylesheet -->
-  <script type="module" crossorigin src="/assets/my-account-B8IvS99W.js"></script>
-  <link rel="modulepreload" crossorigin href="/assets/main-C8dYEG2X.js">
-  <link rel="stylesheet" crossorigin href="/assets/main-DInMtror.css">
+  <script type="module" crossorigin src="/assets/main-Df3Wt6Mn.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/main-DU6YCpfR.css">
 </head>
 
 <body>
@@ -914,7 +913,67 @@
     </div>
 
     <!-- JavaScript -->
-    <script src="js/main.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // Wait for AuthManager to be available (set by main.js)
+        function initAccountPage() {
+            const AuthManager = window.AuthManager;
+            if (!AuthManager) {
+                setTimeout(initAccountPage, 50);
+                return;
+            }
+
+            // Check if user is logged in — redirect to login if not
+            if (!AuthManager.isLoggedIn()) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const user = AuthManager.getSession();
+
+            // Populate account details
+            const greeting = document.getElementById('accountGreeting');
+            const nameEl = document.getElementById('accountName');
+            const emailEl = document.getElementById('accountEmail');
+
+            if (user) {
+                const displayName = `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.displayName || 'Friend';
+
+                if (greeting) {
+                    greeting.innerHTML = `Hello <strong>${displayName}</strong> (not <strong>${displayName}</strong>? <a href="#" id="inlineLogoutBtn" style="color: var(--color-gold); text-decoration: underline;">Sign out</a>)`;
+
+                    // Add listener for the new inline logout link
+                    const inlineLogout = document.getElementById('inlineLogoutBtn');
+                    if (inlineLogout) {
+                        inlineLogout.addEventListener('click', function (e) {
+                            e.preventDefault();
+                            AuthManager.logout();
+                            window.location.href = 'login.html';
+                        });
+                    }
+                }
+
+                if (nameEl) nameEl.textContent = displayName || '—';
+                if (emailEl) emailEl.textContent = user.email || '—';
+            }
+
+            // Main Logout button
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function () {
+                    AuthManager.logout();
+                    window.location.href = 'login.html'; // Redirect to login after logout
+                });
+            }
+        }
+
+        // Start initialization
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initAccountPage);
+        } else {
+            initAccountPage();
+        }
+    </script>
 </body>
 
 </html>
