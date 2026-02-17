@@ -32,14 +32,22 @@ export function saveItems(items) {
  * @returns {{ success: boolean, message: string }}
  */
 export function addItem(product) {
+  const parsedStockQuantity = Number(product.stockQuantity);
+  const stockQuantity = Number.isFinite(parsedStockQuantity) ? parsedStockQuantity : 0;
+
+  // Defensive guard: only purchasable products can ever enter cart state.
+  if (product.inStock !== true || stockQuantity <= 0) {
+    return { success: false, message: 'Out of stock' };
+  }
+
   const items = getItems();
   const existingIndex = items.findIndex(item => String(item.id) === String(product.id));
 
   const currentQty = existingIndex > -1 ? items[existingIndex].quantity : 0;
-  const maxStock = product.stockQuantity ?? null; // null = unlimited
+  const maxStock = stockQuantity;
 
   // ── Stock-limit guard ──
-  if (maxStock !== null && currentQty >= maxStock) {
+  if (currentQty >= maxStock) {
     showNotification(
       maxStock === 0
         ? `${product.name} is out of stock`
@@ -52,6 +60,7 @@ export function addItem(product) {
     items[existingIndex].quantity += 1;
     // Keep stockQuantity up-to-date in the cart entry
     items[existingIndex].stockQuantity = maxStock;
+    items[existingIndex].inStock = true;
   } else {
     items.push({
       id: String(product.id),
@@ -59,7 +68,8 @@ export function addItem(product) {
       price: parseFloat(product.price),
       image: product.image || product.primaryImage || '',
       quantity: 1,
-      stockQuantity: maxStock
+      stockQuantity: maxStock,
+      inStock: true
     });
   }
 

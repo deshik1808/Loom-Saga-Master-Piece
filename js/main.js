@@ -1219,14 +1219,21 @@ const CartManager = {
      * @returns {{ success: boolean, message: string }}
      */
     addItem(product) {
+        const parsedStockQuantity = Number(product.stockQuantity);
+        const maxStock = Number.isFinite(parsedStockQuantity) ? parsedStockQuantity : 0;
+
+        // Critical defensive guard: non-purchasable items must never mutate cart state.
+        if (product.inStock !== true || maxStock <= 0) {
+            return { success: false, message: 'Out of stock' };
+        }
+
         const items = this.getItems();
         const existingIndex = items.findIndex(item => String(item.id) === String(product.id));
 
         const currentQty = existingIndex > -1 ? items[existingIndex].quantity : 0;
-        const maxStock = product.stockQuantity ?? null; // null = unlimited
 
         // Stock-limit guard
-        if (maxStock !== null && currentQty >= maxStock) {
+        if (currentQty >= maxStock) {
             this.showNotification(
                 maxStock === 0
                     ? `${product.name} is out of stock`
@@ -1240,12 +1247,14 @@ const CartManager = {
             items[existingIndex].quantity += 1;
             // Keep stockQuantity up-to-date in the cart entry
             items[existingIndex].stockQuantity = maxStock;
+            items[existingIndex].inStock = true;
         } else {
             // Add new item with quantity 1
             items.push({
                 ...product,
                 quantity: 1,
-                stockQuantity: maxStock
+                stockQuantity: maxStock,
+                inStock: true
             });
         }
 
@@ -1654,16 +1663,21 @@ const WishlistManager = {
      */
     addItem(product) {
         const items = this.getItems();
-        const existingIndex = items.findIndex(item => item.id === product.id);
+        const existingIndex = items.findIndex(item => String(item.id) === String(product.id));
+        const parsedStockQuantity = Number(product.stockQuantity);
+        const inStock = product.inStock !== false;
+        const stockQuantity = Number.isFinite(parsedStockQuantity) ? parsedStockQuantity : (inStock ? 1 : 0);
 
         if (existingIndex === -1) {
             items.push({
-                id: product.id,
+                id: String(product.id),
                 name: product.name,
                 price: product.price,
                 regularPrice: product.regularPrice || 0,
                 salePrice: product.salePrice || 0,
                 image: product.image,
+                inStock,
+                stockQuantity,
                 addedAt: new Date().toISOString()
             });
             this.saveItems(items);
@@ -1677,7 +1691,7 @@ const WishlistManager = {
      */
     removeItem(productId) {
         const items = this.getItems();
-        const filteredItems = items.filter(item => item.id !== productId);
+        const filteredItems = items.filter(item => String(item.id) !== String(productId));
         this.saveItems(filteredItems);
         this.showNotification('Removed from wishlist');
     },
@@ -1704,7 +1718,7 @@ const WishlistManager = {
      */
     hasItem(productId) {
         const items = this.getItems();
-        return items.some(item => item.id === productId);
+        return items.some(item => String(item.id) === String(productId));
     },
 
     /**
@@ -1781,6 +1795,7 @@ const WishlistPageManager = {
     itemsPerPage: 6,
     currentPage: 1,
     totalPages: 1,
+    emptyTemplate: null,
 
     /**
      * Initialize wishlist page
@@ -1788,6 +1803,11 @@ const WishlistPageManager = {
     init() {
         const wishlistGrid = document.getElementById('wishlistGrid');
         if (!wishlistGrid) return; // Not on wishlist page
+
+        const wishlistEmpty = document.getElementById('wishlistEmpty');
+        if (wishlistEmpty) {
+            this.emptyTemplate = wishlistEmpty.cloneNode(true);
+        }
 
         // Clean up any duplicate items that may exist from before the fix
         WishlistManager.removeDuplicates();
@@ -1799,12 +1819,14 @@ const WishlistPageManager = {
      * Render wishlist items for current page
      */
     render() {
-        const wishlistGrid = document.getElementById('wishlistGrid');
-        const wishlistEmpty = document.getElementById('wishlistEmpty');
+        const wishlistPage = document.querySelector('.wishlist-page');
+        const wishlistContainer = wishlistPage ? wishlistPage.querySelector('.container') : null;
+        let wishlistGrid = document.getElementById('wishlistGrid');
+        let wishlistEmpty = document.getElementById('wishlistEmpty');
         const wishlistPagination = document.getElementById('wishlistPagination');
         const wishlistItemCount = document.getElementById('wishlistItemCount');
 
-        if (!wishlistGrid) return;
+        if (!wishlistContainer || !wishlistPage) return;
 
         const items = WishlistManager.getItems();
 
@@ -1813,18 +1835,51 @@ const WishlistPageManager = {
             wishlistItemCount.textContent = items.length;
         }
 
+        // Always clear render target before injecting fresh markup
+        if (wishlistGrid) {
+            wishlistGrid.innerHTML = '';
+        }
+
         // Handle empty state
         if (items.length === 0) {
-            wishlistGrid.innerHTML = '';
-            if (wishlistEmpty) wishlistEmpty.style.display = 'block';
+            if (wishlistGrid) {
+                wishlistGrid.remove();
+            }
+
+            if (!wishlistEmpty && this.emptyTemplate) {
+                wishlistEmpty = this.emptyTemplate.cloneNode(true);
+                wishlistPage.appendChild(wishlistEmpty);
+            }
+
+            if (wishlistEmpty) {
+                wishlistEmpty.removeAttribute('style');
+            }
+
             if (wishlistPagination) wishlistPagination.style.display = 'none';
             return;
         }
 
-        if (wishlistEmpty) wishlistEmpty.style.display = 'none';
+        if (wishlistEmpty) {
+            wishlistEmpty.remove();
+        }
+
+        if (!wishlistGrid) {
+            wishlistGrid = document.createElement('div');
+            wishlistGrid.className = 'wishlist-grid';
+            wishlistGrid.id = 'wishlistGrid';
+
+            if (wishlistPagination) {
+                wishlistContainer.insertBefore(wishlistGrid, wishlistPagination);
+            } else {
+                wishlistContainer.appendChild(wishlistGrid);
+            }
+        }
 
         // Calculate pagination
-        this.totalPages = Math.ceil(items.length / this.itemsPerPage);
+        this.totalPages = Math.max(1, Math.ceil(items.length / this.itemsPerPage));
+        if (this.currentPage > this.totalPages) {
+            this.currentPage = this.totalPages;
+        }
         const startIndex = (this.currentPage - 1) * this.itemsPerPage;
         const endIndex = startIndex + this.itemsPerPage;
         const pageItems = items.slice(startIndex, endIndex);
@@ -1835,9 +1890,13 @@ const WishlistPageManager = {
             const salePrice = Number(item.salePrice) || 0;
             const hasSale = salePrice > 0 && regularPrice > salePrice;
             const currentPrice = Number(item.price) || 0;
+            const inStock = item.inStock !== false;
+            const stockQuantity = Number(item.stockQuantity);
+            const normalizedStockQuantity = Number.isFinite(stockQuantity) ? stockQuantity : (inStock ? 1 : 0);
+            const isPurchasable = inStock === true && normalizedStockQuantity > 0;
 
             return `
-            <article class="wishlist-card" data-product-id="${item.id}" data-product-name="${item.name}" data-product-price="${currentPrice}" data-product-regular-price="${regularPrice}" data-product-sale-price="${salePrice}" data-product-image="${item.image}">
+            <article class="wishlist-card" data-product-id="${item.id}" data-product-name="${item.name}" data-product-price="${currentPrice}" data-product-regular-price="${regularPrice}" data-product-sale-price="${salePrice}" data-product-image="${item.image}" data-in-stock="${inStock}" data-stock-quantity="${normalizedStockQuantity}">
                 <a href="product-detail.html" class="wishlist-card-link">
                     <div class="wishlist-card-image">
                         <img src="${item.image}" alt="${item.name}" loading="lazy">
@@ -1853,7 +1912,9 @@ const WishlistPageManager = {
                         </p>
                     </div>
                 </a>
-                <button class="wishlist-add-btn" data-id="${item.id}">Add To Bag</button>
+                ${isPurchasable
+                    ? `<button class="wishlist-add-btn" data-id="${item.id}">Add To Bag</button>`
+                    : '<button class="wishlist-add-btn" disabled aria-disabled="true">Out of Stock</button>'}
             </article>
         `;
         }).join('');
@@ -1958,17 +2019,20 @@ const WishlistPageManager = {
         });
 
         // Add to bag buttons
-        document.querySelectorAll('.wishlist-add-btn').forEach(btn => {
+        document.querySelectorAll('.wishlist-add-btn:not([disabled])').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
 
                 const card = btn.closest('.wishlist-card');
                 if (card) {
+                    const parsedStockQuantity = Number(card.dataset.stockQuantity);
                     const product = {
                         id: card.dataset.productId,
                         name: card.dataset.productName,
                         price: parseFloat(card.dataset.productPrice),
-                        image: card.dataset.productImage
+                        image: card.dataset.productImage,
+                        inStock: card.dataset.inStock === 'true',
+                        stockQuantity: Number.isFinite(parsedStockQuantity) ? parsedStockQuantity : 0
                     };
                     CartManager.addItem(product);
                 }
@@ -2134,6 +2198,8 @@ function initProductCards() {
             name: 'Lime Green Hand Printed Vishnupuri Silk',
             price: 5199,
             image: 'https://placehold.co/300x400/a8c8b0/333333?text=Saree',
+            inStock: true,
+            stockQuantity: 10,
             color: 'Lime Green',
             style: 'None'
         });
@@ -2145,6 +2211,8 @@ function initProductCards() {
             name: 'Royal Blue Banarasi Silk',
             price: 8499,
             image: 'https://placehold.co/300x400/4a6fa5/ffffff?text=Blue+Saree',
+            inStock: true,
+            stockQuantity: 10,
             color: 'Royal Blue',
             style: 'Traditional'
         });
@@ -2635,7 +2703,11 @@ function initWishlistButtons() {
                     price: parseFloat(card.dataset.productPrice) || 0,
                     regularPrice: parseFloat(card.dataset.productRegularPrice) || 0,
                     salePrice: parseFloat(card.dataset.productSalePrice) || 0,
-                    image: card.dataset.productImage || card.querySelector('img')?.src || ''
+                    image: card.dataset.productImage || card.querySelector('img')?.src || '',
+                    inStock: card.dataset.inStock === 'false' ? false : true,
+                    stockQuantity: Number.isFinite(Number(card.dataset.stockQuantity))
+                        ? Number(card.dataset.stockQuantity)
+                        : (card.dataset.inStock === 'false' ? 0 : 1)
                 };
 
                 // Toggle wishlist item
@@ -2694,12 +2766,18 @@ function initProductDetail() {
 
     if (addToCartBtn && productInfo) {
         addToCartBtn.addEventListener('click', () => {
+            if (addToCartBtn.dataset.dynamicBound === 'true') return;
+
+            const parsedStockQuantity = Number(productInfo.dataset.stockQuantity);
+            const inStock = productInfo.dataset.inStock === 'false' ? false : true;
             // Get product data from data attributes
             const product = {
                 id: productInfo.dataset.productId,
                 name: productInfo.dataset.productName,
                 price: parseFloat(productInfo.dataset.productPrice),
                 image: productInfo.dataset.productImage,
+                inStock,
+                stockQuantity: Number.isFinite(parsedStockQuantity) ? parsedStockQuantity : (inStock ? 1 : 0),
                 quantity: 1
             };
 
@@ -3271,6 +3349,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 productInfo.dataset.productId = product.id;
                 productInfo.dataset.productName = product.name;
                 productInfo.dataset.productPrice = product.price;
+                productInfo.dataset.inStock = product.inStock === true ? 'true' : 'false';
                 productInfo.dataset.stockQuantity = product.stockQuantity ?? '';
                 if (images[0]) {
                     productInfo.dataset.productImage = images[0];
@@ -3280,14 +3359,19 @@ document.addEventListener('DOMContentLoaded', function () {
             // 5. Cart Logic — enforces stock limits
             var addBtn = document.getElementById('addToCartBtn');
             if (addBtn) {
-                if (product.inStock === false) {
+                addBtn.dataset.dynamicBound = 'true';
+
+                var parsedStockQty = Number(product.stockQuantity);
+                var stockQty = Number.isFinite(parsedStockQty) ? parsedStockQty : 0;
+                var isPurchasable = product.inStock === true && stockQty > 0;
+
+                if (!isPurchasable) {
                     addBtn.textContent = 'OUT OF STOCK';
                     addBtn.disabled = true;
                     addBtn.classList.add('disabled');
                 } else {
                     // Show stock hint if managed and low
-                    var stockQty = product.stockQuantity;
-                    if (stockQty !== null && stockQty !== undefined && stockQty <= 5) {
+                    if (stockQty <= 5) {
                         var stockHint = document.createElement('p');
                         stockHint.className = 'product-stock-hint';
                         stockHint.textContent = 'Only ' + stockQty + ' left in stock';
@@ -3306,7 +3390,8 @@ document.addEventListener('DOMContentLoaded', function () {
                             name: product.name,
                             price: product.price,
                             image: images[0] || 'assets/images/placeholder.webp',
-                            stockQuantity: product.stockQuantity ?? null
+                            inStock: true,
+                            stockQuantity: stockQty
                         };
 
                         // Add to cart using global CartManager (enforces stock limit)
@@ -3448,41 +3533,62 @@ const CookieConsentManager = {
     fabDismissSessionKey: 'loom_cookie_settings_fab_dismissed',
     currentConsent: null,
     elements: {},
+    timers: {},
+    initialized: false,
 
     init() {
+        if (this.initialized) return;
+        this.initialized = true;
+
         this.injectMarkup();
         this.wireSettingsLinks();
         this.cacheElements();
         this.bindEvents();
 
-        if (this.isSettingsFabDismissedForSession()) {
-            this.hideSettingsFab();
-        }
-
         const storedConsent = this.getStoredConsent();
         if (storedConsent) {
             this.currentConsent = this.normalizeConsent(storedConsent);
             this.applyConsent(this.currentConsent, false);
-            this.hideBanner();
+            
+            // If consent already exists, show settings FAB gently after short delay (1000-1500ms)
+            if (!this.isSettingsFabDismissedForSession()) {
+                this.timers.fab = setTimeout(() => this.showSettingsFab(), 1200);
+            }
         } else {
             this.currentConsent = this.getDefaultConsent();
             if (this.isBannerDismissedForSession()) {
-                this.hideBanner();
+                // If dismissed for session, wait and show FAB gently
+                if (!this.isSettingsFabDismissedForSession()) {
+                    this.timers.fab = setTimeout(() => this.showSettingsFab(), 1200);
+                }
             } else {
-                this.showBanner();
+                // NEW: Wait for user interaction before showing banner
+                this.setupInteractionTrigger();
             }
         }
     },
 
-    wireSettingsLinks() {
-        const allLinks = document.querySelectorAll('a');
-        allLinks.forEach((link) => {
-            const label = (link.textContent || '').trim().toLowerCase();
-            if (label === 'privacy & cookies') {
-                link.setAttribute('href', '#');
-                link.setAttribute('data-cookie-settings-link', 'true');
+    setupInteractionTrigger() {
+        const triggerDelay = 2000; // 2 seconds after first action
+        const events = ['scroll', 'mousedown', 'keydown', 'touchstart'];
+        
+        const handleInteraction = () => {
+            // Remove listeners immediately so they only fire once
+            events.forEach(evt => window.removeEventListener(evt, handleInteraction));
+            
+            // Start the timer to show banner 2s after the action
+            if (!this.timers.banner) {
+                this.timers.banner = setTimeout(() => this.showBanner(), triggerDelay);
             }
-        });
+        };
+
+        events.forEach(evt => window.addEventListener(evt, handleInteraction, { passive: true }));
+    },
+
+    wireSettingsLinks() {
+        // We no longer hijack the footer link to show settings.
+        // The 'Privacy & Cookies' link in the footer should lead to the actual policy page.
+        // Users can still access settings via the floating FAB or the banner.
     },
 
     getDefaultConsent() {
@@ -3591,7 +3697,7 @@ const CookieConsentManager = {
           </div>
         </div>
       </div>
-      <button type="button" class="cookie-settings-fab" id="cookieSettingsFab" data-cookie-action="open-modal" aria-label="Open cookie settings">
+      <button type="button" class="cookie-settings-fab cookie-settings-fab--hidden" id="cookieSettingsFab" data-cookie-action="open-modal" aria-label="Open cookie settings">
         <span class="cookie-settings-fab__label">Cookie Settings</span>
         <span class="cookie-settings-fab__close" data-cookie-action="dismiss-settings-fab" aria-label="Hide cookie settings shortcut">×</span>
       </button>
@@ -3611,10 +3717,14 @@ const CookieConsentManager = {
 
     bindEvents() {
         document.addEventListener('click', (event) => {
-            const settingsLink = event.target.closest('[data-cookie-settings-link]');
-            if (settingsLink) {
-                event.preventDefault();
-                this.openModal();
+            // Check if footer 'Privacy & Cookies' link was clicked
+            const footerLink = event.target.closest('a');
+            if (footerLink && footerLink.getAttribute('href') === 'cookie-policy.html') {
+                // If the user navigates to the policy page, clear any pending banners/fabs
+                if (this.timers.banner) clearTimeout(this.timers.banner);
+                if (this.timers.fab) clearTimeout(this.timers.fab);
+                this.hideBanner();
+                this.hideSettingsFab();
                 return;
             }
 
@@ -3668,6 +3778,10 @@ const CookieConsentManager = {
 
             if (action === 'dismiss-settings-fab') {
                 this.setSettingsFabDismissedForSession();
+                if (this.timers.fab) {
+                    clearTimeout(this.timers.fab);
+                    this.timers.fab = null;
+                }
                 this.hideSettingsFab();
                 return;
             }
@@ -3708,12 +3822,24 @@ const CookieConsentManager = {
 
     showBanner() {
         if (!this.elements.banner) return;
+        if (this.timers.banner) {
+            clearTimeout(this.timers.banner);
+            this.timers.banner = null;
+        }
         this.elements.banner.classList.add('cookie-consent--visible');
     },
 
     hideBanner() {
         if (!this.elements.banner) return;
+        
+        // Hide banner immediately
         this.elements.banner.classList.remove('cookie-consent--visible');
+        
+        // After banner dismissal: Wait 3000ms–4000ms, then reveal settings card gently
+        if (!this.isSettingsFabDismissedForSession()) {
+            if (this.timers.fab) clearTimeout(this.timers.fab);
+            this.timers.fab = setTimeout(() => this.showSettingsFab(), 3500);
+        }
     },
 
     isBannerDismissedForSession() {
@@ -3756,9 +3882,32 @@ const CookieConsentManager = {
         }
     },
 
+    showSettingsFab() {
+        if (!this.elements.settingsFab || this.isSettingsFabDismissedForSession()) return;
+        
+        if (this.timers.fab) {
+            clearTimeout(this.timers.fab);
+            this.timers.fab = null;
+        }
+
+        // Ensure banner is not visible before showing FAB
+        if (this.elements.banner && this.elements.banner.classList.contains('cookie-consent--visible')) return;
+
+        // Prepare for gentle fade-in
+        this.elements.settingsFab.style.opacity = '0';
+        this.elements.settingsFab.style.transition = 'opacity 0.8s ease, transform 0.4s ease';
+        this.elements.settingsFab.classList.remove('cookie-settings-fab--hidden');
+        
+        // Force reflow
+        this.elements.settingsFab.offsetHeight;
+        
+        this.elements.settingsFab.style.opacity = '1';
+    },
+
     hideSettingsFab() {
         if (!this.elements.settingsFab) return;
         this.elements.settingsFab.classList.add('cookie-settings-fab--hidden');
+        this.elements.settingsFab.style.opacity = '0';
     },
 
     openModal() {

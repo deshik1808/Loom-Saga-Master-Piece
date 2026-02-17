@@ -6,6 +6,21 @@
 
 const STORAGE_KEY = 'loomSaga_wishlist';
 
+function normalizeProduct(product) {
+  const parsedStockQuantity = Number(product?.stockQuantity);
+  const inStock = product?.inStock !== false;
+  const stockQuantity = Number.isFinite(parsedStockQuantity)
+    ? parsedStockQuantity
+    : (inStock ? 1 : 0);
+
+  return {
+    ...product,
+    id: String(product.id),
+    inStock,
+    stockQuantity
+  };
+}
+
 /**
  * Get all wishlist items
  * @returns {Array} Wishlist items array
@@ -30,7 +45,7 @@ export function saveItems(items) {
  * @returns {boolean} True if in wishlist
  */
 export function isInWishlist(productId) {
-  return getItems().some(item => item.id === productId);
+  return getItems().some(item => String(item.id) === String(productId));
 }
 
 /**
@@ -40,17 +55,18 @@ export function isInWishlist(productId) {
  */
 export function toggle(product) {
   const items = getItems();
-  const existingIndex = items.findIndex(item => item.id === product.id);
+  const normalizedProduct = normalizeProduct(product);
+  const existingIndex = items.findIndex(item => String(item.id) === String(normalizedProduct.id));
   
   if (existingIndex > -1) {
     items.splice(existingIndex, 1);
     saveItems(items);
-    showNotification(`${product.name} removed from wishlist`);
+    showNotification(`${normalizedProduct.name} removed from wishlist`);
     return false;
   } else {
-    items.push(product);
+    items.push(normalizedProduct);
     saveItems(items);
-    showNotification(`${product.name} added to wishlist`);
+    showNotification(`${normalizedProduct.name} added to wishlist`);
     return true;
   }
 }
@@ -60,11 +76,12 @@ export function toggle(product) {
  * @param {Object} product - Product object
  */
 export function addItem(product) {
-  if (!isInWishlist(product.id)) {
+  const normalizedProduct = normalizeProduct(product);
+  if (!isInWishlist(normalizedProduct.id)) {
     const items = getItems();
-    items.push(product);
+    items.push(normalizedProduct);
     saveItems(items);
-    showNotification(`${product.name} added to wishlist`);
+    showNotification(`${normalizedProduct.name} added to wishlist`);
   }
 }
 
@@ -73,7 +90,7 @@ export function addItem(product) {
  * @param {string} productId - Product ID
  */
 export function removeItem(productId) {
-  const items = getItems().filter(item => item.id !== productId);
+  const items = getItems().filter(item => String(item.id) !== String(productId));
   saveItems(items);
   
   // Re-render wishlist if on wishlist page

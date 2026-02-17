@@ -6,6 +6,16 @@
 
 class ProductRenderer {
   /**
+   * Product is purchasable only when explicitly in stock and quantity is positive.
+   * @param {Object} product
+   * @returns {boolean}
+   */
+  static isPurchasable(product) {
+    const stockQuantity = Number(product?.stockQuantity);
+    return product?.inStock === true && Number.isFinite(stockQuantity) && stockQuantity > 0;
+  }
+
+  /**
    * Get an optimized image URL using Statically.io for remote WordPress images
    * @param {string} url - Original image URL
    * @param {number} width - Target width
@@ -45,7 +55,9 @@ class ProductRenderer {
     const primaryUrl = product.images?.primary || product.primaryImage || product.images?.placeholder;
     const imageUrl = this.getOptimizedImage(primaryUrl, 600);
     const loadingAttr = lazy ? 'loading="lazy"' : 'loading="eager"';
-    const isOutOfStock = product.inStock === false;
+    const parsedStockQuantity = Number(product.stockQuantity);
+    const stockQuantity = Number.isFinite(parsedStockQuantity) ? parsedStockQuantity : 0;
+    const isOutOfStock = !this.isPurchasable(product);
     const regularPrice = Number(product.regularPrice) || 0;
     const salePrice = Number(product.salePrice) || 0;
     const hasSale = salePrice > 0 && regularPrice > salePrice;
@@ -59,8 +71,8 @@ class ProductRenderer {
         data-product-regular-price="${regularPrice}"
         data-product-sale-price="${salePrice}"
         data-product-image="${imageUrl}"
-        data-stock-quantity="${product.stockQuantity ?? ''}"
-        data-in-stock="${product.inStock !== false}">
+        data-stock-quantity="${stockQuantity}"
+        data-in-stock="${product.inStock === true}">
         <a href="product-detail.html?id=${product.id}" class="product-card-link">
           <div class="product-card-image luxury-shimmer">
             <img src="${imageUrl}" 
@@ -333,7 +345,11 @@ class ProductRenderer {
           price: parseFloat(card.dataset.productPrice),
           regularPrice: parseFloat(card.dataset.productRegularPrice) || 0,
           salePrice: parseFloat(card.dataset.productSalePrice) || 0,
-          image: card.dataset.productImage
+          image: card.dataset.productImage,
+          inStock: card.dataset.inStock === 'false' ? false : true,
+          stockQuantity: Number.isFinite(Number(card.dataset.stockQuantity))
+            ? Number(card.dataset.stockQuantity)
+            : (card.dataset.inStock === 'false' ? 0 : 1)
         };
 
         // Use WishlistManager if available
