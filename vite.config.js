@@ -1,9 +1,34 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
 
+/**
+ * Vite plugin to mirror Vercel rewrites for local development.
+ * Rewrites /category/<slug> → /category.html?category=<slug> so the
+ * dynamic category page works in both `npm run dev` and `vercel dev`.
+ */
+function categoryRewritePlugin() {
+  return {
+    name: 'category-rewrite',
+    configureServer(server) {
+      server.middlewares.use((req, res, next) => {
+        const match = req.url && req.url.match(/^\/category\/([^?./]+)/);
+        if (match) {
+          req.url = `/category.html?category=${match[1]}`;
+        } else if (req.url === '/category' || req.url === '/category/') {
+          req.url = '/category.html?category=all';
+        }
+        next();
+      });
+    },
+  };
+}
+
 export default defineConfig({
   // Root is the project root
   root: '.',
+
+  // Plugins
+  plugins: [categoryRewritePlugin()],
 
   // Build options
   build: {

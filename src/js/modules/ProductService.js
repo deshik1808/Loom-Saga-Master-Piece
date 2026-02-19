@@ -82,6 +82,10 @@ class ProductService {
    * @private
    */
   _normalizeApiProduct(p) {
+    const normalizedCategorySlugs = (p.categories || [])
+      .map(c => typeof c === 'string' ? c : c?.slug)
+      .filter(Boolean);
+
     return {
       // ── Identity ──
       id: String(p.id),
@@ -107,8 +111,11 @@ class ProductService {
 
       // ── Taxonomy ──
       category: p.category || 'uncategorized',      // primary category slug
+      categorySlug: p.category || normalizedCategorySlugs[0] || 'uncategorized',
+      subcategory: p.subcategory || '',
       categoryName: p.categoryName || 'Uncategorized',
       categories: p.categories || [],                  // [{name,slug}, …]
+      collections: normalizedCategorySlugs,
       tags: p.tags || [],
 
       // ── Stock ──
@@ -156,8 +163,11 @@ class ProductService {
         placeholder: p.images?.placeholder || ''
       },
       category: p.category || 'uncategorized',
+      categorySlug: p.category || 'uncategorized',
+      subcategory: p.subcategory || '',
       categoryName: '',
       categories: (p.collections || []).map(s => ({ slug: s, name: s })),
+      collections: p.collections || [],
       tags: p.tags || [],
       inStock: p.inStock !== false,
       stockQuantity: p.quantity ?? null,
@@ -224,10 +234,32 @@ class ProductService {
    * assigned to multiple WooCommerce categories will appear on every page.
    */
   getProductsByCategory(categorySlug) {
-    return this.products.filter(p =>
-      p.category === categorySlug ||
-      p.categories.some(c => c.slug === categorySlug)
-    );
+    const normalizedTarget = this.normalizeCategorySlug(categorySlug);
+    if (!normalizedTarget || normalizedTarget === 'all') {
+      return [...this.products];
+    }
+
+    return this.products.filter((p) => {
+      const candidateSlugs = new Set();
+      const addSlug = (value) => {
+        const normalized = this.normalizeCategorySlug(value);
+        if (normalized) candidateSlugs.add(normalized);
+      };
+
+      addSlug(p.category);
+      addSlug(p.categorySlug);
+      addSlug(p.subcategory);
+
+      if (Array.isArray(p.categories)) {
+        p.categories.forEach((c) => addSlug(typeof c === 'string' ? c : c?.slug));
+      }
+
+      if (Array.isArray(p.collections)) {
+        p.collections.forEach((c) => addSlug(typeof c === 'string' ? c : c?.slug));
+      }
+
+      return candidateSlugs.has(normalizedTarget);
+    });
   }
 
   /** Get featured products */
@@ -267,10 +299,10 @@ class ProductService {
 
     // Filter by category (checks all assigned categories)
     if (filters.category) {
-      results = results.filter(p =>
-        p.category === filters.category ||
-        p.categories.some(c => c.slug === filters.category)
+      const categoryMatches = new Set(
+        this.getProductsByCategory(filters.category).map((p) => String(p.id))
       );
+      results = results.filter((p) => categoryMatches.has(String(p.id)));
     }
 
     // Filter by subcategory
@@ -556,6 +588,27 @@ class ProductService {
     if (filters.inStock) params.set('inStock', 'true');
 
     return params.toString();
+  }
+
+  /**
+   * Normalize URL/category values to canonical slug form.
+   * "all", "view-all", "collections" are treated as the all-products token.
+   */
+  normalizeCategorySlug(value) {
+    if (!value) return '';
+
+    const slug = String(value)
+      .trim()
+      .toLowerCase()
+      .replace(/^\/+|\/+$/g, '')
+      .replace(/\.html$/i, '')
+      .replace(/\s+/g, '-');
+
+    if (!slug || ['all', 'view-all', 'viewall', 'collection', 'collections'].includes(slug)) {
+      return 'all';
+    }
+
+    return slug;
   }
 }
 

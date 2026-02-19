@@ -217,8 +217,8 @@ const MobileMenuController = {
           <h2 class="mobile-menu__subtitle">NEW ARRIVALS</h2>
         </div>
         <ul class="mobile-menu__sublist">
-          <li><a href="vishnupuri-silk.html">Vishnupuri Silk Sarees</a></li>
-          <li><a href="#">Muslin Sarees</a></li>
+          <li><a href="/category?type=vishnupuri-silk">Vishnupuri Silk Sarees</a></li>
+          <li><a href="/category?type=muslin-sarees">Muslin Sarees</a></li>
         </ul>
       </div>
       <div class="mobile-menu__panel mobile-menu__panel--sub" id="submenu-collection" data-panel="collection">
@@ -227,12 +227,12 @@ const MobileMenuController = {
           <h2 class="mobile-menu__subtitle">COLLECTION</h2>
         </div>
         <ul class="mobile-menu__sublist">
-          <li><a href="vishnupuri-silk.html">Vishnupuri Silk Sarees</a></li>
-          <li><a href="#">Muslin Sarees</a></li>
-          <li><a href="silk-sarees.html">Modal Silk Sarees</a></li>
-          <li><a href="#">Matka Jamdani Sarees</a></li>
-          <li><a href="#">Tussar Jamdani Sarees</a></li>
-          <li><a href="collections.html">View All</a></li>
+          <li><a href="/category?type=vishnupuri-silk">Vishnupuri Silk Sarees</a></li>
+          <li><a href="/category?type=muslin-sarees">Muslin Sarees</a></li>
+          <li><a href="/category?type=silk-sarees">Modal Silk Sarees</a></li>
+          <li><a href="/category?type=matka-jamdani">Matka Jamdani Sarees</a></li>
+          <li><a href="/category?type=tussar-jamdani">Tussar Jamdani Sarees</a></li>
+          <li><a href="/category?type=all">View All</a></li>
         </ul>
       </div>
       <div class="mobile-menu__panel mobile-menu__panel--sub" id="submenu-sarees" data-panel="sarees">
@@ -243,7 +243,7 @@ const MobileMenuController = {
         <div class="mobile-menu__subgroup">
           <h3 class="mobile-menu__subgroup-title">Shop By Fabric</h3>
           <ul class="mobile-menu__sublist">
-            <li><a href="silk-sarees.html">Silk</a></li>
+            <li><a href="/category?type=silk-sarees">Silk</a></li>
             <li><a href="#">Tissue Silk</a></li>
             <li><a href="#">Lenin</a></li>
             <li><a href="#">Cotton</a></li>
@@ -258,7 +258,7 @@ const MobileMenuController = {
             <li><a href="#">Kalamkari</a></li>
           </ul>
         </div>
-        <a href="collections.html" class="mobile-menu__view-all">VIEW ALL SAREES</a>
+        <a href="/category?type=all" class="mobile-menu__view-all">VIEW ALL SAREES</a>
       </div>
       <div class="mobile-menu__panel mobile-menu__panel--sub" id="submenu-crafts" data-panel="crafts">
         <div class="mobile-menu__subheader">
@@ -787,11 +787,11 @@ const SearchOverlayManager = {
 
     // Category suggestions mapping
     categories: [
-        { name: 'Silk Sarees', url: 'silk-sarees.html' },
-        { name: 'Vishnupuri Collection', url: 'vishnupuri-silk.html' },
+        { name: 'Silk Sarees', url: '/category?type=silk-sarees' },
+        { name: 'Vishnupuri Collection', url: '/category?type=vishnupuri-silk' },
         { name: 'Handloom Sarees', url: 'handloom.html' },
-        { name: 'Wedding Collection', url: 'collections.html' },
-        { name: 'New Arrivals', url: 'collections.html' },
+        { name: 'Wedding Collection', url: '/category?type=all' },
+        { name: 'New Arrivals', url: '/category?type=all' },
     ],
 
     init() {
@@ -938,7 +938,7 @@ const SearchOverlayManager = {
         if (categories.length === 0) {
             this.suggestionList.innerHTML = `
                 <li class="search-overlay__suggestion-item">
-                    <a href="silk-sarees.html?q=${encodeURIComponent(query)}" class="search-overlay__suggestion-link">
+                    <a href="/category?type=silk-sarees?q=${encodeURIComponent(query)}" class="search-overlay__suggestion-link">
                         Search for "${query}"
                     </a>
                 </li>
@@ -2356,6 +2356,203 @@ const PaginationManager = {
     }
 };
 
+// ==================== CATEGORY NAVIGATION + MASTER TEMPLATE ====================
+const CategoryNavigationManager = {
+    slugByPath: {
+        'vishnupuri-silk': 'vishnupuri-silk',
+        'muslin-sarees': 'muslin-sarees',
+        'silk-sarees': 'silk-sarees',
+        'matka-jamdani': 'matka-jamdani',
+        'tussar-jamdani': 'tussar-jamdani',
+        'tussar-dhakai-jamdani': 'tussar-dhakai-jamdani',
+        'muslin-jamdani': 'muslin-jamdani',
+        'tissue-matka-jamdani': 'tissue-matka-jamdani',
+        'silk-lenin': 'silk-lenin'
+    },
+
+    slugByLabel: {
+        'vishnupuri silk sarees': 'vishnupuri-silk',
+        'muslin sarees': 'muslin-sarees',
+        'modal silk sarees': 'silk-sarees',
+        'silk': 'silk-sarees',
+        'matka jamdani sarees': 'matka-jamdani',
+        'tussar jamdani sarees': 'tussar-jamdani',
+        'tussar dhakai jamdani sarees': 'tussar-dhakai-jamdani',
+        'muslin jamdani sarees': 'muslin-jamdani',
+        'tissue matka jamdani sarees': 'tissue-matka-jamdani',
+        'silk lenin sarees': 'silk-lenin'
+    },
+
+    normalizeSlug(value) {
+        if (!value) return '';
+        const slug = String(value)
+            .trim()
+            .toLowerCase()
+            .replace(/^\/+|\/+$/g, '')
+            .replace(/\.html$/i, '');
+
+        if (!slug || ['all', 'view-all', 'viewall', 'collection', 'collections'].includes(slug)) {
+            return 'all';
+        }
+
+        return slug;
+    },
+
+    extractSlugFromHref(href) {
+        if (!href || href.startsWith('#')) return '';
+
+        try {
+            const parsed = new URL(href, window.location.origin);
+            const fromQuery = parsed.searchParams.get('category')
+                || parsed.searchParams.get('slug')
+                || parsed.searchParams.get('type');
+
+            if (fromQuery) {
+                return this.normalizeSlug(fromQuery);
+            }
+
+            const pathBase = parsed.pathname.split('/').pop() || '';
+            const cleanedPath = this.normalizeSlug(pathBase);
+            return this.slugByPath[cleanedPath] || '';
+        } catch (error) {
+            return '';
+        }
+    },
+
+    isCategoryMenuContext(link) {
+        const desktopMenu = link.closest('.mega-menu-new-arrivals, .mega-menu-collection, .mega-menu-sarees');
+        const mobileMenu = link.closest('#submenu-new-arrivals, #submenu-collection, #submenu-sarees');
+        return Boolean(desktopMenu || mobileMenu);
+    },
+
+    resolveSlug(link) {
+        const href = link.getAttribute('href') || '';
+        const label = (link.textContent || '').trim().toLowerCase();
+
+        let slug = this.extractSlugFromHref(href);
+        if (!slug && this.isCategoryMenuContext(link) && label.includes('view all')) {
+            slug = 'all';
+        }
+        if (!slug && (href === '#' || href === '') && this.slugByLabel[label]) {
+            slug = this.slugByLabel[label];
+        }
+        if (!slug && this.isCategoryMenuContext(link) && (href === '#' || href === '')) {
+            slug = 'all';
+        }
+
+        return slug;
+    },
+
+    rewriteLinks() {
+        const navLinks = document.querySelectorAll(
+            '.mega-menu .mega-menu-list a, .mobile-menu .mobile-menu__sublist a, .mobile-menu .mobile-menu__view-all'
+        );
+
+        navLinks.forEach((link) => {
+            const slug = this.resolveSlug(link);
+            if (!slug) return;
+            link.setAttribute('href', `/category?type=${encodeURIComponent(slug)}`);
+        });
+    }
+};
+
+const CategoryPageManager = {
+    slugToTitle: {
+        'silk-sarees': 'SILK SAREES',
+        'vishnupuri-silk': 'VISHNUPURI SILK',
+        'muslin-sarees': 'MUSLIN SAREES',
+        'matka-jamdani': 'MATKA JAMDANI SAREES',
+        'tussar-jamdani': 'TUSSAR JAMDANI SAREES',
+        'tussar-dhakai-jamdani': 'TUSSAR DHAKAI JAMDANI',
+        'muslin-jamdani': 'MUSLIN JAMDANI SAREES',
+        'tissue-matka-jamdani': 'TISSUE MATKA JAMDANI',
+        'silk-lenin': 'SILK LENIN SAREES',
+        'all': 'COLLECTION'
+    },
+
+    normalizeSlug(value) {
+        if (window.ProductService && typeof window.ProductService.normalizeCategorySlug === 'function') {
+            return window.ProductService.normalizeCategorySlug(value);
+        }
+        return CategoryNavigationManager.normalizeSlug(value);
+    },
+
+    getRequestedSlug() {
+        const params = new URLSearchParams(window.location.search);
+        const rawSlug = params.get('category') || params.get('slug') || params.get('type') || 'all';
+        return this.normalizeSlug(rawSlug);
+    },
+
+    formatTitle(slug) {
+        if (this.slugToTitle[slug]) return this.slugToTitle[slug];
+        return slug.split('-').map((part) => part.toUpperCase()).join(' ');
+    },
+
+    updateUi(slug) {
+        const title = this.formatTitle(slug);
+        const titleEl = document.getElementById('categoryTitle');
+        if (titleEl) titleEl.textContent = title;
+
+        document.title = `${title} | Loom Saga - Weaving Indian Culture`;
+
+        const canonical = document.querySelector('link[rel="canonical"]');
+        if (canonical) {
+            canonical.href = slug === 'all'
+                ? 'https://loomsaga.com/category.html'
+                : `https://loomsaga.com//category?type=${encodeURIComponent(slug)}`;
+        }
+    },
+
+    async waitForDependencies() {
+        for (let i = 0; i < 40; i++) {
+            if (window.ProductService && window.ProductRenderer) return true;
+            await new Promise((resolve) => setTimeout(resolve, 25));
+        }
+        return false;
+    },
+
+    async init() {
+        const page = document.getElementById('categoryPageContainer');
+        const grid = document.getElementById('categoryProductsGrid');
+        if (!page || !grid) return;
+
+        const depsReady = await this.waitForDependencies();
+        if (!depsReady) {
+            console.error('CategoryPageManager: Product modules are unavailable');
+            return;
+        }
+
+        let slug = this.getRequestedSlug();
+
+        try {
+            await window.ProductService.init();
+
+            const allProducts = window.ProductService.getAllProducts();
+            let products = window.ProductService.getProductsByCategory(slug);
+
+            // Keep the requested slug even with zero products
+            // (don't fall back to 'all' — show the empty state instead)
+
+            this.updateUi(slug);
+
+            // Ensure a clean render cycle
+            grid.innerHTML = '';
+            window.ProductRenderer.renderGrid(products, grid, {
+                emptyMessage: '<div style="text-align:center;padding:5rem 2rem;"><p style="font-family:var(--font-heading);font-size:1.4rem;color:#333;letter-spacing:0.12em;margin-bottom:0.8rem;">COMING SOON</p><p style="font-family:var(--font-body,Georgia,serif);font-size:0.95rem;color:#888;line-height:1.7;max-width:420px;margin:0 auto;">Our artisans are weaving something extraordinary for this collection. Stay tuned for timeless pieces crafted with love.</p></div>'
+            });
+        } catch (error) {
+            console.error('CategoryPageManager: Failed to render category page', error);
+            grid.innerHTML = `
+                <div style="grid-column: 1/-1; text-align:center; padding:4rem 1rem;">
+                    <p style="font-family:var(--font-heading); font-size:1.1rem; color:#555;">
+                        Unable to load products right now. Please try again.
+                    </p>
+                </div>
+            `;
+        }
+    }
+};
+
 // ==================== INITIALIZATION ====================
 /**
  * Initialize the application
@@ -2370,6 +2567,9 @@ function init() {
 
     // Initial header state
     handleHeaderScroll();
+
+    // Normalize category links so they always target the dynamic master template.
+    CategoryNavigationManager.rewriteLinks();
 
     // Initialize carousels
     initCarousels();
@@ -2397,6 +2597,9 @@ function init() {
 
     // Initialize filter/sort functionality
     FilterSortManager.init();
+
+    // Initialize dynamic category master template (category.html).
+    CategoryPageManager.init();
 
     // Initialize footer accordion
     if (typeof MobileFooterAccordion !== 'undefined') {
@@ -3549,7 +3752,7 @@ const CookieConsentManager = {
         if (storedConsent) {
             this.currentConsent = this.normalizeConsent(storedConsent);
             this.applyConsent(this.currentConsent, false);
-            
+
             // If consent already exists, show settings FAB gently after short delay (1000-1500ms)
             if (!this.isSettingsFabDismissedForSession()) {
                 this.timers.fab = setTimeout(() => this.showSettingsFab(), 1200);
@@ -3571,11 +3774,11 @@ const CookieConsentManager = {
     setupInteractionTrigger() {
         const triggerDelay = 2000; // 2 seconds after first action
         const events = ['scroll', 'mousedown', 'keydown', 'touchstart'];
-        
+
         const handleInteraction = () => {
             // Remove listeners immediately so they only fire once
             events.forEach(evt => window.removeEventListener(evt, handleInteraction));
-            
+
             // Start the timer to show banner 2s after the action
             if (!this.timers.banner) {
                 this.timers.banner = setTimeout(() => this.showBanner(), triggerDelay);
@@ -3831,10 +4034,10 @@ const CookieConsentManager = {
 
     hideBanner() {
         if (!this.elements.banner) return;
-        
+
         // Hide banner immediately
         this.elements.banner.classList.remove('cookie-consent--visible');
-        
+
         // After banner dismissal: Wait 3000ms–4000ms, then reveal settings card gently
         if (!this.isSettingsFabDismissedForSession()) {
             if (this.timers.fab) clearTimeout(this.timers.fab);
@@ -3884,7 +4087,7 @@ const CookieConsentManager = {
 
     showSettingsFab() {
         if (!this.elements.settingsFab || this.isSettingsFabDismissedForSession()) return;
-        
+
         if (this.timers.fab) {
             clearTimeout(this.timers.fab);
             this.timers.fab = null;
@@ -3897,10 +4100,10 @@ const CookieConsentManager = {
         this.elements.settingsFab.style.opacity = '0';
         this.elements.settingsFab.style.transition = 'opacity 0.8s ease, transform 0.4s ease';
         this.elements.settingsFab.classList.remove('cookie-settings-fab--hidden');
-        
+
         // Force reflow
         this.elements.settingsFab.offsetHeight;
-        
+
         this.elements.settingsFab.style.opacity = '1';
     },
 
