@@ -52,8 +52,20 @@ class ProductRenderer {
   static renderCard(product, options = {}) {
     const { showWishlist = true, lazy = true } = options;
 
-    const primaryUrl = product.images?.primary || product.primaryImage || product.images?.placeholder;
+    // product.images can be a flat array or an object { primary, gallery, placeholder }
+    const images = product.images || {};
+    const gallery = Array.isArray(images) ? images : (images.gallery || []);
+
+    const primaryUrl = gallery[0]
+      || product.primaryImage
+      || images.primary
+      || images.placeholder;
     const imageUrl = this.getOptimizedImage(primaryUrl, 600);
+
+    // Second gallery image shown on hover (if present)
+    const secondaryRaw = gallery[1] || null;
+    const hoverImageUrl = secondaryRaw ? this.getOptimizedImage(secondaryRaw, 600) : null;
+
     const loadingAttr = lazy ? 'loading="lazy"' : 'loading="eager"';
     const parsedStockQuantity = Number(product.stockQuantity);
     const stockQuantity = Number.isFinite(parsedStockQuantity) ? parsedStockQuantity : 0;
@@ -90,8 +102,10 @@ class ProductRenderer {
           <div class="product-card-image luxury-shimmer">
             <img src="${imageUrl}" 
                  alt="${this.escapeHtml(product.name)}" 
+                 class="product-card-image-primary"
                  ${loadingAttr}
                  onload="this.parentElement.classList.remove('luxury-shimmer')">
+            ${hoverImageUrl ? `<img src="${hoverImageUrl}" alt="" class="product-card-image-hover" loading="lazy" aria-hidden="true">` : ''}
             ${isOutOfStock ? '<span class="product-badge product-badge--oos">Out of Stock</span>' : ''}
             ${hasSale ? '<span class="product-badge product-badge--sale">Sale</span>' : ''}
             ${showWishlist ? this.renderWishlistButton() : ''}

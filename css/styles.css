@@ -605,10 +605,6 @@ ul {
   transition: opacity 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
-.luxury-shimmer img[src] {
-  /* Only target images that have a source and are actually loaded */
-}
-
 /* PDP Gallery Loading State */
 .gallery-image.luxury-shimmer {
   min-height: 500px;
@@ -4378,13 +4374,13 @@ section.fashion-insights-section {
 }
 
 .gallery-image.zoom-active img {
-  transform: scale(2.5);
+  transform: scale(3.0);
   transform-origin: 0 0;
   cursor: move;
 }
 
-/* Hover zoom effect on images */
-.gallery-image:hover img {
+/* Hover zoom effect on images - disabled when in full zoom mode */
+.gallery-image:not(.zoom-active):hover img {
   transform: scale(1.03);
 }
 
@@ -5513,14 +5509,32 @@ section.fashion-insights-section {
 }
 
 .product-card-image img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform var(--transition-slow);
+  transition: transform var(--transition-slow), opacity 0.35s ease;
+}
+
+/* Primary image — always visible */
+.product-card-image-primary {
+  opacity: 1;
+  z-index: 1;
+}
+
+/* Hover (second gallery) image — hidden by default, revealed on card hover */
+.product-card-image-hover {
+  opacity: 0;
+  z-index: 2;
 }
 
 .product-card:hover .product-card-image img {
   transform: scale(1.03);
+}
+
+.product-card:hover .product-card-image-hover {
+  opacity: 1;
 }
 
 /* Product Wishlist Button */
@@ -5642,14 +5656,18 @@ section.fashion-insights-section {
 }
 
 /* Out-of-stock card fading */
-.product-card--out-of-stock .product-card-image img {
+.product-card--out-of-stock .product-card-image-primary {
   opacity: 0.55;
   filter: grayscale(30%);
 }
 
+/* No zoom and no hover image reveal for out-of-stock cards */
 .product-card--out-of-stock:hover .product-card-image img {
   transform: none;
-  /* Disable zoom on OOS */
+}
+
+.product-card--out-of-stock:hover .product-card-image-hover {
+  opacity: 0;
 }
 
 .product-card--out-of-stock .product-card-name,
