@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Loom Saga - Main JavaScript
  * Handles interactive features for the e-commerce website
  */
@@ -777,7 +777,7 @@ const SearchOverlayManager = {
                     name: p.name,
                     price: p.price,
                     image: p.primaryImage || p.images?.[0] || 'https://placehold.co/140x180/e0e0e0/666?text=No+Image',
-                    url: 'product-detail.html?id=' + p.id,
+                    url: 'product-detail?id=' + p.id,
                     category: p.category || 'Uncategorized'
                 };
             });
@@ -1400,13 +1400,17 @@ const CartManager = {
         cartItemsEl.innerHTML = items.map(item => `
             <div class="cart-item" data-id="${item.id}">
                 <div class="cart-item-product">
-                    <img src="${item.image}" alt="${item.name}" class="cart-item-image">
+                    <a href="/product-detail?id=${item.id}" class="cart-item-image-link" style="display:block;text-decoration:none;">
+                        <img src="${item.image}" alt="${item.name}" class="cart-item-image">
+                    </a>
                     <div class="cart-item-details">
-                        <h3 class="cart-item-name">${item.name}</h3>
+                        <a href="/product-detail?id=${item.id}" class="cart-item-name-link" style="text-decoration:none;color:inherit;">
+                            <h3 class="cart-item-name">${item.name}</h3>
+                        </a>
                         <p class="cart-item-price">${this.formatPrice(item.price)}</p>
                         <div class="cart-item-meta">
-                            <span>Color: ${item.color || 'Not specified'}</span>
-                            <span>Style: ${item.style || 'None'}</span>
+                            <span>Color: ${item.color || 'Unknown'}</span>
+                            <span>Style: ${item.style || 'Unknown'}</span>
                         </div>
                     </div>
                 </div>
@@ -1559,13 +1563,17 @@ const CartManager = {
 
         drawerItemsEl.innerHTML = items.map(item => `
             <div class="drawer-item">
-                <img src="${item.image}" alt="${item.name}" class="drawer-item-image">
+                <a href="/product-detail?id=${item.id}" class="drawer-item-image-link" style="display:block;text-decoration:none;flex-shrink:0;">
+                    <img src="${item.image}" alt="${item.name}" class="drawer-item-image">
+                </a>
                 <div class="drawer-item-details">
-                    <h4 class="drawer-item-name">${item.name}</h4>
+                    <a href="/product-detail?id=${item.id}" class="drawer-item-name-link" style="text-decoration:none;color:inherit;">
+                        <h4 class="drawer-item-name">${item.name}</h4>
+                    </a>
                     <p class="drawer-item-price">${this.formatPrice(item.price)}</p>
                     <div class="drawer-item-meta">
-                        Size: ${item.style && item.style !== 'None' ? item.style : 'S'} <br>
-                        Color: ${item.color || 'Default'}
+                        Color: ${item.color || 'Unknown'} <br>
+                        Style: ${item.style || 'Unknown'}
                     </div>
                     
                     <div class="drawer-item-actions">
@@ -2809,41 +2817,65 @@ const FilterSortManager = {
         const products = this.productsGrid?.querySelectorAll('.product-card');
         products?.forEach(product => product.style.display = '');
 
+        // Remove luxury empty state if present
+        this.productsGrid?.querySelector('.filter-empty-state')?.remove();
+
         CartManager.showNotification('Filters cleared');
     },
 
     applyFilters() {
-        // This is a demo implementation - in production would filter based on product data
+        // Collect all active filter selections
         const selectedColors = this.getCheckedValues('color');
         const selectedFabrics = this.getCheckedValues('fabric');
+        const selectedOccasions = this.getCheckedValues('occasion');
         const selectedPrices = this.getCheckedValues('price');
 
-        const hasFilters = selectedColors.length || selectedFabrics.length || selectedPrices.length;
+        const hasFilters = selectedColors.length || selectedFabrics.length ||
+            selectedOccasions.length || selectedPrices.length;
 
         if (!hasFilters) {
-            // No filters, show all
+            // No filters selected - show everything
             this.clearFilters();
             return;
         }
 
-        // Demo: Filter products based on name containing color
+        // Remove any previously injected empty state before re-filtering
+        this.productsGrid?.querySelector('.filter-empty-state')?.remove();
+
+        // Filter products
         const products = this.productsGrid?.querySelectorAll('.product-card');
         let visibleCount = 0;
 
         products?.forEach(product => {
             const name = product.querySelector('.product-card-name')?.textContent.toLowerCase() || '';
             const price = this.extractPrice(product.querySelector('.product-card-price'));
+            // Split pipe-separated attribute values stamped by ProductRenderer
+            // e.g. data-product-color="red|blue" â†’ ['red', 'blue']
+            const productColors = (product.dataset.productColor || '').toLowerCase().split('|').filter(Boolean);
+            const productFabrics = (product.dataset.productFabric || '').toLowerCase().split('|').filter(Boolean);
+            const productOccasions = (product.dataset.productOccasion || '').toLowerCase().split('|').filter(Boolean);
 
-            let matchesColor = selectedColors.length === 0 ||
-                selectedColors.some(color => name.includes(color));
+            // Match: selected filter value must exactly appear in the product's attribute list.
+            // Falls back to name-contains check if data attribute is empty (legacy/static cards).
+            const matchesColor = selectedColors.length === 0 ||
+                selectedColors.some(c =>
+                    productColors.length > 0 ? productColors.includes(c) : name.includes(c)
+                );
 
-            let matchesFabric = selectedFabrics.length === 0 ||
-                selectedFabrics.some(fabric => name.includes(fabric));
+            const matchesFabric = selectedFabrics.length === 0 ||
+                selectedFabrics.some(f =>
+                    productFabrics.length > 0 ? productFabrics.includes(f) : name.includes(f)
+                );
 
-            let matchesPrice = selectedPrices.length === 0 ||
+            const matchesOccasion = selectedOccasions.length === 0 ||
+                selectedOccasions.some(o =>
+                    productOccasions.length > 0 ? productOccasions.includes(o) : false
+                );
+
+            const matchesPrice = selectedPrices.length === 0 ||
                 selectedPrices.some(range => this.priceInRange(price, range));
 
-            if (matchesColor && matchesFabric && matchesPrice) {
+            if (matchesColor && matchesFabric && matchesOccasion && matchesPrice) {
                 product.style.display = '';
                 visibleCount++;
             } else {
@@ -2851,7 +2883,26 @@ const FilterSortManager = {
             }
         });
 
-        CartManager.showNotification(`Showing ${visibleCount} products`);
+        // Show luxury empty state when no products match the active filters
+        if (visibleCount === 0 && this.productsGrid) {
+            const emptyState = document.createElement('div');
+            emptyState.className = 'filter-empty-state';
+            emptyState.style.cssText = 'grid-column:1/-1;text-align:center;padding:6rem 2rem;';
+            emptyState.innerHTML = `
+                <p style="font-family:var(--font-heading,'Cormorant Garamond',Georgia,serif);font-size:1.5rem;letter-spacing:0.18em;color:#2c2c2c;margin-bottom:1rem;text-transform:uppercase;">No Pieces Found</p>
+                <p style="font-family:var(--font-body,Georgia,serif);font-size:0.95rem;color:#888;line-height:1.8;max-width:420px;margin:0 auto 1.8rem;">
+                    Your refined selection yields no results at this moment &mdash; our curators are continually expanding the atelier. Try adjusting your filters or explore the full collection.
+                </p>
+                <button onclick="FilterSortManager.clearFilters();" style="background:none;border:1px solid #2c2c2c;color:#2c2c2c;font-family:var(--font-heading,'Cormorant Garamond',Georgia,serif);font-size:0.78rem;letter-spacing:0.22em;padding:0.75rem 2.2rem;cursor:pointer;text-transform:uppercase;">Clear Filters</button>
+            `;
+            this.productsGrid.appendChild(emptyState);
+        }
+
+        CartManager.showNotification(
+            visibleCount === 0
+                ? 'No products match your selection'
+                : `Showing ${visibleCount} product${visibleCount !== 1 ? 's' : ''}`
+        );
     },
 
     getCheckedValues(name) {
@@ -2984,11 +3035,16 @@ function initProductDetail() {
                 quantity: 1
             };
 
-            // Get selected color if any
+            // Get selected color (swatch > data attribute > Unknown)
             const selectedColor = document.querySelector('.color-swatch.active');
-            if (selectedColor) {
+            if (selectedColor && selectedColor.dataset.color) {
                 product.color = selectedColor.dataset.color;
+            } else {
+                product.color = productInfo.dataset.productColor || 'Unknown';
             }
+
+            // Get style from data attribute
+            product.style = productInfo.dataset.productStyle || 'Unknown';
 
             // Add to cart using CartManager
             CartManager.addItem(product);
@@ -3399,11 +3455,11 @@ document.addEventListener('DOMContentLoaded', function () {
             var inStock = product.inStock;
 
             var imageHTML = image
-                ? '<a href="product-detail.html?id=' + product.id + '"><img src="' + image + '" alt="' + name + '" style="width:100%;display:block;aspect-ratio:3/4;object-fit:cover;" /></a>'
+                ? '<a href="product-detail?id=' + product.id + '"><img src="' + image + '" alt="' + name + '" style="width:100%;display:block;aspect-ratio:3/4;object-fit:cover;" /></a>'
                 : '';
 
             var ctaHTML = inStock
-                ? '<a href="product-detail.html?id=' + product.id + '" style="display:inline-block;margin-top:16px;padding:12px 32px;border:1px solid #2c2c2c;font-family:inherit;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:#2c2c2c;text-decoration:none;">View Product</a>'
+                ? '<a href="product-detail?id=' + product.id + '" style="display:inline-block;margin-top:16px;padding:12px 32px;border:1px solid #2c2c2c;font-family:inherit;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:#2c2c2c;text-decoration:none;">View Product</a>'
                 : '<span style="display:inline-block;margin-top:16px;font-family:inherit;font-size:12px;letter-spacing:1.5px;color:#999;text-transform:uppercase;">Currently Unavailable</span>';
 
             container.innerHTML =
@@ -3582,19 +3638,43 @@ document.addEventListener('DOMContentLoaded', function () {
                         addBtn.parentNode.insertBefore(stockHint, addBtn.nextSibling);
                     }
 
-                    addBtn.textContent = 'BUY NOW';
+                    addBtn.textContent = 'ADD TO CART';
+
+                    // Mark button so fallback handler at line ~3014 skips
+                    addBtn.dataset.dynamicBound = 'true';
 
                     addBtn.addEventListener('click', function (e) {
                         e.preventDefault();
 
-                        // Create product object with stock info for CartManager
                         var cartProduct = {
                             id: product.id,
                             name: product.name,
                             price: product.price,
                             image: images[0] || 'assets/images/placeholder.webp',
                             inStock: true,
-                            stockQuantity: stockQty
+                            stockQuantity: stockQty,
+                            color: (function () {
+                                // Use swatch-selected color if user picked one on PDP
+                                var swatch = document.querySelector('.color-swatch.active');
+                                if (swatch && swatch.dataset.color) return swatch.dataset.color;
+                                // Fallback to product attribute
+                                var attrs = product.attributes || {};
+                                if (Array.isArray(attrs.color) && attrs.color.length > 0) return attrs.color[0];
+                                if (typeof attrs.color === 'string' && attrs.color) return attrs.color;
+                                return 'Unknown';
+                            })(),
+                            style: (function () {
+                                // Convert slug to Title Case (e.g. 'silk-sarees' → 'Silk Sarees')
+                                function slugToTitle(slug) {
+                                    if (!slug) return 'Unknown';
+                                    return slug.split('-').map(function (w) {
+                                        return w.charAt(0).toUpperCase() + w.slice(1);
+                                    }).join(' ');
+                                }
+                                if (product.categoryName && product.categoryName !== 'Uncategorized') return slugToTitle(product.categoryName);
+                                if (Array.isArray(product.categories) && product.categories.length > 0) return slugToTitle(product.categories[0].name || product.categories[0].slug) || 'Unknown';
+                                return 'Unknown';
+                            })()
                         };
 
                         // Add to cart using global CartManager (enforces stock limit)
@@ -3602,18 +3682,17 @@ document.addEventListener('DOMContentLoaded', function () {
                             var result = window.CartManager.addItem(cartProduct);
 
                             if (result && result.success) {
-                                // Show a brief feedback state
+                                // Show a brief feedback state, then revert — stay on PDP
                                 addBtn.textContent = 'ADDING...';
-
-                                // Small delay to let the user see the state
+                                addBtn.disabled = true;
                                 setTimeout(function () {
-                                    window.location.href = 'cart.html';
-                                }, 300);
+                                    addBtn.textContent = 'ADD TO CART';
+                                    addBtn.disabled = false;
+                                }, 1500);
                             }
                             // If result.success is false, CartManager already showed notification
                         } else {
                             console.error('CartManager not found');
-                            window.location.href = 'cart.html';
                         }
                     });
                 }
@@ -3752,11 +3831,6 @@ const CookieConsentManager = {
         if (storedConsent) {
             this.currentConsent = this.normalizeConsent(storedConsent);
             this.applyConsent(this.currentConsent, false);
-
-            // If consent already exists, show settings FAB gently after short delay (1000-1500ms)
-            if (!this.isSettingsFabDismissedForSession()) {
-                this.timers.fab = setTimeout(() => this.showSettingsFab(), 1200);
-            }
         } else {
             this.currentConsent = this.getDefaultConsent();
             if (this.isBannerDismissedForSession()) {
@@ -3952,6 +4026,7 @@ const CookieConsentManager = {
                 );
                 this.closeModal();
                 this.hideBanner();
+                this.hideSettingsFab();
                 this.clearBannerDismissedForSession();
                 return;
             }
@@ -3969,13 +4044,14 @@ const CookieConsentManager = {
                 );
                 this.closeModal();
                 this.hideBanner();
+                this.hideSettingsFab();
                 this.clearBannerDismissedForSession();
                 return;
             }
 
             if (action === 'dismiss-banner') {
                 this.setBannerDismissedForSession();
-                this.hideBanner();
+                this.hideBanner(true);
                 return;
             }
 
@@ -4012,6 +4088,7 @@ const CookieConsentManager = {
                 );
                 this.closeModal();
                 this.hideBanner();
+                this.hideSettingsFab();
                 this.clearBannerDismissedForSession();
             }
         });
@@ -4032,14 +4109,14 @@ const CookieConsentManager = {
         this.elements.banner.classList.add('cookie-consent--visible');
     },
 
-    hideBanner() {
+    hideBanner(showSettingsFabAfterDismiss = false) {
         if (!this.elements.banner) return;
 
         // Hide banner immediately
         this.elements.banner.classList.remove('cookie-consent--visible');
 
         // After banner dismissal: Wait 3000ms–4000ms, then reveal settings card gently
-        if (!this.isSettingsFabDismissedForSession()) {
+        if (showSettingsFabAfterDismiss && !this.isSettingsFabDismissedForSession()) {
             if (this.timers.fab) clearTimeout(this.timers.fab);
             this.timers.fab = setTimeout(() => this.showSettingsFab(), 3500);
         }
@@ -4109,6 +4186,10 @@ const CookieConsentManager = {
 
     hideSettingsFab() {
         if (!this.elements.settingsFab) return;
+        if (this.timers.fab) {
+            clearTimeout(this.timers.fab);
+            this.timers.fab = null;
+        }
         this.elements.settingsFab.classList.add('cookie-settings-fab--hidden');
         this.elements.settingsFab.style.opacity = '0';
     },

@@ -61,6 +61,9 @@ export function addItem(product) {
     // Keep stockQuantity up-to-date in the cart entry
     items[existingIndex].stockQuantity = maxStock;
     items[existingIndex].inStock = true;
+    // Backfill color/style if missing (backwards compat)
+    if (!items[existingIndex].color && product.color) items[existingIndex].color = product.color;
+    if (!items[existingIndex].style && product.style) items[existingIndex].style = product.style;
   } else {
     items.push({
       id: String(product.id),
@@ -69,7 +72,9 @@ export function addItem(product) {
       image: product.image || product.primaryImage || '',
       quantity: 1,
       stockQuantity: maxStock,
-      inStock: true
+      inStock: true,
+      color: product.color || 'Unknown',
+      style: product.style || 'Unknown'
     });
   }
 

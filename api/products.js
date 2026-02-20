@@ -67,12 +67,12 @@ export default async function handler(req, res) {
         featured: product.featured || false,
         newArrival: product.date_created > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
 
-        // Attributes — pass them ALL so the frontend filter system works
+        // Attributes — pass full options arrays so multi-value attributes work correctly
         attributes: {
-          color: product.attributes?.find(a => a.name.toLowerCase() === "color")?.options?.[0] || null,
-          fabric: product.attributes?.find(a => a.name.toLowerCase() === "fabric")?.options?.[0] || null,
+          color: product.attributes?.find(a => a.name.toLowerCase() === "color")?.options || [],
+          fabric: product.attributes?.find(a => a.name.toLowerCase() === "fabric")?.options || [],
           occasion: product.attributes?.find(a => a.name.toLowerCase() === "occasion")?.options || [],
-          // Pass raw attributes for any custom needs
+          // Raw attributes for any custom needs
           raw: (product.attributes || []).map(a => ({
             name: a.name,
             options: a.options

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ProductRenderer - Dynamic Product Card Rendering
  * @description Renders product cards from WooCommerce-sourced data into DOM
  * @version 2.0.0
@@ -63,6 +63,16 @@ class ProductRenderer {
     const hasSale = salePrice > 0 && regularPrice > salePrice;
     const currentPrice = hasSale ? salePrice : (Number(product.price) || 0);
 
+    // Build pipe-separated, lowercase filter strings from WooCommerce attribute arrays.
+    // Pipe-separated allows the filter to split and match individual values (e.g. "red|blue").
+    const attrs = product.attributes || {};
+    const colorAttr = (Array.isArray(attrs.color) ? attrs.color : (attrs.color ? [attrs.color] : []))
+      .map(v => v.toLowerCase().trim()).join('|');
+    const fabricAttr = (Array.isArray(attrs.fabric) ? attrs.fabric : (attrs.fabric ? [attrs.fabric] : []))
+      .map(v => v.toLowerCase().trim()).join('|');
+    const occasionAttr = (Array.isArray(attrs.occasion) ? attrs.occasion : (attrs.occasion ? [attrs.occasion] : []))
+      .map(v => v.toLowerCase().trim()).join('|');
+
     return `
       <article class="product-card${isOutOfStock ? ' product-card--out-of-stock' : ''}" 
         data-product-id="${product.id}" 
@@ -72,8 +82,11 @@ class ProductRenderer {
         data-product-sale-price="${salePrice}"
         data-product-image="${imageUrl}"
         data-stock-quantity="${stockQuantity}"
-        data-in-stock="${product.inStock === true}">
-        <a href="product-detail.html?id=${product.id}" class="product-card-link">
+        data-in-stock="${product.inStock === true}"
+        data-product-color="${colorAttr}"
+        data-product-fabric="${fabricAttr}"
+        data-product-occasion="${occasionAttr}">
+        <a href="product-detail?id=${product.id}" class="product-card-link">
           <div class="product-card-image luxury-shimmer">
             <img src="${imageUrl}" 
                  alt="${this.escapeHtml(product.name)}" 
@@ -161,7 +174,7 @@ class ProductRenderer {
     const currentPrice = hasSale ? salePrice : (Number(product.price) || 0);
 
     return `
-      <a href="product-detail.html?id=${product.id}" class="search-product-card">
+      <a href="product-detail?id=${product.id}" class="search-product-card">
         <img src="${imageUrl}" alt="${this.escapeHtml(product.name)}" class="search-product-card__image" loading="lazy">
         <div class="search-product-card__info">
           <p class="search-product-card__name">${this.escapeHtml(product.name)}</p>
