@@ -16,10 +16,35 @@ const CategoryRouter = {
         'tussar-dhakai-jamdani': 'TUSSAR DHAKAI JAMDANI',
         'muslin-jamdani': 'MUSLIN JAMDANI SAREES',
         'tissue-matka-jamdani': 'TISSUE MATKA JAMDANI',
-        'silk-lenin': 'SILK LENIN SAREES'
+        'silk-lenin': 'SILK LENIN SAREES',
+        // Fabric categories
+        'silk': 'SILK',
+        'tissue-silk': 'TISSUE SILK',
+        'lenin': 'LENIN',
+        'cotton': 'COTTON',
+        // Craft categories
+        'zari-weaving': 'ZARI WEAVING',
+        'ikat': 'IKAT',
+        'handloom-weaving': 'HANDLOOM WEAVING',
+        'kalamkari': 'KALAMKARI',
+        'jamdani-weaving': 'JAMDANI WEAVING',
+        'temple-border': 'TEMPLE BORDER',
+        'hand-painting': 'HAND PAINTING',
+        // Color categories
+        'red': 'RED',
+        'yellow': 'YELLOW',
+        'brown': 'BROWN',
+        'black': 'BLACK',
+        'blue': 'BLUE',
+        'pink': 'PINK',
+        'green': 'GREEN',
+        'lavender': 'LAVENDER',
+        'orange': 'ORANGE',
+        'sea-green': 'SEA GREEN',
+        'multi-color': 'MULTI COLOR'
     },
 
-    init: async function() {
+    init: async function () {
         const container = document.getElementById('categoryPageContainer');
         if (!container) return;
 
@@ -52,7 +77,7 @@ const CategoryRouter = {
         try {
             await window.ProductService.init();
             const products = window.ProductService.getProductsByCategory(slug);
-            
+
             const grid = document.getElementById('categoryProductsGrid');
             if (grid) {
                 grid.innerHTML = '';
@@ -68,29 +93,29 @@ const CategoryRouter = {
         }
     },
 
-    updateUI: function(slug) {
+    updateUI: function (slug) {
         const titleEl = document.getElementById('categoryTitle');
         const prettyTitle = this.formatTitle(slug);
-        
+
         if (titleEl) titleEl.textContent = prettyTitle;
         document.title = `${prettyTitle} | Loom Saga - Weaving Indian Culture`;
-        
+
         // Update canonical if possible
         const canonical = document.querySelector('link[rel="canonical"]');
         if (canonical) canonical.href = `https://loomsaga.com/${slug}`;
     },
 
-    formatTitle: function(slug) {
+    formatTitle: function (slug) {
         // Use map if exists, otherwise format slug (hyphen to space + uppercase)
         if (this.slugToTitle[slug]) return this.slugToTitle[slug];
-        
+
         return slug
             .split('-')
             .map(word => word.toUpperCase())
             .join(' ');
     },
 
-    showEmpty: function(message) {
+    showEmpty: function (message) {
         const grid = document.getElementById('categoryProductsGrid');
         if (grid) {
             grid.innerHTML = `

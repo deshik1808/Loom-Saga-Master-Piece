@@ -2369,7 +2369,7 @@ const CategoryNavigationManager = {
     slugByPath: {
         'vishnupuri-silk': 'vishnupuri-silk',
         'muslin-sarees': 'muslin-sarees',
-        'silk-sarees': 'silk-sarees',
+        'modal-silk': 'modal-silk',
         'matka-jamdani': 'matka-jamdani',
         'tussar-jamdani': 'tussar-jamdani',
         'tussar-dhakai-jamdani': 'tussar-dhakai-jamdani',
@@ -2381,8 +2381,9 @@ const CategoryNavigationManager = {
     slugByLabel: {
         'vishnupuri silk sarees': 'vishnupuri-silk',
         'muslin sarees': 'muslin-sarees',
-        'modal silk sarees': 'silk-sarees',
-        'silk': 'silk-sarees',
+        'modal silk sarees': 'modal-silk',
+        'modal silk': 'modal-silk',
+        'silk': 'modal-silk',
         'matka jamdani sarees': 'matka-jamdani',
         'tussar jamdani sarees': 'tussar-jamdani',
         'tussar dhakai jamdani sarees': 'tussar-dhakai-jamdani',
@@ -2466,15 +2467,15 @@ const CategoryNavigationManager = {
 
 const CategoryPageManager = {
     slugToTitle: {
-        'silk-sarees': 'SILK SAREES',
+        'modal-silk': 'MODAL SILK',
         'vishnupuri-silk': 'VISHNUPURI SILK',
-        'muslin-sarees': 'MUSLIN SAREES',
-        'matka-jamdani': 'MATKA JAMDANI SAREES',
-        'tussar-jamdani': 'TUSSAR JAMDANI SAREES',
+        'muslin-sarees': 'MUSLIN',
+        'matka-jamdani': 'MATKA JAMDANI',
+        'tussar-jamdani': 'TUSSAR JAMDANI',
         'tussar-dhakai-jamdani': 'TUSSAR DHAKAI JAMDANI',
-        'muslin-jamdani': 'MUSLIN JAMDANI SAREES',
+        'muslin-jamdani': 'MUSLIN JAMDANI',
         'tissue-matka-jamdani': 'TISSUE MATKA JAMDANI',
-        'silk-lenin': 'SILK LENIN SAREES',
+        'silk-lenin': 'SILK LENIN',
         'all': 'COLLECTION'
     },
 
@@ -2546,7 +2547,7 @@ const CategoryPageManager = {
             // Ensure a clean render cycle
             grid.innerHTML = '';
             window.ProductRenderer.renderGrid(products, grid, {
-                emptyMessage: '<div style="text-align:center;padding:5rem 2rem;"><p style="font-family:var(--font-heading);font-size:1.4rem;color:#333;letter-spacing:0.12em;margin-bottom:0.8rem;">COMING SOON</p><p style="font-family:var(--font-body,Georgia,serif);font-size:0.95rem;color:#888;line-height:1.7;max-width:420px;margin:0 auto;">Our artisans are weaving something extraordinary for this collection. Stay tuned for timeless pieces crafted with love.</p></div>'
+                emptyMessage: '<div style="grid-column: 1/-1; width: 100%; min-height: 40vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2rem;"><p style="font-family:var(--font-heading);font-size:1.4rem;color:#333;letter-spacing:0.12em;margin-bottom:0.8rem;text-align:center;">COMING SOON</p><p style="font-family:var(--font-body,Georgia,serif);font-size:0.95rem;color:#888;line-height:1.7;max-width:480px;margin:0 auto;text-align:center;">Our artisans are weaving something extraordinary for this collection. Stay tuned for timeless pieces crafted with love.</p></div>'
             });
         } catch (error) {
             console.error('CategoryPageManager: Failed to render category page', error);
@@ -2703,6 +2704,36 @@ const FilterSortManager = {
             this.filterApply.addEventListener('click', () => {
                 this.applyFilters();
                 this.closeFilter();
+            });
+        }
+
+        // Checkboxes "All" logic
+        if (this.filterPanel) {
+            const allCheckboxes = this.filterPanel.querySelectorAll('input[type="checkbox"][value="all"]');
+            allCheckboxes.forEach(allCb => {
+                allCb.addEventListener('change', (e) => {
+                    const groupOptions = e.target.closest('.filter-options').querySelectorAll('input[type="checkbox"]:not([value="all"])');
+                    groupOptions.forEach(cb => {
+                        cb.checked = e.target.checked;
+                    });
+                });
+            });
+
+            // Inverse logic for specific checkboxes
+            const specificCheckboxes = this.filterPanel.querySelectorAll('input[type="checkbox"]:not([value="all"])');
+            specificCheckboxes.forEach(cb => {
+                cb.addEventListener('change', (e) => {
+                    const filterOptions = e.target.closest('.filter-options');
+                    const allCb = filterOptions.querySelector('input[type="checkbox"][value="all"]');
+                    if (allCb) {
+                        if (!e.target.checked) {
+                            allCb.checked = false;
+                        } else {
+                            const allSpecificCheckboxes = Array.from(filterOptions.querySelectorAll('input[type="checkbox"]:not([value="all"])'));
+                            allCb.checked = allSpecificCheckboxes.every(c => c.checked);
+                        }
+                    }
+                });
             });
         }
 
@@ -2991,16 +3022,68 @@ function initProductDetail() {
     // Accordion toggle
     const accordionHeaders = document.querySelectorAll('.product-accordion-header');
 
+    // Helper: smoothly close an accordion
+    function closeAccordion(acc, hdr) {
+        const content = acc.querySelector('.product-accordion-content');
+        if (!content) return;
+
+        // Animate from current height to 0
+        content.style.height = content.scrollHeight + 'px';
+        // Force reflow so browser registers the starting height
+        content.offsetHeight;
+        content.style.height = '0px';
+
+        acc.classList.remove('active');
+        hdr.setAttribute('aria-expanded', 'false');
+    }
+
+    // Helper: smoothly open an accordion
+    function openAccordion(acc, hdr) {
+        const content = acc.querySelector('.product-accordion-content');
+        if (!content) return;
+
+        acc.classList.add('active');
+        hdr.setAttribute('aria-expanded', 'true');
+
+        // Measure the real content height
+        content.style.height = 'auto';
+        const targetHeight = content.scrollHeight;
+        // Snap back to 0 so we can transition
+        content.style.height = '0px';
+        // Force reflow
+        content.offsetHeight;
+        // Animate to exact measured height
+        content.style.height = targetHeight + 'px';
+
+        // After transition ends, set to auto so content can reflow if needed
+        const onEnd = () => {
+            if (acc.classList.contains('active')) {
+                content.style.height = 'auto';
+            }
+            content.removeEventListener('transitionend', onEnd);
+        };
+        content.addEventListener('transitionend', onEnd);
+    }
+
     accordionHeaders.forEach(header => {
         header.addEventListener('click', () => {
             const accordion = header.parentElement;
             const isActive = accordion.classList.contains('active');
 
-            // Toggle active class
-            accordion.classList.toggle('active');
+            // Close all other open accordions (mutually exclusive)
+            accordionHeaders.forEach(otherHeader => {
+                const otherAccordion = otherHeader.parentElement;
+                if (otherAccordion !== accordion && otherAccordion.classList.contains('active')) {
+                    closeAccordion(otherAccordion, otherHeader);
+                }
+            });
 
-            // Update aria-expanded
-            header.setAttribute('aria-expanded', !isActive);
+            // Toggle current accordion
+            if (isActive) {
+                closeAccordion(accordion, header);
+            } else {
+                openAccordion(accordion, header);
+            }
         });
     });
 
@@ -3505,6 +3588,144 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // 4a. Replace title (WordPress API returns 'name')
             titleEl.textContent = product.name;
+
+            // === OG META TAG UPDATE ===
+            // Dynamically update Open Graph and canonical tags to reflect current product.
+            // Uses upsert pattern (setAttribute on existing or newly created element) to avoid duplicates.
+            (function updateOGMeta(product, images) {
+                var canonicalUrl = window.location.href;
+                var productTitle = product.name || document.title;
+                // Strip HTML from short description; fallback to product name
+                var productDesc = (function () {
+                    if (product.shortDescription) {
+                        var tmp = document.createElement('div');
+                        tmp.innerHTML = product.shortDescription;
+                        var text = (tmp.textContent || tmp.innerText || '').trim();
+                        return text.length > 160 ? text.substring(0, 157) + '...' : text;
+                    }
+                    if (product.description) {
+                        var tmp2 = document.createElement('div');
+                        tmp2.innerHTML = product.description;
+                        var text2 = (tmp2.textContent || tmp2.innerText || '').trim();
+                        return text2.length > 160 ? text2.substring(0, 157) + '...' : text2;
+                    }
+                    return productTitle;
+                })();
+                var productImage = (images && images[0]) || '';
+
+                // Helper: upsert a <meta property="..."> tag
+                function upsertMeta(prop, content, isName) {
+                    if (!content) return;
+                    var attr = isName ? 'name' : 'property';
+                    var sel = 'meta[' + attr + '="' + prop + '"]';
+                    var el = document.head.querySelector(sel);
+                    if (!el) {
+                        el = document.createElement('meta');
+                        el.setAttribute(attr, prop);
+                        document.head.appendChild(el);
+                    }
+                    el.setAttribute('content', content);
+                }
+
+                // Update page title
+                document.title = productTitle + ' | Loom Saga';
+
+                // OG tags
+                upsertMeta('og:title', productTitle);
+                upsertMeta('og:description', productDesc);
+                if (productImage) upsertMeta('og:image', productImage);
+                upsertMeta('og:url', canonicalUrl);
+
+                // Twitter tags
+                upsertMeta('twitter:title', productTitle, true);
+                upsertMeta('twitter:description', productDesc, true);
+                if (productImage) upsertMeta('twitter:image', productImage, true);
+
+                // Canonical link
+                var canonicalLink = document.head.querySelector('link[rel="canonical"]');
+                if (!canonicalLink) {
+                    canonicalLink = document.createElement('link');
+                    canonicalLink.setAttribute('rel', 'canonical');
+                    document.head.appendChild(canonicalLink);
+                }
+                canonicalLink.setAttribute('href', canonicalUrl);
+            })(product, product.images || []);
+
+            // === SHARE BUTTON HANDLER ===
+            (function initShareBtn(product, images) {
+                var shareBtn = document.getElementById('pdpShareBtn');
+                var shareFeedback = document.getElementById('shareFeedback');
+                if (!shareBtn) return;
+
+                var shareUrl = window.location.href;
+                var shareTitle = product.name || document.title;
+                var shareText = (function () {
+                    if (product.shortDescription) {
+                        var tmp = document.createElement('div');
+                        tmp.innerHTML = product.shortDescription;
+                        return (tmp.textContent || tmp.innerText || '').trim().substring(0, 140);
+                    }
+                    return shareTitle;
+                })();
+
+                var feedbackTimer = null;
+
+                function showFeedback() {
+                    if (!shareFeedback) return;
+                    shareFeedback.classList.add('visible');
+                    if (feedbackTimer) clearTimeout(feedbackTimer);
+                    feedbackTimer = setTimeout(function () {
+                        shareFeedback.classList.remove('visible');
+                    }, 1500);
+                }
+
+                shareBtn.addEventListener('click', function () {
+                    if (navigator.share) {
+                        // Native share (mobile)
+                        navigator.share({
+                            title: shareTitle,
+                            text: shareText,
+                            url: shareUrl
+                        }).catch(function (err) {
+                            // User cancelled or share failed — suppress silently
+                            if (err.name !== 'AbortError') {
+                                console.debug('[Share] navigator.share error:', err);
+                            }
+                        });
+                    } else if (navigator.clipboard && navigator.clipboard.writeText) {
+                        // Clipboard fallback
+                        navigator.clipboard.writeText(shareUrl).then(function () {
+                            showFeedback();
+                        }).catch(function () {
+                            // Last-resort fallback
+                            try {
+                                var ta = document.createElement('textarea');
+                                ta.value = shareUrl;
+                                ta.style.position = 'fixed';
+                                ta.style.opacity = '0';
+                                document.body.appendChild(ta);
+                                ta.select();
+                                document.execCommand('copy');
+                                document.body.removeChild(ta);
+                                showFeedback();
+                            } catch (e) { /* silently fail */ }
+                        });
+                    } else {
+                        // Absolute last resort
+                        try {
+                            var ta = document.createElement('textarea');
+                            ta.value = shareUrl;
+                            ta.style.position = 'fixed';
+                            ta.style.opacity = '0';
+                            document.body.appendChild(ta);
+                            ta.select();
+                            document.execCommand('copy');
+                            document.body.removeChild(ta);
+                            showFeedback();
+                        } catch (e) { /* silently fail */ }
+                    }
+                });
+            })(product, product.images || []);
 
             // 4b. Replace price
             var priceEl = document.getElementById('pdpPrice');
@@ -4327,3 +4548,80 @@ if (document.readyState === 'loading') {
 } else {
     CookieConsentManager.init();
 }
+
+// ==================== WISHLIST BADGE SYNC ====================
+/**
+ * Sync the wishlist count badge (#wishlistCount) in the header.
+ * Reads directly from localStorage so it works even before WishlistManager loads.
+ */
+function syncWishlistBadge() {
+    const badge = document.getElementById('wishlistCount');
+    if (!badge) return;
+    try {
+        const stored = localStorage.getItem('loomSaga_wishlist');
+        const items = stored ? JSON.parse(stored) : [];
+        const count = Array.isArray(items) ? items.length : 0;
+        badge.textContent = count;
+        badge.style.display = count > 0 ? 'flex' : 'none';
+    } catch (e) {
+        badge.textContent = '0';
+        badge.style.display = 'none';
+    }
+}
+
+/**
+ * Sync all wishlist heart buttons on the page with current localStorage state.
+ * Restores state from bfcache (back button), cross-tab syncing, and same-page syncing.
+ */
+function syncWishlistButtons() {
+    try {
+        const stored = localStorage.getItem('loomSaga_wishlist');
+        const items = stored ? JSON.parse(stored) : [];
+        const wishlistedIds = Array.isArray(items) ? items.map(item => String(item.id)) : [];
+
+        document.querySelectorAll('.product-wishlist-btn').forEach(btn => {
+            const card = btn.closest('.product-card') || btn.closest('[data-product-id]');
+            if (card && card.dataset.productId) {
+                const isWishlisted = wishlistedIds.includes(String(card.dataset.productId));
+                if (isWishlisted) {
+                    btn.classList.add('active');
+                    btn.setAttribute('aria-label', 'Remove from Wishlist');
+                } else {
+                    btn.classList.remove('active');
+                    btn.setAttribute('aria-label', 'Add to Wishlist');
+                }
+            }
+        });
+    } catch (e) {
+        console.error('Loom Saga: Error syncing wishlist buttons', e);
+    }
+}
+
+function performFullWishlistSync() {
+    syncWishlistBadge();
+    syncWishlistButtons();
+}
+
+// Run on page load
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', performFullWishlistSync);
+} else {
+    performFullWishlistSync();
+}
+
+// Handle bfcache (going back in browser history restores old DOM)
+window.addEventListener('pageshow', function (e) {
+    if (e.persisted) {
+        performFullWishlistSync();
+    }
+});
+
+// Keep in sync across tabs
+window.addEventListener('storage', function (e) {
+    if (e.key === 'loomSaga_wishlist') {
+        performFullWishlistSync();
+    }
+});
+
+// Keep in sync within the same page (e.g. 2 instances of same product)
+window.addEventListener('wishlistUpdated', performFullWishlistSync);

@@ -152,11 +152,7 @@ class ProductRenderer {
 
     // Handle empty state
     if (!products || products.length === 0) {
-      containerEl.innerHTML = `
-        <div class="products-empty-state">
-          <p>${emptyMessage}</p>
-        </div>
-      `;
+      containerEl.innerHTML = emptyMessage;
       return;
     }
 
@@ -359,12 +355,21 @@ class ProductRenderer {
   static initializeWishlistButtons(container) {
     const buttons = container.querySelectorAll('.product-wishlist-btn');
     buttons.forEach(btn => {
+      const card = btn.closest('.product-card');
+      if (!card) return;
+
+      // Restore active state if product is already in wishlist
+      if (window.WishlistManager && window.WishlistManager.isInWishlist) {
+        const productId = card.dataset.productId;
+        if (window.WishlistManager.isInWishlist(productId)) {
+          btn.classList.add('active');
+          btn.setAttribute('aria-label', 'Remove from Wishlist');
+        }
+      }
+
       btn.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-
-        const card = btn.closest('.product-card');
-        if (!card) return;
 
         const productData = {
           id: card.dataset.productId,
@@ -387,8 +392,14 @@ class ProductRenderer {
             const isAdded = toggleFn.call(window.WishlistManager, productData);
             if (isAdded) {
               btn.classList.add('active');
+              btn.setAttribute('aria-label', 'Remove from Wishlist');
             } else {
               btn.classList.remove('active');
+              btn.setAttribute('aria-label', 'Add to Wishlist');
+            }
+            // Also sync the header badge
+            if (window.WishlistManager.updateBadge) {
+              window.WishlistManager.updateBadge();
             }
           }
         }

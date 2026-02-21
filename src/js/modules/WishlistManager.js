@@ -37,6 +37,8 @@ export function getItems() {
 export function saveItems(items) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
   updateBadge();
+  // Dispatch custom event so the UI can sync automatically
+  window.dispatchEvent(new CustomEvent('wishlistUpdated', { detail: { items } }));
 }
 
 /**
@@ -57,7 +59,7 @@ export function toggle(product) {
   const items = getItems();
   const normalizedProduct = normalizeProduct(product);
   const existingIndex = items.findIndex(item => String(item.id) === String(normalizedProduct.id));
-  
+
   if (existingIndex > -1) {
     items.splice(existingIndex, 1);
     saveItems(items);
@@ -92,7 +94,7 @@ export function addItem(product) {
 export function removeItem(productId) {
   const items = getItems().filter(item => String(item.id) !== String(productId));
   saveItems(items);
-  
+
   // Re-render wishlist if on wishlist page
   if (typeof window.renderWishlist === 'function') {
     window.renderWishlist();
@@ -126,20 +128,20 @@ export function updateBadge() {
 export function showNotification(message) {
   const existing = document.querySelector('.wishlist-notification');
   if (existing) existing.remove();
-  
+
   const notification = document.createElement('div');
   notification.className = 'wishlist-notification';
   notification.innerHTML = `
     <span>${message}</span>
     <a href="wishlist.html" class="notification-link">View Wishlist</a>
   `;
-  
+
   document.body.appendChild(notification);
-  
+
   requestAnimationFrame(() => {
     notification.classList.add('show');
   });
-  
+
   setTimeout(() => {
     notification.classList.remove('show');
     setTimeout(() => notification.remove(), 300);

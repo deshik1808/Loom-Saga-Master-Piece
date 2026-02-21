@@ -4337,7 +4337,7 @@ section.fashion-insights-section {
 .product-detail-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--spacing-lg);
+  gap: calc(var(--spacing-lg) * 1.2);
 }
 
 /* Product Gallery - Stacked Images Layout (Binal Patel Style) */
@@ -4426,15 +4426,23 @@ section.fashion-insights-section {
   justify-content: space-between;
   align-items: flex-start;
   gap: var(--spacing-md);
-  margin-bottom: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
 }
 
 .product-title {
   font-family: var(--font-body);
   font-size: 1.1rem;
-  font-weight: var(--font-weight-regular);
+  font-weight: var(--font-weight-light);
   color: var(--color-black);
   line-height: 1.4;
+  letter-spacing: 0.02em;
+}
+
+.product-header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex-shrink: 0;
 }
 
 .product-info .product-wishlist-btn {
@@ -4442,9 +4450,61 @@ section.fashion-insights-section {
   flex-shrink: 0;
 }
 
+/* === PDP Share Button === */
+.product-share-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.product-share-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-black);
+  transition: all var(--transition-fast);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.product-share-btn:hover {
+  transform: scale(1.1);
+}
+
+.product-share-btn svg {
+  display: block;
+  flex-shrink: 0;
+}
+
+/* Share "Link copied" feedback */
+.share-feedback {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  right: 0;
+  background: var(--color-black);
+  color: var(--color-white);
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  padding: 4px 10px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.share-feedback.visible {
+  opacity: 1;
+}
+
 /* Product Price Section */
 .product-price-section {
-  margin-bottom: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
 }
 
 .product-price {
@@ -4482,22 +4542,22 @@ section.fashion-insights-section {
 
 .product-tax-note {
   font-family: var(--font-body);
-  font-size: var(--font-size-xs);
-  color: var(--color-text-light);
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 
 /* Color Selection */
 .product-color-section {
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: calc(var(--spacing-lg) + var(--spacing-md));
 }
 
 .product-color-label {
   font-family: var(--font-body);
   font-size: 0.85rem;
-  color: var(--color-text);
-  margin-bottom: var(--spacing-sm);
+  color: var(--color-text-light);
+  margin-bottom: var(--spacing-xs);
 }
 
 .product-color-swatches {
@@ -4533,7 +4593,7 @@ section.fashion-insights-section {
 /* Add to Cart Button */
 .product-add-btn {
   width: 100%;
-  padding: 12px 24px;
+  padding: 18px 24px;
   background-color: var(--color-black);
   color: var(--color-white);
   font-family: var(--font-body);
@@ -4552,12 +4612,13 @@ section.fashion-insights-section {
 
 /* Product Accordions - Premium Styling */
 .product-accordions {
-  border-top: 1px solid #e8e8e8;
-  margin-top: var(--spacing-md);
+  border-top: 1px solid var(--color-border-light);
 }
 
 .product-accordion {
-  border-bottom: 1px solid #e8e8e8;
+  border-bottom: 1px solid var(--color-border-light);
+  overflow: hidden;
+  transition: all var(--transition-slow);
 }
 
 .product-accordion-header {
@@ -4582,38 +4643,55 @@ section.fashion-insights-section {
   flex: 1;
 }
 
+/* Icon container for cross-fade stacking */
+.product-accordion-header {
+  position: relative;
+}
+
 .accordion-icon-minus,
 .accordion-icon-plus {
   width: 14px;
   height: 14px;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
-/* Default: show plus, hide minus */
+/* Default: show plus, hide minus (cross-fade) */
 .product-accordion .accordion-icon-minus {
-  display: none;
+  opacity: 0;
+  transform: translateY(-50%) rotate(-90deg);
 }
 
 .product-accordion .accordion-icon-plus {
-  display: block;
+  opacity: 1;
+  transform: translateY(-50%) rotate(0deg);
 }
 
-/* Active: show minus, hide plus */
+/* Active: show minus, hide plus (cross-fade) */
 .product-accordion.active .accordion-icon-minus {
-  display: block;
+  opacity: 1;
+  transform: translateY(-50%) rotate(0deg);
 }
 
 .product-accordion.active .accordion-icon-plus {
-  display: none;
+  opacity: 0;
+  transform: translateY(-50%) rotate(90deg);
 }
 
-/* Accordion Content */
+/* Accordion Content — height is set by JS for buttery-smooth transitions */
 .product-accordion-content {
-  display: none;
-  padding-bottom: var(--spacing-md);
+  height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: height 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    opacity 0.35s ease 0.05s;
 }
 
 .product-accordion.active .product-accordion-content {
-  display: block;
+  opacity: 1;
 }
 
 .accordion-subtitle {
@@ -4699,19 +4777,30 @@ section.fashion-insights-section {
 
 /* Description Read More / Read Less truncation */
 .desc-preview {
-  display: block;
+  max-height: 1000px;
+  opacity: 1;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
 }
 
 .desc-full {
-  display: none;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(10px);
 }
 
 .desc-expanded .desc-preview {
-  display: none;
+  max-height: 0;
+  opacity: 0;
+  margin-bottom: 0;
 }
 
 .desc-expanded .desc-full {
-  display: block;
+  max-height: 2000px;
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* ── WordPress WYSIWYG Content Normalization ──
@@ -4809,7 +4898,7 @@ section.fashion-insights-section {
 
 /* You May Also Like Section */
 .product-related {
-  padding: var(--spacing-xl) 0;
+  padding: var(--spacing-2xl) 0;
   background-color: var(--color-cream);
 }
 
@@ -5332,32 +5421,46 @@ section.fashion-insights-section {
   top: 0;
   right: -100%;
   width: 100%;
-  max-width: 350px;
+  max-width: 340px;
   height: 100vh;
   background-color: var(--color-white);
-  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.13);
   z-index: 9999;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
   transition: right var(--transition-slow);
+  overflow: hidden;
 }
 
 .filter-panel.active {
   right: 0;
 }
 
+/* Scrollable filter body */
+.filter-panel-body {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
 .filter-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--spacing-md);
-  border-bottom: 1px solid #e0e0e0;
+  padding: 14px var(--spacing-md);
+  border-bottom: 1px solid #e8e4de;
+  position: sticky;
+  top: 0;
+  background-color: var(--color-white);
+  z-index: 1;
+  flex-shrink: 0;
 }
 
 .filter-title {
   font-family: var(--font-heading);
-  font-size: 1.2rem;
+  font-size: 1.05rem;
   font-weight: 500;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
 }
 
 .filter-close {
@@ -5375,33 +5478,35 @@ section.fashion-insights-section {
 
 /* Filter Groups */
 .filter-group {
-  padding: var(--spacing-md);
-  border-bottom: 1px solid #e0e0e0;
+  padding: 12px var(--spacing-md);
+  border-bottom: 1px solid #eeebe6;
 }
 
 .filter-group-title {
   font-family: var(--font-body);
-  font-size: 0.9rem;
-  font-weight: 500;
+  font-size: 0.85rem;
+  font-weight: 400;
   color: var(--color-black);
-  margin-bottom: var(--spacing-sm);
+  letter-spacing: 0.04em;
+  text-transform: capitalize;
+  margin-bottom: 8px;
 }
 
 .filter-options {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-xs);
+  gap: 6px;
 }
 
 .filter-checkbox {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
+  gap: 10px;
   font-family: var(--font-body);
-  font-size: 0.85rem;
+  font-size: 0.83rem;
   color: var(--color-text);
   cursor: pointer;
-  padding: var(--spacing-xs) 0;
+  padding: 4px 0;
   transition: color var(--transition-fast);
 }
 
@@ -5412,29 +5517,29 @@ section.fashion-insights-section {
 .filter-checkbox input[type="checkbox"] {
   width: 18px;
   height: 18px;
-  accent-color: var(--color-black);
+  accent-color: var(--color-gold-dark);
   cursor: pointer;
 }
 
 /* Filter Actions */
 .filter-actions {
   display: flex;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-md);
-  position: sticky;
-  bottom: 0;
+  gap: 8px;
+  padding: 14px var(--spacing-md);
+  flex-shrink: 0;
   background-color: var(--color-white);
-  border-top: 1px solid #e0e0e0;
+  border-top: 1px solid #e8e4de;
 }
 
 .filter-clear {
   flex: 1;
-  padding: var(--spacing-sm) var(--spacing-md);
+  padding: 10px 12px;
   font-family: var(--font-body);
-  font-size: 0.85rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
   color: var(--color-text);
   background: none;
-  border: 1px solid #e0e0e0;
+  border: 1px solid #d8d4ce;
   cursor: pointer;
   transition: all var(--transition-fast);
 }
@@ -5446,9 +5551,10 @@ section.fashion-insights-section {
 
 .filter-apply {
   flex: 1;
-  padding: var(--spacing-sm) var(--spacing-md);
+  padding: 10px 12px;
   font-family: var(--font-body);
-  font-size: 0.85rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
   color: var(--color-white);
   background-color: var(--color-black);
   border: 1px solid var(--color-black);
@@ -6604,8 +6710,8 @@ section.fashion-insights-section {
   }
 
   .product-detail-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: var(--spacing-xl);
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: calc(var(--spacing-xl) * 1.3);
     align-items: start;
   }
 
@@ -12269,4 +12375,134 @@ body.cookie-modal-open {
   .cookie-policy-page {
     padding-top: calc(var(--header-height) + var(--spacing-xl));
   }
+}
+
+/* ==================== PRODUCT CARD WISHLIST HEART BUTTON ==================== */
+
+/* The button sits absolutely inside .product-card-image at bottom-right */
+.product-wishlist-btn {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  z-index: 10;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  opacity: 1;
+  transform: scale(1);
+  transition: transform 0.25s ease;
+  /* Prevent the button from triggering the product-card-link */
+  pointer-events: auto;
+  /* Add a subtle drop shadow to the icon itself so it's visible on bright images */
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+}
+
+/* Hover state of the button itself */
+.product-wishlist-btn:hover {
+  transform: scale(1.15);
+}
+
+/* Button icon images */
+.product-wishlist-btn img {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  display: block;
+  transition: transform 0.2s ease;
+}
+
+/* Outline heart: shown by default */
+.product-wishlist-btn .heart-outline {
+  display: block;
+}
+
+/* Filled heart: hidden by default */
+.product-wishlist-btn .heart-filled {
+  display: none;
+}
+
+/* When active (wishlisted) - swap icons */
+.product-wishlist-btn.active .heart-outline {
+  display: none;
+}
+
+.product-wishlist-btn.active .heart-filled {
+  display: block;
+}
+
+/* Pop animation on active toggle */
+.product-wishlist-btn.active img {
+  animation: heartPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes heartPop {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.35);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Active style (redundant now but kept for consistency) */
+.product-wishlist-btn.active {
+  opacity: 1;
+}
+
+/* Ensure the product card image wrapper allows overflow for the button */
+.product-card-image {
+  position: relative;
+  overflow: hidden;
+}
+
+/* ==================== WISHLIST NOTIFICATION TOAST ==================== */
+
+.wishlist-notification {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  z-index: 3000;
+  background: var(--color-black, #1a1a1a);
+  color: var(--color-white, #fffff5);
+  font-family: var(--font-body, 'Montserrat', sans-serif);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  padding: 12px 20px;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  white-space: nowrap;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  pointer-events: none;
+}
+
+.wishlist-notification.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
+}
+
+.wishlist-notification .notification-link {
+  color: var(--color-gold, #c9a962);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  white-space: nowrap;
+}
+
+.wishlist-notification .notification-link:hover {
+  color: #e0bd74;
 }
