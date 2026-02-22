@@ -407,6 +407,13 @@ function renderPDP(product) {
         this.parentElement.classList.remove('luxury-shimmer');
         this.style.opacity = '1';
       };
+      // Attach click event for lightbox
+      wrapper.addEventListener('click', function () {
+        const idx = parseInt(this.dataset.index, 10);
+        if (window.LightboxPlugin && typeof window.LightboxPlugin.open === 'function') {
+          window.LightboxPlugin.open(idx);
+        }
+      });
       wrapper.appendChild(img);
       // Insert after the grid (as sibling of gallery-grid)
       galleryGrid.parentElement.appendChild(wrapper);
@@ -589,6 +596,10 @@ function renderPDP(product) {
     // If no data, leave existing placeholder content
   }
 
+  // ── Remove skeleton loading state → smooth reveal ──
+  const productInfoEl = document.querySelector('.product-info');
+  if (productInfoEl) productInfoEl.classList.remove('pdp-loading');
+
   console.log(`PDP rendered: ${product.name} (ID: ${product.id})`);
 }
 
@@ -638,6 +649,143 @@ function renderPDPError() {
 }
 
 /**
+ * Update Open Graph and Twitter meta tags for SEO and sharing
+ */
+function updateOGMeta(product, allImages) {
+  const canonicalUrl = window.location.href;
+  const productTitle = product.name || document.title;
+
+  let productDesc = productTitle;
+  if (product.shortDescription) {
+    const tmp = document.createElement('div');
+    tmp.innerHTML = product.shortDescription;
+    const text = (tmp.textContent || tmp.innerText || '').trim();
+    productDesc = text.length > 160 ? text.substring(0, 157) + '...' : text;
+  } else if (product.description) {
+    const tmp2 = document.createElement('div');
+    tmp2.innerHTML = product.description;
+    const text2 = (tmp2.textContent || tmp2.innerText || '').trim();
+    productDesc = text2.length > 160 ? text2.substring(0, 157) + '...' : text2;
+  }
+
+  const productImage = (allImages && allImages[0]) || '';
+
+  function upsertMeta(prop, content, isName) {
+    if (!content) return;
+    const attr = isName ? 'name' : 'property';
+    const sel = `meta[${attr}="${prop}"]`;
+    let el = document.head.querySelector(sel);
+    if (!el) {
+      el = document.createElement('meta');
+      el.setAttribute(attr, prop);
+      document.head.appendChild(el);
+    }
+    el.setAttribute('content', content);
+  }
+
+  upsertMeta('og:title', productTitle);
+  upsertMeta('og:description', productDesc);
+  if (productImage) upsertMeta('og:image', productImage);
+  upsertMeta('og:url', canonicalUrl);
+
+  upsertMeta('twitter:title', productTitle, true);
+  upsertMeta('twitter:description', productDesc, true);
+  if (productImage) upsertMeta('twitter:image', productImage, true);
+
+  // Canonical link
+  let canonicalLink = document.head.querySelector('link[rel="canonical"]');
+  if (!canonicalLink) {
+    canonicalLink = document.createElement('link');
+    canonicalLink.setAttribute('rel', 'canonical');
+    document.head.appendChild(canonicalLink);
+  }
+  canonicalLink.setAttribute('href', canonicalUrl);
+}
+
+/**
+ * Initialize Web Share API button
+ */
+function initShareBtn(product) {
+  const shareBtn = document.getElementById('pdpShareBtn');
+  const shareFeedback = document.getElementById('shareFeedback');
+  if (!shareBtn) return;
+
+  // Clone and replace to avoid duplicate event listeners if renderPDP runs twice
+  const newShareBtn = shareBtn.cloneNode(true);
+  shareBtn.parentNode.replaceChild(newShareBtn, shareBtn);
+
+  const shareUrl = window.location.href;
+  const shareTitle = product.name || document.title;
+  let shareText = shareTitle;
+  if (product.shortDescription) {
+    const tmp = document.createElement('div');
+    tmp.innerHTML = product.shortDescription;
+    shareText = (tmp.textContent || tmp.innerText || '').trim().substring(0, 140);
+  }
+
+  let feedbackTimer = null;
+  function showFeedback() {
+    if (!shareFeedback) return;
+    shareFeedback.classList.add('visible');
+    if (feedbackTimer) clearTimeout(feedbackTimer);
+    feedbackTimer = setTimeout(() => {
+      shareFeedback.classList.remove('visible');
+    }, 1500);
+  }
+
+  newShareBtn.addEventListener('click', () => {
+    if (navigator.share) {
+      navigator.share({
+        title: shareTitle,
+        text: shareText,
+        url: shareUrl
+      }).catch(err => {
+        if (err.name !== 'AbortError') console.debug('[Share] Error:', err);
+      });
+    } else if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(shareUrl)
+        .then(() => showFeedback())
+        .catch(() => { /* skip fallback for brevity */ });
+    }
+  });
+}
+
+/**
+ * Safely update JUST the accordions after background fetch
+ */
+function updatePDPAccordions(product) {
+  const descAccordion = document.getElementById('pdpAccordionDescription');
+  if (descAccordion && (product.description || product.shortDescription)) {
+    descAccordion.innerHTML = product.description || product.shortDescription;
+  }
+
+  const matAccordion = document.getElementById('pdpAccordionMaterials');
+  if (matAccordion) {
+    const acf = product.acf || {};
+    const fabricComp = acf.fabricComposition || product.attributes?.fabricComposition || '';
+    const materialDetails = acf.materialDetails || '';
+
+    if (fabricComp || materialDetails) {
+      let html = '';
+      if (fabricComp) html += `<p><strong>Fabric Composition:</strong> ${fabricComp}</p>`;
+      if (materialDetails) html += materialDetails;
+      matAccordion.innerHTML = html;
+    }
+  }
+
+  const careAccordion = document.getElementById('pdpAccordionCare');
+  if (careAccordion && product.acf && product.acf.careInstructions) {
+    careAccordion.innerHTML = product.acf.careInstructions;
+  }
+
+  const deliveryAccordion = document.getElementById('pdpAccordionDelivery');
+  if (deliveryAccordion && product.acf && product.acf.deliveryInfo) {
+    deliveryAccordion.innerHTML = product.acf.deliveryInfo;
+  }
+}
+
+
+/**
  * PDP page initialisation handler
  */
 document.addEventListener('DOMContentLoaded', async () => {
@@ -657,7 +805,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   let product = null;
 
   try {
-    // 1. Try ProductService (already loaded from init())
+    // 1. Instantly load basic product basic data from ProductService caching
     await ProductService.init();
 
     if (productId) {
@@ -667,14 +815,57 @@ document.addEventListener('DOMContentLoaded', async () => {
       product = ProductService.getProductBySlug(productSlug);
     }
 
-    // 2. If not found locally, try direct API call
-    if (!product && productId) {
+    // 🔥 OPTIMISTIC RENDER: Render immediately using basic data! (< 100ms)
+    // This removes the skeleton loader so the user can see the product instantly.
+    if (product) {
+      renderPDP(product);
+      renderRelatedProducts(product.id);
+      updateOGMeta(product, getProductImages(product));
+      initShareBtn(product);
+    }
+
+    // 2. We still need ACF accordion data: Try session cache or background fetch
+    if (!product || !product.acf) {
       try {
-        const apiRes = await fetch(`/api/product?id=${encodeURIComponent(productId)}`);
-        if (apiRes.ok) {
-          const apiProduct = await apiRes.json();
-          if (apiProduct && apiProduct.id) {
+        const cacheKey = `ls_pdp_${productId || productSlug}`;
+        const cached = sessionStorage.getItem(cacheKey);
+        let apiProduct = null;
+        let requiresRender = !product;
+
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (Date.now() - parsed.ts < 10 * 60 * 1000) {
+            apiProduct = parsed.data;
+            console.log('PDP: ACF data loaded from session cache (instant)');
+          } else {
+            sessionStorage.removeItem(cacheKey);
+          }
+        }
+
+        if (!apiProduct && (productId || product.id)) {
+          const idToFetch = productId || product.id;
+          const apiRes = await fetch(`/api/product?id=${encodeURIComponent(idToFetch)}`);
+          if (apiRes.ok) {
+            apiProduct = await apiRes.json();
+            if (apiProduct && apiProduct.id) {
+              try { sessionStorage.setItem(cacheKey, JSON.stringify({ ts: Date.now(), data: apiProduct })); } catch (e) { }
+            }
+          }
+        }
+
+        if (apiProduct && apiProduct.id) {
+          if (requiresRender) {
+            // First render ever (direct link, no basic data)
             product = apiProduct;
+            renderPDP(product);
+            renderRelatedProducts(product.id);
+            updateOGMeta(product, getProductImages(product));
+            initShareBtn(product);
+          } else {
+            // We already optimistically rendered, just populate the accordions silently
+            product.acf = apiProduct.acf;
+            product.description = apiProduct.description || product.description;
+            updatePDPAccordions(product);
           }
         }
       } catch (apiErr) {
@@ -682,17 +873,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     }
 
-    // 3. If still no product, show error
+    // 3. If completely not found, show error
     if (!product) {
       renderPDPError();
-      return;
     }
-
-    // Render product data into DOM
-    renderPDP(product);
-
-    // Render related "You May Also Like" products
-    renderRelatedProducts(product.id);
 
   } catch (error) {
     console.error('PDP: Failed to load product', error);

@@ -2,16 +2,16 @@
 <html lang="en">
 
 <head>
-    <!-- Meta Tags for SEO -->
+    <!-- Meta Tags for SEO — dynamically updated by JS -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description"
-        content="Manage your Loom Saga account. View your profile, orders, and account settings." />
+        content="Fashion Insights by Loom Saga - Discover styling tips, saree trends, and inspiration." />
     <meta name="author" content="Loom Saga" />
 
-    <title>My Account | Loom Saga - Weaving Indian Culture</title>
+    <title>Fashion Insights | Loom Saga</title>
 
-    <!-- Google Fonts - Elegant typography for luxury brand -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -20,11 +20,240 @@
 
     <!-- Main Stylesheet -->
     <link rel="stylesheet" href="css/styles.css" />
+
+    <!-- WordPress Content Styles -->
+    <style>
+        /* =========== Article Body — WordPress Content =========== */
+        /* =========== WordPress Content Mapping to Luxury Design =========== */
+        /* Center and format paragraphs to match .article-block-content p */
+        .article-body p {
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            color: var(--color-text-light);
+            line-height: 1.8;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: var(--spacing-md);
+            text-align: center;
+            max-width: 55vw;
+        }
+
+        /* Map WordPress headings (H1, H2) */
+        .article-body h1,
+        .article-body .h1 {
+            font-family: var(--font-body) !important;
+            font-size: 1.3rem !important;
+            font-weight: var(--font-weight-medium) !important;
+            color: var(--color-black) !important;
+            text-align: center !important;
+            margin-top: 5vh !important;
+            margin-bottom: 4vh !important;
+            letter-spacing: var(--letter-spacing-xwide) !important;
+            text-transform: uppercase !important;
+            line-height: 1.4 !important;
+            max-width: 90vw !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+            display: block !important;
+        }
+
+        .article-body h2,
+        .article-body .h2 {
+            font-family: var(--font-body) !important;
+            font-size: 1rem !important;
+            font-weight: 700 !important;
+            color: var(--color-black) !important;
+            text-align: center !important;
+            margin-top: 6vh !important;
+            margin-bottom: 3vh !important;
+            letter-spacing: var(--letter-spacing-wide) !important;
+            text-transform: uppercase !important;
+            display: block !important;
+        }
+
+        /* Subtle gap after hero image for the first element */
+        .article-body>*:first-child,
+        .article-body>.wp-block-heading:first-child {
+            margin-top: 15vh !important;
+        }
+
+        .article-body h3,
+        .article-body h4 {
+            font-family: var(--font-body) !important;
+            font-size: 0.9rem !important;
+            font-weight: 700 !important;
+            color: var(--color-black) !important;
+            text-align: center !important;
+            margin-top: 4vh !important;
+            margin-bottom: 2vh !important;
+            letter-spacing: var(--letter-spacing-wide) !important;
+            text-transform: uppercase !important;
+        }
+
+        /* Map WordPress images */
+        .article-body figure,
+        .article-body .wp-block-image {
+            width: 100%;
+            max-width: 55vw;
+            margin: 4vh auto;
+            display: block;
+        }
+
+        .article-body img {
+            width: 100%;
+            max-width: 50vw;
+            height: 75vh;
+            max-height: 700px;
+            min-height: 400px;
+            object-fit: cover;
+            object-position: center top;
+            display: block;
+            margin: 4vh auto;
+        }
+
+        /* Reset figure margin if image is already margined */
+        .article-body figure img,
+        .article-body .wp-block-image img {
+            max-width: 100%;
+            margin: 0;
+        }
+
+        .article-body figcaption {
+            font-family: var(--font-body);
+            font-size: 0.8rem;
+            color: #999;
+            text-align: center;
+            margin-top: var(--spacing-xs);
+        }
+
+        .article-body blockquote {
+            margin: var(--spacing-lg) auto;
+            padding: var(--spacing-md);
+            border-left: 3px solid var(--color-coral);
+            background-color: var(--color-cream);
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            color: var(--color-black);
+            line-height: 1.6;
+            max-width: 55vw;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .article-body a {
+            color: var(--color-coral);
+            text-decoration: underline;
+            transition: color var(--transition-fast);
+        }
+
+        .article-body a:hover {
+            color: var(--color-black);
+        }
+
+        @media (max-width: 768px) {
+
+            .article-body p,
+            .article-body blockquote {
+                max-width: 85vw;
+            }
+
+            .article-body h1,
+            .article-body h2 {
+                font-size: 1.2rem;
+            }
+
+            .article-body h3,
+            .article-body h4 {
+                font-size: 1rem;
+            }
+
+            .article-body figure,
+            .article-body .wp-block-image,
+            .article-body img {
+                max-width: 85vw;
+            }
+
+            .article-body img {
+                height: 50vh;
+                min-height: 300px;
+            }
+        }
+
+        /* =========== Article Loading Skeleton =========== */
+        /* Uses the same premium shimmer as category.html */
+        .skeleton-pulse {
+            background: linear-gradient(90deg, #f0ece6 25%, #e8e3db 37%, #f0ece6 63%);
+            background-size: 800px 100%;
+            animation: skeletonShimmer 1.6s ease-in-out infinite;
+            border-radius: 2px;
+        }
+
+        .article-hero--loading {
+            height: 500px;
+            width: 100%;
+        }
+
+        .article-title--loading {
+            height: 40px;
+            width: 60%;
+            margin: 20px auto;
+        }
+
+        .article-meta--loading {
+            height: 20px;
+            width: 30%;
+            margin: 10px auto;
+        }
+
+        .article-text--loading {
+            height: 20px;
+            margin: 10px auto;
+        }
+
+        .article-text--loading:nth-child(2) {
+            width: 90%;
+        }
+
+        .article-text--loading:nth-child(3) {
+            width: 85%;
+        }
+
+        .article-text--loading:nth-child(4) {
+            width: 60%;
+        }
+
+        /* =========== Article Not Found =========== */
+        .article-not-found {
+            text-align: center;
+            padding: 120px 20px;
+        }
+
+        .article-not-found h2 {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            color: var(--color-black);
+            margin-bottom: 12px;
+        }
+
+        .article-not-found p {
+            font-family: var(--font-body);
+            color: var(--color-text-light);
+            font-size: 0.95rem;
+        }
+
+        .article-not-found a {
+            display: inline-block;
+            margin-top: 24px;
+            color: var(--color-coral);
+            text-decoration: underline;
+            font-size: 0.9rem;
+        }
+    </style>
 </head>
 
 <body>
     <!-- ==================== HEADER ==================== -->
-    <header class="header header-dark" id="header">
+    <header class="header" id="header">
         <div class="header-container">
             <!-- Top Header Row -->
             <div class="header-top">
@@ -131,8 +360,8 @@
                         </div>
                     </li>
                     <li class="nav-item has-dropdown">
-                        <a href="/category?type=modal-silk" class="nav-link"><span class="nav-link-text">Sarees</span> <svg
-                                class="dropdown-arrow" width="8" height="5" viewBox="0 0 8 5" fill="none">
+                        <a href="/category?type=modal-silk" class="nav-link"><span class="nav-link-text">Sarees</span>
+                            <svg class="dropdown-arrow" width="8" height="5" viewBox="0 0 8 5" fill="none">
                                 <path d="M1 1L4 4L7 1" stroke="currentColor" stroke-width="1.2" />
                             </svg></a>
                         <div class="mega-menu mega-menu-sarees">
@@ -207,20 +436,7 @@
                                 <div class="mega-menu-links">
                                     <h3 class="mega-menu-heading">Fashion Insights</h3>
                                     <ul class="mega-menu-list">
-                                        <li><a href="./fashion-insights.html">Indo-Western Style: How the New-Age...</a>
-                                        </li>
-                                        <li><a href="./fashion-insights.html">Draped for the Day: Saree Looks for...</a>
-                                        </li>
-                                        <li><a href="./fashion-insights.html">Monsoon Saree Guide: Colours,
-                                                Fabrics...</a></li>
-                                        <li><a href="./fashion-insights.html">Shine Through the Rituals:
-                                                Handpicked...</a></li>
-                                        <li><a href="./fashion-insights.html">Festive Ready: Elegant Sarees to
-                                                Gift...</a></li>
-                                        <li><a href="./fashion-insights.html">Season of Love: Sarees for
-                                                Valentine's...</a></li>
-                                        <li><a href="./fashion-insights.html">From Loom to Drape: The Journey of
-                                                an...</a></li>
+                                        <li><a href="./fashion-insights.html">View All Insights</a></li>
                                     </ul>
                                 </div>
                                 <div class="mega-menu-images">
@@ -271,15 +487,13 @@
         </div>
     </header>
 
-    <!-- Mobile Navigation Overlay (backdrop) -->
+    <!-- Mobile Navigation Overlay -->
     <div class="nav-overlay" id="navOverlay"></div>
 
-    <!-- ==================== FULLSCREEN MOBILE MENU (Manish Malhotra Style) ==================== -->
+    <!-- ==================== MOBILE MENU ==================== -->
     <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
-        <!-- Main Menu Panel -->
         <div class="mobile-menu__panel mobile-menu__panel--main active" id="mobileMenuMain">
             <div class="mobile-menu__content">
-                <!-- Primary Navigation -->
                 <nav class="mobile-menu__nav" aria-label="Mobile Navigation">
                     <ul class="mobile-menu__list">
                         <li class="mobile-menu__item">
@@ -334,8 +548,6 @@
                         </li>
                     </ul>
                 </nav>
-
-                <!-- Secondary Actions -->
                 <div class="mobile-menu__secondary">
                     <a href="wishlist.html" class="mobile-menu__secondary-link">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -354,183 +566,11 @@
                         <span>LOG IN</span>
                     </a>
                 </div>
-
-                <!-- Social Links -->
-                <div class="mobile-menu__social">
-                    <span class="mobile-menu__social-label">Find our store</span>
-                    <div class="mobile-menu__social-icons">
-                        <a href="#" aria-label="Instagram"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="1.5">
-                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
-                            </svg></a>
-                        <a href="#" aria-label="Facebook"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="1.5">
-                                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-                            </svg></a>
-                        <a href="#" aria-label="WhatsApp"><svg width="22" height="22" viewBox="0 0 24 24"
-                                fill="currentColor">
-                                <path
-                                    d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                            </svg></a>
-                        <a href="#" aria-label="YouTube"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="1.5">
-                                <path
-                                    d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z" />
-                                <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" />
-                            </svg></a>
-                    </div>
-                </div>
             </div>
-        </div>
-
-        <!-- Sub-Panel: New Arrivals -->
-        <div class="mobile-menu__panel mobile-menu__panel--sub" id="submenu-new-arrivals" data-panel="new-arrivals">
-            <div class="mobile-menu__subheader">
-                <button class="mobile-menu__back" data-back="main">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M19 12H5" />
-                        <path d="M11 19l-7-7 7-7" />
-                    </svg>
-                    <span>Back</span>
-                </button>
-                <h2 class="mobile-menu__subtitle">NEW ARRIVALS</h2>
-            </div>
-            <ul class="mobile-menu__sublist">
-                <li><a href="/category?type=vishnupuri-silk">Vishnupuri Silk Sarees</a></li>
-                <li><a href="#">Muslin Sarees</a></li>
-            </ul>
-        </div>
-
-        <!-- Sub-Panel: Collection -->
-        <div class="mobile-menu__panel mobile-menu__panel--sub" id="submenu-collection" data-panel="collection">
-            <div class="mobile-menu__subheader">
-                <button class="mobile-menu__back" data-back="main">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M19 12H5" />
-                        <path d="M11 19l-7-7 7-7" />
-                    </svg>
-                    <span>Back</span>
-                </button>
-                <h2 class="mobile-menu__subtitle">COLLECTION</h2>
-            </div>
-            <ul class="mobile-menu__sublist">
-                <li><a href="/category?type=vishnupuri-silk">Vishnupuri Silk Sarees</a></li>
-                <li><a href="#">Muslin Sarees</a></li>
-                <li><a href="/category?type=modal-silk">Modal Silk Sarees</a></li>
-                <li><a href="#">Matka Jamdani Sarees</a></li>
-                <li><a href="#">Tussar Jamdani Sarees</a></li>
-                <li><a href="#">Tussar Dhakai Jamdani Sarees</a></li>
-                <li><a href="#">Muslin Jamdani Sarees</a></li>
-                <li><a href="#">Tissue Matka Jamdani Sarees</a></li>
-                <li><a href="#">Silk Lenin Sarees</a></li>
-                <li><a href="/category?type=all">View All</a></li>
-            </ul>
-        </div>
-
-        <!-- Sub-Panel: Sarees -->
-        <div class="mobile-menu__panel mobile-menu__panel--sub" id="submenu-sarees" data-panel="sarees">
-            <div class="mobile-menu__subheader">
-                <button class="mobile-menu__back" data-back="main">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M19 12H5" />
-                        <path d="M11 19l-7-7 7-7" />
-                    </svg>
-                    <span>Back</span>
-                </button>
-                <h2 class="mobile-menu__subtitle">SAREES</h2>
-            </div>
-            <div class="mobile-menu__subgroup">
-                <h3 class="mobile-menu__subgroup-title">Shop By Fabric</h3>
-                <ul class="mobile-menu__sublist">
-                    <li><a href="/category?type=silk">Silk</a></li>
-                    <li><a href="/category?type=tissue-silk">Tissue Silk</a></li>
-                    <li><a href="/category?type=lenin">Lenin</a></li>
-                    <li><a href="/category?type=cotton">Cotton</a></li>
-                </ul>
-            </div>
-            <div class="mobile-menu__subgroup">
-                <h3 class="mobile-menu__subgroup-title">Shop By Craft</h3>
-                <ul class="mobile-menu__sublist">
-                    <li><a href="/category?type=zari-weaving">Zari Weaving</a></li>
-                    <li><a href="/category?type=ikat">Ikat</a></li>
-                    <li><a href="/category?type=handloom-weaving">Handloom Weaving</a></li>
-                    <li><a href="/category?type=kalamkari">Kalamkari</a></li>
-                    <li><a href="/category?type=jamdani-weaving">Jamdani Weaving</a></li>
-                </ul>
-            </div>
-            <div class="mobile-menu__subgroup">
-                <h3 class="mobile-menu__subgroup-title">Shop By Color</h3>
-                <ul class="mobile-menu__sublist mobile-menu__sublist--grid">
-                    <li><a href="/category?type=red">Red</a></li>
-                    <li><a href="/category?type=yellow">Yellow</a></li>
-                    <li><a href="/category?type=brown">Brown</a></li>
-                    <li><a href="/category?type=black">Black</a></li>
-                    <li><a href="/category?type=blue">Blue</a></li>
-                    <li><a href="/category?type=pink">Pink</a></li>
-                    <li><a href="/category?type=green">Green</a></li>
-                    <li><a href="/category?type=lavender">Lavender</a></li>
-                </ul>
-            </div>
-            <a href="/category?type=all" class="mobile-menu__view-all">View All Sarees</a>
-        </div>
-
-        <!-- Sub-Panel: Crafts -->
-        <div class="mobile-menu__panel mobile-menu__panel--sub" id="submenu-crafts" data-panel="crafts">
-            <div class="mobile-menu__subheader">
-                <button class="mobile-menu__back" data-back="main">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M19 12H5" />
-                        <path d="M11 19l-7-7 7-7" />
-                    </svg>
-                    <span>Back</span>
-                </button>
-                <h2 class="mobile-menu__subtitle">CRAFTS</h2>
-            </div>
-            <div class="mobile-menu__subgroup">
-                <h3 class="mobile-menu__subgroup-title">Handloom</h3>
-                <ul class="mobile-menu__sublist">
-                    <li><a href="handloom.html#fabrics">Fabrics</a></li>
-                    <li><a href="handloom.html#weaving">Weaving Process</a></li>
-                    <li><a href="handloom.html#techniques">Techniques &amp; Patterns</a></li>
-                    <li><a href="handloom.html#dyes">Dyes &amp; Paintings</a></li>
-                </ul>
-            </div>
-            <div class="mobile-menu__subgroup">
-                <h3 class="mobile-menu__subgroup-title">Fashion Insights</h3>
-                <ul class="mobile-menu__sublist">
-                    <li><a href="fashion-insights.html">Indo-Western Style</a></li>
-                    <li><a href="fashion-insights.html">Draped for the Day</a></li>
-                    <li><a href="fashion-insights.html">Monsoon Saree Guide</a></li>
-                    <li><a href="fashion-insights.html">Festive Ready</a></li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- Sub-Panel: About Us -->
-        <div class="mobile-menu__panel mobile-menu__panel--sub" id="submenu-about" data-panel="about">
-            <div class="mobile-menu__subheader">
-                <button class="mobile-menu__back" data-back="main">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M19 12H5" />
-                        <path d="M11 19l-7-7 7-7" />
-                    </svg>
-                    <span>Back</span>
-                </button>
-                <h2 class="mobile-menu__subtitle">ABOUT US</h2>
-            </div>
-            <ul class="mobile-menu__sublist">
-                <li><a href="brand-story.html">Our Brand Story</a></li>
-                <li><a href="about.html">Our Founder's Story</a></li>
-                <li><a href="#">Our Store</a></li>
-                <li><a href="#">FAQ's</a></li>
-                <li><a href="contact.html">Contact Us</a></li>
-            </ul>
         </div>
     </div>
 
-    <!-- ==================== PREMIUM SEARCH OVERLAY (Manish Malhotra Style) ==================== -->
+    <!-- ==================== SEARCH OVERLAY ==================== -->
     <div class="search-overlay" id="searchOverlay" aria-hidden="true">
         <div class="search-overlay__backdrop" id="searchBackdrop"></div>
         <div class="search-overlay__panel">
@@ -562,8 +602,6 @@
                     </svg>
                 </button>
             </div>
-
-            <!-- Popular Search Links -->
             <div class="search-overlay__popular">
                 <span class="search-overlay__popular-label">POPULAR SEARCH:</span>
                 <div class="search-overlay__popular-links">
@@ -574,24 +612,16 @@
                     <a href="fashion-insights.html" class="search-overlay__popular-link">Fashion Tips</a>
                 </div>
             </div>
-
-            <!-- Two-Column Results Container -->
             <div class="search-overlay__results" id="searchOverlayResults" style="display: none;">
                 <div class="search-overlay__suggestions" id="searchSuggestions">
                     <h4 class="search-overlay__column-title">SUGGESTIONS</h4>
-                    <ul class="search-overlay__suggestion-list" id="suggestionList">
-                        <!-- Dynamic suggestions -->
-                    </ul>
+                    <ul class="search-overlay__suggestion-list" id="suggestionList"></ul>
                 </div>
                 <div class="search-overlay__products" id="searchProducts">
                     <h4 class="search-overlay__column-title">PRODUCTS</h4>
-                    <div class="search-overlay__product-list" id="productList">
-                        <!-- Dynamic horizontal product cards -->
-                    </div>
+                    <div class="search-overlay__product-list" id="productList"></div>
                 </div>
             </div>
-
-            <!-- No Results State -->
             <div class="search-overlay__no-results" id="searchNoResults" style="display: none;">
                 <p>No results found. Try a different search term.</p>
             </div>
@@ -599,153 +629,85 @@
     </div>
 
 
-    <!-- ==================== MY ACCOUNT PAGE ==================== -->
-    <main class="auth-page">
-        <div class="container">
-            <!-- Page Title -->
-            <h1 class="auth-title" style="margin-bottom: 0.5rem;">MY ACCOUNT</h1>
-            <p class="auth-subtitle" id="accountGreeting" style="margin-bottom: 2rem;">&nbsp;</p>
+    <!-- ==================== ARTICLE CONTENT ==================== -->
+    <main class="article-page" id="articlePage">
 
-            <!-- Two-column grid -->
-            <div class="account-grid">
-
-                <!-- LEFT COLUMN -->
-                <div class="account-col">
-                    <!-- Profile Card -->
-                    <div class="account-card">
-                        <div class="account-avatar">
-                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="1.2">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                                <circle cx="12" cy="7" r="4" />
-                            </svg>
-                        </div>
-                        <div class="account-info">
-                            <div class="account-field">
-                                <span class="account-label">NAME</span>
-                                <span class="account-value" id="accountName">—</span>
-                            </div>
-                            <div class="account-field">
-                                <span class="account-label">EMAIL</span>
-                                <span class="account-value" id="accountEmail">—</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Quick Links -->
-                    <div class="account-links">
-                        <a href="wishlist.html" class="account-link-item">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="1.5">
-                                <path
-                                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                            </svg>
-                            <span>My Wishlist</span>
-                            <svg class="account-link-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="2">
-                                <path d="M5 12h14" />
-                                <path d="M13 5l7 7-7 7" />
-                            </svg>
-                        </a>
-                        <a href="cart.html" class="account-link-item">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="1.5">
-                                <circle cx="9" cy="21" r="1" />
-                                <circle cx="20" cy="21" r="1" />
-                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-                            </svg>
-                            <span>My Cart</span>
-                            <svg class="account-link-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="2">
-                                <path d="M5 12h14" />
-                                <path d="M13 5l7 7-7 7" />
-                            </svg>
-                        </a>
-                        <a href="/category?type=all" class="account-link-item">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="1.5">
-                                <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
-                                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
-                            </svg>
-                            <span>Shop Collections</span>
-                            <svg class="account-link-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="2">
-                                <path d="M5 12h14" />
-                                <path d="M13 5l7 7-7 7" />
-                            </svg>
-                        </a>
-                    </div>
-
-                    <!-- Logout Button -->
-                    <button class="auth-btn auth-btn-primary account-logout-btn" id="logoutBtn">SIGN OUT</button>
-                </div>
-
-                <!-- RIGHT COLUMN -->
-                <div class="account-col">
-
-                    <!-- Order History Section -->
-                    <div class="account-section">
-                        <div class="account-section-header">
-                            <h2 class="account-section-title">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="1.5">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                                    <polyline points="14 2 14 8 20 8" />
-                                    <line x1="16" y1="13" x2="8" y2="13" />
-                                    <line x1="16" y1="17" x2="8" y2="17" />
-                                    <polyline points="10 9 9 9 8 9" />
-                                </svg>
-                                ORDER HISTORY
-                            </h2>
-                        </div>
-                        <div class="account-section-body" id="orderHistoryBody">
-                            <div class="account-empty-state">
-                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="1">
-                                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
-                                    <line x1="1" y1="10" x2="23" y2="10" />
-                                </svg>
-                                <p>You haven't placed any orders yet.</p>
-                                <a href="/category?type=all" class="account-section-cta">Start Shopping</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Address Details Section -->
-                    <div class="account-section">
-                        <div class="account-section-header">
-                            <h2 class="account-section-title">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="1.5">
-                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                                    <circle cx="12" cy="10" r="3" />
-                                </svg>
-                                ADDRESS DETAILS
-                            </h2>
-                            <button class="account-action-btn" aria-label="Add new address"
-                                onclick="alert('Address management feature coming soon!')">Add New</button>
-                        </div>
-                        <div class="account-section-body" id="addressDetailsBody">
-                            <div class="account-empty-state">
-                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="1">
-                                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                                    <polyline points="9 22 9 12 15 12 15 22" />
-                                </svg>
-                                <p>No saved addresses yet.</p>
-                                <span class="account-section-hint">Your shipping address will appear here after your
-                                    first order.</span>
-                                <button class="account-section-cta"
-                                    onclick="alert('Address management feature coming soon!')"
-                                    style="margin-top: 1rem;">Add Address</button>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
+        <!-- Loading State -->
+        <div id="articleLoading">
+            <section class="article-hero">
+                <div class="article-hero--loading skeleton-pulse"></div>
+            </section>
+            <div class="container article-container" style="max-width:780px;margin:0 auto;padding:0 20px;">
+                <div class="article-title--loading skeleton-pulse" style="margin-top:40px;"></div>
+                <div class="article-text--loading skeleton-pulse" style="margin-top:16px;"></div>
+                <div class="article-text--loading skeleton-pulse" style="margin-top:10px;"></div>
+                <div class="article-text--loading skeleton-pulse" style="margin-top:10px;width:60%;"></div>
             </div>
         </div>
+
+        <!-- Article Content (hidden until loaded) -->
+        <div id="articleContent" style="display:none;">
+            <!-- Hero Image -->
+            <section class="article-hero">
+                <img id="articleHeroImg" src="" alt="" loading="eager">
+            </section>
+
+            <!-- WordPress Content Body -->
+            <div class="article-body" id="articleBody">
+                <!-- Full rendered HTML from WordPress injected here -->
+            </div>
+
+            <!-- Share & Back -->
+            <div class="container article-container">
+                <footer class="article-footer">
+                    <div class="article-share">
+                        <span class="share-label">Share this article:</span>
+                        <div class="share-icons">
+                            <a href="#" class="share-icon" aria-label="Share on Instagram">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1.5">
+                                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                                </svg>
+                            </a>
+                            <a href="#" class="share-icon" id="shareFacebook" aria-label="Share on Facebook">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1.5">
+                                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+                                </svg>
+                            </a>
+                            <a href="#" class="share-icon" id="shareWhatsApp" aria-label="Share on WhatsApp">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    <a href="fashion-insights.html" class="back-to-insights">← Back to Fashion Insights</a>
+                </footer>
+            </div>
+
+            <!-- Related Articles -->
+            <section class="related-articles" id="relatedSection" style="display:none;">
+                <div class="container">
+                    <h2 class="related-title">You May Also Like</h2>
+                    <div class="related-grid" id="relatedGrid">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Not Found State -->
+        <div id="articleNotFound" style="display:none;" class="article-not-found">
+            <h2>Article Not Found</h2>
+            <p>The article you're looking for may have been moved or isn't available right now.</p>
+            <a href="fashion-insights.html">← Browse all Fashion Insights</a>
+        </div>
     </main>
+
 
     <!-- ==================== FOOTER ==================== -->
     <footer class="footer" id="footer">
@@ -753,7 +715,6 @@
         <div class="footer-content">
             <div class="container">
                 <div class="footer-grid">
-                    <!-- Newsletter Column -->
                     <div class="footer-column footer-newsletter">
                         <h3 class="footer-heading">NEWSLETTER</h3>
                         <p class="footer-text">Subscribe to receive updates, access to exclusive deals, and more.</p>
@@ -762,7 +723,6 @@
                                 aria-label="Email address">
                             <button type="submit" class="newsletter-btn">Subscribe</button>
                         </form>
-
                         <h4 class="footer-subheading">Find our store</h4>
                         <div class="social-icons">
                             <a href="#" class="social-icon" aria-label="Instagram">
@@ -795,8 +755,6 @@
                             </a>
                         </div>
                     </div>
-
-                    <!-- The Company Column -->
                     <div class="footer-column">
                         <button class="footer-heading footer-accordion-toggle" aria-expanded="false">
                             <span>THE COMPANY</span>
@@ -816,8 +774,6 @@
                             </ul>
                         </div>
                     </div>
-
-                    <!-- Need Help Column -->
                     <div class="footer-column">
                         <button class="footer-heading footer-accordion-toggle" aria-expanded="false">
                             <span>NEED HELP</span>
@@ -837,8 +793,6 @@
                             </ul>
                         </div>
                     </div>
-
-                    <!-- Legal Column -->
                     <div class="footer-column">
                         <button class="footer-heading footer-accordion-toggle" aria-expanded="false">
                             <span>LEGAL</span>
@@ -850,7 +804,7 @@
                         </button>
                         <div class="footer-accordion-content">
                             <ul class="footer-links">
-                                <li><a href="cookie-policy.html">Privacy & Cookies</a></li>
+                                <li><a href="cookie-policy.html">Privacy &amp; Cookies</a></li>
                                 <li><a href="#">Fees And Payment</a></li>
                                 <li><a href="#">Term And Condition</a></li>
                             </ul>
@@ -858,8 +812,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Footer Bottom -->
             <div class="footer-bottom">
                 <div class="footer-separator"></div>
                 <p class="footer-copyright">© 2026, Loom Saga</p>
@@ -879,28 +831,20 @@
                 </svg>
             </button>
         </div>
-
         <div class="cart-drawer-subheader">
             <span>PRODUCT</span>
             <span>TOTAL</span>
         </div>
-
-        <div class="cart-drawer-content" id="cartDrawerItems">
-            <!-- Cart items will be injected here -->
-        </div>
-
+        <div class="cart-drawer-content" id="cartDrawerItems"></div>
         <div class="cart-drawer-footer" id="cartDrawerFooter">
             <div class="drawer-total-row">
                 <span class="drawer-total-label">Estimated total</span>
                 <span class="drawer-total-amount" id="drawerTotalAmount">Rs. 0.00</span>
             </div>
             <p class="drawer-note">Taxes, Discounts and shipping calculated at checkout</p>
-
             <button class="drawer-checkout-btn">CHECK OUT</button>
             <button class="drawer-view-cart-btn" onclick="window.location.href='cart.html'">VIEW MY CART</button>
         </div>
-
-        <!-- Empty Cart State -->
         <div class="cart-drawer-empty" id="cartDrawerEmpty" style="display: none;">
             <div class="empty-drawer-icon">
                 <img src="assets/icons/cart.png" alt="Empty Cart" width="60" height="60" style="opacity: 0.5;">
@@ -914,66 +858,9 @@
     <!-- JavaScript -->
     <script src="js/main.js"></script>
     <script type="module" src="src/js/main.js"></script>
-    <script>
-        // Wait for AuthManager to be available (set by main.js)
-        function initAccountPage() {
-            const AuthManager = window.AuthManager;
-            if (!AuthManager) {
-                setTimeout(initAccountPage, 50);
-                return;
-            }
 
-            // Check if user is logged in — redirect to login if not
-            if (!AuthManager.isLoggedIn()) {
-                window.location.href = 'login.html';
-                return;
-            }
-
-            const user = AuthManager.getSession();
-
-            // Populate account details
-            const greeting = document.getElementById('accountGreeting');
-            const nameEl = document.getElementById('accountName');
-            const emailEl = document.getElementById('accountEmail');
-
-            if (user) {
-                const displayName = `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.displayName || 'Friend';
-
-                if (greeting) {
-                    greeting.innerHTML = `Hello <strong>${displayName}</strong> (not <strong>${displayName}</strong>? <a href="#" id="inlineLogoutBtn" style="color: var(--color-gold); text-decoration: underline;">Sign out</a>)`;
-
-                    // Add listener for the new inline logout link
-                    const inlineLogout = document.getElementById('inlineLogoutBtn');
-                    if (inlineLogout) {
-                        inlineLogout.addEventListener('click', function (e) {
-                            e.preventDefault();
-                            AuthManager.logout();
-                            window.location.href = 'login.html';
-                        });
-                    }
-                }
-
-                if (nameEl) nameEl.textContent = displayName || '—';
-                if (emailEl) emailEl.textContent = user.email || '—';
-            }
-
-            // Main Logout button
-            const logoutBtn = document.getElementById('logoutBtn');
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', function () {
-                    AuthManager.logout();
-                    window.location.href = 'login.html'; // Redirect to login after logout
-                });
-            }
-        }
-
-        // Start initialization
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initAccountPage);
-        } else {
-            initAccountPage();
-        }
-    </script>
+    <!-- Article Rendering Module -->
+    <script type="module" src="src/js/modules/ArticleController.js"></script>
 </body>
 
 </html>

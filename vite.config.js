@@ -57,6 +57,7 @@ export default defineConfig({
         wishlist: resolve(__dirname, 'wishlist.html'),
         'brand-story': resolve(__dirname, 'brand-story.html'),
         'article-golden-beauty': resolve(__dirname, 'article-golden-beauty.html'),
+        'article': resolve(__dirname, 'article.html'),
       },
     },
     // CSS code splitting

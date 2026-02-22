@@ -14,7 +14,11 @@ class ProductService {
     this.filters = {};
     this.isLoaded = false;
     this.loadPromise = null;
-    this.dataSource = 'none'; // 'api' | 'local' | 'none'
+    this.dataSource = 'none'; // 'api' | 'local' | 'cache' | 'none'
+
+    // ── Session cache config ──
+    this._CACHE_KEY = 'ls_products_cache';
+    this._CACHE_TTL = 5 * 60 * 1000; // 5 minutes
   }
 
   /**
@@ -43,6 +47,16 @@ class ProductService {
    * @private
    */
   async loadProducts() {
+    // ── 1. Try sessionStorage cache first ──
+    const cached = this._readCache();
+    if (cached) {
+      this.products = cached.map(p => this._normalizeApiProduct(p));
+      this.dataSource = 'cache';
+      console.log('ProductService: Loaded from session cache (instant)');
+      return;
+    }
+
+    // ── 2. Fetch from API ──
     try {
       // Fetch from Vercel Serverless Function proxying WooCommerce
       const response = await fetch('/api/products');
@@ -55,6 +69,7 @@ class ProductService {
         // Normalise API products so the rest of the code can use the same shape
         this.products = apiProducts.map(p => this._normalizeApiProduct(p));
         this.dataSource = 'api';
+        this._writeCache(apiProducts);
         return;
       }
 
@@ -63,7 +78,7 @@ class ProductService {
       console.warn('ProductService: API failed, falling back to local JSON', error.message);
     }
 
-    // Fallback to local JSON
+    // ── 3. Fallback to local JSON ──
     try {
       const response = await fetch('/data/products.json');
       const data = await response.json();
@@ -609,6 +624,46 @@ class ProductService {
     }
 
     return slug;
+  }
+
+  // ==================== SESSION CACHE ====================
+
+  /**
+   * Read cached product data from sessionStorage.
+   * Returns the raw API-shaped array if cache is fresh, or null.
+   * @private
+   */
+  _readCache() {
+    try {
+      const raw = sessionStorage.getItem(this._CACHE_KEY);
+      if (!raw) return null;
+
+      const { ts, data } = JSON.parse(raw);
+      if (Date.now() - ts > this._CACHE_TTL) {
+        sessionStorage.removeItem(this._CACHE_KEY);
+        return null;
+      }
+
+      return data;
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Write product data to sessionStorage with a timestamp.
+   * Silently fails if storage is full.
+   * @private
+   */
+  _writeCache(apiProducts) {
+    try {
+      sessionStorage.setItem(this._CACHE_KEY, JSON.stringify({
+        ts: Date.now(),
+        data: apiProducts
+      }));
+    } catch (e) {
+      console.warn('ProductService: sessionStorage write failed', e.message);
+    }
   }
 }
 

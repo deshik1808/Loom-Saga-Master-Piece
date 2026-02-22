@@ -681,30 +681,30 @@
           <div class="gallery-images">
             <!-- Hero Image - Full width -->
             <div class="gallery-image gallery-image--hero luxury-shimmer" data-index="0">
-              <img id="pdpImage0" src="https://placehold.co/800x1000/9acd32/333333?text=Image+1"
-                alt="Lime green Hand-printed Vishnupuri Silk Saree - View 1" fetchpriority="high" loading="eager"
-                onload="this.parentElement.classList.remove('luxury-shimmer'); this.style.opacity='1';">
+              <img id="pdpImage0" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+                alt="Product image loading" fetchpriority="high" loading="eager"
+                onload="if(this.src.indexOf('data:image')!==-1)return;this.parentElement.classList.remove('luxury-shimmer'); this.style.opacity='1';">
             </div>
 
             <!-- Grid of additional images - 2 columns -->
             <div class="gallery-grid" id="pdpGalleryGrid">
               <div class="gallery-image luxury-shimmer" data-index="1">
-                <img id="pdpImage1" src="https://placehold.co/400x500/8bc34a/333333?text=Image+2" alt="Product view 2"
-                  loading="lazy"
-                  onload="this.parentElement.classList.remove('luxury-shimmer'); this.style.opacity='1';">
+                <img id="pdpImage1" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+                  alt="Product view 2" loading="lazy"
+                  onload="if(this.src.indexOf('data:image')!==-1)return;this.parentElement.classList.remove('luxury-shimmer'); this.style.opacity='1';">
               </div>
               <div class="gallery-image luxury-shimmer" data-index="2">
-                <img id="pdpImage2" src="https://placehold.co/400x500/7cb342/333333?text=Image+3" alt="Product view 3"
-                  loading="lazy"
-                  onload="this.parentElement.classList.remove('luxury-shimmer'); this.style.opacity='1';">
+                <img id="pdpImage2" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+                  alt="Product view 3" loading="lazy"
+                  onload="if(this.src.indexOf('data:image')!==-1)return;this.parentElement.classList.remove('luxury-shimmer'); this.style.opacity='1';">
               </div>
             </div>
 
             <!-- Additional full-width image -->
             <div class="gallery-image gallery-image--full luxury-shimmer" data-index="3">
-              <img id="pdpImage3" src="https://placehold.co/800x600/4caf50/333333?text=Detail+Shot"
+              <img id="pdpImage3" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
                 alt="Product detail view" loading="lazy"
-                onload="this.parentElement.classList.remove('luxury-shimmer'); this.style.opacity='1';">
+                onload="if(this.src.indexOf('data:image')!==-1)return;this.parentElement.classList.remove('luxury-shimmer'); this.style.opacity='1';">
             </div>
 
             <!-- Extra gallery images are added dynamically by js/main.js -->
@@ -739,12 +739,11 @@
         </div>
 
         <!-- Product Info -->
-        <div class="product-info" data-product-id="LS-VSK-001"
-          data-product-name="Lime green Hand-printed Vishnupuri Silk" data-product-price="5199"
-          data-product-image="https://placehold.co/600x800/9acd32/333333?text=Main+Image">
+        <div class="product-info pdp-loading" data-product-id="" data-product-name="" data-product-price=""
+          data-product-image="">
           <!-- Title & Wishlist -->
           <div class="product-header">
-            <h1 class="product-title" id="pdpTitle">Loading...</h1>
+            <h1 class="product-title" id="pdpTitle"></h1>
             <div class="product-header-actions">
               <button class="product-wishlist-btn" aria-label="Add to Wishlist">
                 <img src="assets/icons/heart-outline.png" alt="" class="heart-outline">
@@ -766,27 +765,19 @@
 
           <!-- Price -->
           <div class="product-price-section">
-            <p class="product-price" id="pdpPrice">—</p>
+            <p class="product-price" id="pdpPrice"></p>
             <p class="product-tax-note">MRP inclusive of all taxes</p>
           </div>
 
           <!-- Color Selection -->
-          <div class="product-color-section">
+          <div class="product-color-section" style="display:none">
             <p class="product-color-label">Colour:</p>
             <div class="product-color-swatches">
-              <button class="color-swatch active" style="background-color: #8b4513;" aria-label="Brown"
-                data-color="brown"></button>
-              <button class="color-swatch" style="background-color: #ffd700;" aria-label="Yellow"
-                data-color="yellow"></button>
-              <button class="color-swatch" style="background-color: #0000cd;" aria-label="Blue"
-                data-color="blue"></button>
-              <button class="color-swatch" style="background-color: #228b22;" aria-label="Green"
-                data-color="green"></button>
             </div>
           </div>
 
           <!-- Add to Cart Button -->
-          <button class="product-add-btn" id="addToCartBtn" data-product-id="LS-VSK-001">ADD</button>
+          <button class="product-add-btn" id="addToCartBtn" data-product-id="" disabled></button>
 
           <!-- Accordions -->
           <div class="product-accordions">
@@ -1149,7 +1140,7 @@
       </div>
       <p class="drawer-note">Taxes, Discounts and shipping calculated at checkout</p>
 
-      <button class="drawer-checkout-btn" onclick="window.location.href='checkout.html'">CHECK OUT</button>
+      <button class="drawer-checkout-btn">CHECK OUT</button>
       <button class="drawer-view-cart-btn" onclick="window.location.href='cart.html'">VIEW MY CART</button>
     </div>
 

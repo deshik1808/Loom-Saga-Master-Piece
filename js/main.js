@@ -2093,8 +2093,12 @@ function getWishlist() {
  * Connects the local cart to the WordPress/WooCommerce checkout
  */
 function initCheckout() {
-    const checkoutBtn = document.getElementById('checkoutBtn');
-    if (checkoutBtn) {
+    const checkoutBtns = document.querySelectorAll('#checkoutBtn, .drawer-checkout-btn');
+
+    checkoutBtns.forEach(checkoutBtn => {
+        // Remove old inline onclick redirect if present in HTML
+        checkoutBtn.removeAttribute('onclick');
+
         checkoutBtn.addEventListener('click', async (e) => {
             e.preventDefault();
 
@@ -2138,7 +2142,7 @@ function initCheckout() {
                 checkoutBtn.style.opacity = '1';
             }
         });
-    }
+    });
 }
 
 // ==================== CAROUSEL DRAG SCROLL ====================
@@ -2533,16 +2537,14 @@ const CategoryPageManager = {
 
         let slug = this.getRequestedSlug();
 
+        // Set title IMMEDIATELY — before the async product fetch
+        this.updateUi(slug);
+
         try {
             await window.ProductService.init();
 
             const allProducts = window.ProductService.getAllProducts();
             let products = window.ProductService.getProductsByCategory(slug);
-
-            // Keep the requested slug even with zero products
-            // (don't fall back to 'all' — show the empty state instead)
-
-            this.updateUi(slug);
 
             // Ensure a clean render cycle
             grid.innerHTML = '';
@@ -3166,6 +3168,11 @@ function initProductDetail() {
     }
 
     // Close lightbox
+    // Expose globally for dynamic images (src/js/main.js)
+    window.LightboxPlugin = {
+        open: openLightbox
+    };
+
     function closeLightbox() {
         lightbox.classList.remove('active');
         lightbox.setAttribute('aria-hidden', 'true');
@@ -3564,462 +3571,8 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 });
 
-// ==================== PDP DYNAMIC PRODUCT LOADING (PHASE 3) ====================
-document.addEventListener('DOMContentLoaded', function () {
-    // Only run on product-detail page
-    var titleEl = document.getElementById('pdpTitle');
-    if (!titleEl) return;
-
-    // 1. Read product ID from URL query string
-    var params = new URLSearchParams(window.location.search);
-    var productId = params.get('id');
-
-    // 2. If product ID is missing, stop execution
-    if (!productId) return;
-
-    // 3. Fetch product data
-    fetch('/api/product?id=' + encodeURIComponent(productId))
-        .then(function (res) {
-            if (!res.ok) throw new Error('Failed to fetch product');
-            return res.json();
-        })
-        .then(function (product) {
-            if (!product) return;
-
-            // 4a. Replace title (WordPress API returns 'name')
-            titleEl.textContent = product.name;
-
-            // === OG META TAG UPDATE ===
-            // Dynamically update Open Graph and canonical tags to reflect current product.
-            // Uses upsert pattern (setAttribute on existing or newly created element) to avoid duplicates.
-            (function updateOGMeta(product, images) {
-                var canonicalUrl = window.location.href;
-                var productTitle = product.name || document.title;
-                // Strip HTML from short description; fallback to product name
-                var productDesc = (function () {
-                    if (product.shortDescription) {
-                        var tmp = document.createElement('div');
-                        tmp.innerHTML = product.shortDescription;
-                        var text = (tmp.textContent || tmp.innerText || '').trim();
-                        return text.length > 160 ? text.substring(0, 157) + '...' : text;
-                    }
-                    if (product.description) {
-                        var tmp2 = document.createElement('div');
-                        tmp2.innerHTML = product.description;
-                        var text2 = (tmp2.textContent || tmp2.innerText || '').trim();
-                        return text2.length > 160 ? text2.substring(0, 157) + '...' : text2;
-                    }
-                    return productTitle;
-                })();
-                var productImage = (images && images[0]) || '';
-
-                // Helper: upsert a <meta property="..."> tag
-                function upsertMeta(prop, content, isName) {
-                    if (!content) return;
-                    var attr = isName ? 'name' : 'property';
-                    var sel = 'meta[' + attr + '="' + prop + '"]';
-                    var el = document.head.querySelector(sel);
-                    if (!el) {
-                        el = document.createElement('meta');
-                        el.setAttribute(attr, prop);
-                        document.head.appendChild(el);
-                    }
-                    el.setAttribute('content', content);
-                }
-
-                // Update page title
-                document.title = productTitle + ' | Loom Saga';
-
-                // OG tags
-                upsertMeta('og:title', productTitle);
-                upsertMeta('og:description', productDesc);
-                if (productImage) upsertMeta('og:image', productImage);
-                upsertMeta('og:url', canonicalUrl);
-
-                // Twitter tags
-                upsertMeta('twitter:title', productTitle, true);
-                upsertMeta('twitter:description', productDesc, true);
-                if (productImage) upsertMeta('twitter:image', productImage, true);
-
-                // Canonical link
-                var canonicalLink = document.head.querySelector('link[rel="canonical"]');
-                if (!canonicalLink) {
-                    canonicalLink = document.createElement('link');
-                    canonicalLink.setAttribute('rel', 'canonical');
-                    document.head.appendChild(canonicalLink);
-                }
-                canonicalLink.setAttribute('href', canonicalUrl);
-            })(product, product.images || []);
-
-            // === SHARE BUTTON HANDLER ===
-            (function initShareBtn(product, images) {
-                var shareBtn = document.getElementById('pdpShareBtn');
-                var shareFeedback = document.getElementById('shareFeedback');
-                if (!shareBtn) return;
-
-                var shareUrl = window.location.href;
-                var shareTitle = product.name || document.title;
-                var shareText = (function () {
-                    if (product.shortDescription) {
-                        var tmp = document.createElement('div');
-                        tmp.innerHTML = product.shortDescription;
-                        return (tmp.textContent || tmp.innerText || '').trim().substring(0, 140);
-                    }
-                    return shareTitle;
-                })();
-
-                var feedbackTimer = null;
-
-                function showFeedback() {
-                    if (!shareFeedback) return;
-                    shareFeedback.classList.add('visible');
-                    if (feedbackTimer) clearTimeout(feedbackTimer);
-                    feedbackTimer = setTimeout(function () {
-                        shareFeedback.classList.remove('visible');
-                    }, 1500);
-                }
-
-                shareBtn.addEventListener('click', function () {
-                    if (navigator.share) {
-                        // Native share (mobile)
-                        navigator.share({
-                            title: shareTitle,
-                            text: shareText,
-                            url: shareUrl
-                        }).catch(function (err) {
-                            // User cancelled or share failed — suppress silently
-                            if (err.name !== 'AbortError') {
-                                console.debug('[Share] navigator.share error:', err);
-                            }
-                        });
-                    } else if (navigator.clipboard && navigator.clipboard.writeText) {
-                        // Clipboard fallback
-                        navigator.clipboard.writeText(shareUrl).then(function () {
-                            showFeedback();
-                        }).catch(function () {
-                            // Last-resort fallback
-                            try {
-                                var ta = document.createElement('textarea');
-                                ta.value = shareUrl;
-                                ta.style.position = 'fixed';
-                                ta.style.opacity = '0';
-                                document.body.appendChild(ta);
-                                ta.select();
-                                document.execCommand('copy');
-                                document.body.removeChild(ta);
-                                showFeedback();
-                            } catch (e) { /* silently fail */ }
-                        });
-                    } else {
-                        // Absolute last resort
-                        try {
-                            var ta = document.createElement('textarea');
-                            ta.value = shareUrl;
-                            ta.style.position = 'fixed';
-                            ta.style.opacity = '0';
-                            document.body.appendChild(ta);
-                            ta.select();
-                            document.execCommand('copy');
-                            document.body.removeChild(ta);
-                            showFeedback();
-                        } catch (e) { /* silently fail */ }
-                    }
-                });
-            })(product, product.images || []);
-
-            // 4b. Replace price
-            var priceEl = document.getElementById('pdpPrice');
-            if (priceEl) {
-                var currentPrice = Number(product.price) || 0;
-                var regularPrice = Number(product.regularPrice) || 0;
-                var salePrice = Number(product.salePrice) || 0;
-                var hasSale = salePrice > 0 && regularPrice > salePrice;
-
-                if (hasSale) {
-                    priceEl.innerHTML =
-                        '<span class="product-price-regular">Rs.' + regularPrice.toLocaleString('en-IN') + '/-</span>' +
-                        '<span class="product-price-current product-price-current--sale">Rs.' + salePrice.toLocaleString('en-IN') + '/-</span>';
-                } else {
-                    priceEl.innerHTML =
-                        '<span class="product-price-current">Rs.' + currentPrice.toLocaleString('en-IN') + '/-</span>';
-                }
-            }
-
-            // 4c. Replace images with optimized versions - DYNAMIC GALLERY
-            var images = product.images || [];
-            var img0 = document.getElementById('pdpImage0'); // Hero image
-            var galleryGrid = document.getElementById('pdpGalleryGrid'); // Grid container
-
-            // Helper to handle optimized source replacement
-            var setOptimizedSrc = function (el, src, width) {
-                if (!el || !src) return;
-
-                // Add shimmer to parent if not already there
-                if (el.parentElement) el.parentElement.classList.add('luxury-shimmer');
-
-                // Use ProductRenderer helper if available, otherwise fallback
-                var optimizedUrl = window.ProductRenderer
-                    ? window.ProductRenderer.getOptimizedImage(src, width)
-                    : src;
-
-                // Set the src — the onload in HTML will handle removing shimmer
-                el.src = optimizedUrl;
-            };
-
-            // Set hero image (first image)
-            if (images[0]) {
-                setOptimizedSrc(img0, images[0], 1000);
-            }
-
-            // Fill ALL existing placeholder slots first (pdpImage1, pdpImage2, pdpImage3...)
-            // then add extra images below if there are more than 4
-            var galleryImages = document.querySelector('.gallery-images');
-            if (images.length > 1) {
-                // 1. Fill existing hardcoded slots by ID: pdpImage1, pdpImage2, pdpImage3, ...
-                var imgIndex = 1;
-                var existingImg;
-                while (imgIndex < images.length) {
-                    existingImg = document.getElementById('pdpImage' + imgIndex);
-                    if (existingImg) {
-                        // Fill the existing placeholder
-                        setOptimizedSrc(existingImg, images[imgIndex], imgIndex === 3 ? 1000 : 600);
-                        imgIndex++;
-                    } else {
-                        // No more existing slots — break out to add extras
-                        break;
-                    }
-                }
-
-                // 2. If more images remain beyond placeholders, add them dynamically
-                if (imgIndex < images.length && galleryImages) {
-                    for (; imgIndex < images.length; imgIndex++) {
-                        var imageWrapper = document.createElement('div');
-                        imageWrapper.className = 'gallery-image luxury-shimmer';
-                        imageWrapper.dataset.index = imgIndex;
-
-                        var imgEl = document.createElement('img');
-                        imgEl.id = 'pdpImage' + imgIndex;
-                        imgEl.alt = 'Product view ' + (imgIndex + 1);
-                        imgEl.loading = 'lazy';
-                        imgEl.onload = function () {
-                            this.parentElement.classList.remove('luxury-shimmer');
-                            this.style.opacity = '1';
-                        };
-
-                        imageWrapper.appendChild(imgEl);
-                        galleryImages.appendChild(imageWrapper);
-
-                        setOptimizedSrc(imgEl, images[imgIndex], 600);
-                    }
-                }
-
-                // 3. Hide any unused placeholder slots beyond available images
-                var nextSlotIdx = images.length;
-                while (true) {
-                    var unusedSlot = document.getElementById('pdpImage' + nextSlotIdx);
-                    if (!unusedSlot) break;
-                    unusedSlot.parentElement.style.display = 'none';
-                    nextSlotIdx++;
-                }
-            }
-
-            // 4d. Update product-info data attributes (for cart/wishlist)
-            var productInfo = document.querySelector('.product-info');
-            if (productInfo) {
-                productInfo.dataset.productId = product.id;
-                productInfo.dataset.productName = product.name;
-                productInfo.dataset.productPrice = product.price;
-                productInfo.dataset.inStock = product.inStock === true ? 'true' : 'false';
-                productInfo.dataset.stockQuantity = product.stockQuantity ?? '';
-                if (images[0]) {
-                    productInfo.dataset.productImage = images[0];
-                }
-            }
-
-            // 5. Cart Logic — enforces stock limits
-            var addBtn = document.getElementById('addToCartBtn');
-            if (addBtn) {
-                addBtn.dataset.dynamicBound = 'true';
-
-                var parsedStockQty = Number(product.stockQuantity);
-                var stockQty = Number.isFinite(parsedStockQty) ? parsedStockQty : 0;
-                var isPurchasable = product.inStock === true && stockQty > 0;
-
-                if (!isPurchasable) {
-                    addBtn.textContent = 'OUT OF STOCK';
-                    addBtn.disabled = true;
-                    addBtn.classList.add('disabled');
-                } else {
-                    // Show stock hint if managed and low
-                    if (stockQty <= 5) {
-                        var stockHint = document.createElement('p');
-                        stockHint.className = 'product-stock-hint';
-                        stockHint.textContent = 'Only ' + stockQty + ' left in stock';
-                        stockHint.style.cssText = 'font-size:0.8rem;color:#c0392b;margin-top:6px;font-family:var(--font-body);';
-                        addBtn.parentNode.insertBefore(stockHint, addBtn.nextSibling);
-                    }
-
-                    addBtn.textContent = 'ADD TO CART';
-
-                    // Mark button so fallback handler at line ~3014 skips
-                    addBtn.dataset.dynamicBound = 'true';
-
-                    addBtn.addEventListener('click', function (e) {
-                        e.preventDefault();
-
-                        var cartProduct = {
-                            id: product.id,
-                            name: product.name,
-                            price: product.price,
-                            image: images[0] || 'assets/images/placeholder.webp',
-                            inStock: true,
-                            stockQuantity: stockQty,
-                            color: (function () {
-                                // Use swatch-selected color if user picked one on PDP
-                                var swatch = document.querySelector('.color-swatch.active');
-                                if (swatch && swatch.dataset.color) return swatch.dataset.color;
-                                // Fallback to product attribute
-                                var attrs = product.attributes || {};
-                                if (Array.isArray(attrs.color) && attrs.color.length > 0) return attrs.color[0];
-                                if (typeof attrs.color === 'string' && attrs.color) return attrs.color;
-                                return 'Unknown';
-                            })(),
-                            style: (function () {
-                                // Convert slug to Title Case (e.g. 'silk-sarees' → 'Silk Sarees')
-                                function slugToTitle(slug) {
-                                    if (!slug) return 'Unknown';
-                                    return slug.split('-').map(function (w) {
-                                        return w.charAt(0).toUpperCase() + w.slice(1);
-                                    }).join(' ');
-                                }
-                                if (product.categoryName && product.categoryName !== 'Uncategorized') return slugToTitle(product.categoryName);
-                                if (Array.isArray(product.categories) && product.categories.length > 0) return slugToTitle(product.categories[0].name || product.categories[0].slug) || 'Unknown';
-                                return 'Unknown';
-                            })()
-                        };
-
-                        // Add to cart using global CartManager (enforces stock limit)
-                        if (window.CartManager) {
-                            var result = window.CartManager.addItem(cartProduct);
-
-                            if (result && result.success) {
-                                // Show a brief feedback state, then revert — stay on PDP
-                                addBtn.textContent = 'ADDING...';
-                                addBtn.disabled = true;
-                                setTimeout(function () {
-                                    addBtn.textContent = 'ADD TO CART';
-                                    addBtn.disabled = false;
-                                }, 1500);
-                            }
-                            // If result.success is false, CartManager already showed notification
-                        } else {
-                            console.error('CartManager not found');
-                        }
-                    });
-                }
-            }
-
-            // 6. Populate PDP Accordion Descriptions from ACF custom fields
-            if (product.acf) {
-                // Helper: convert plain-text newlines to HTML paragraphs/breaks
-                // Mimics WordPress wpautop() for content from WYSIWYG editor
-                var autoParagraph = function (text) {
-                    if (!text || typeof text !== 'string') return '';
-                    // If content already has block-level HTML, just clean up newlines
-                    if (/<(p|ul|ol|h[1-6]|div|table|blockquote)\b/i.test(text)) {
-                        // Replace double newlines with paragraph breaks where no HTML blocks exist
-                        return text
-                            .replace(/\r\n/g, '\n')
-                            .replace(/\n{2,}/g, '</p>\n<p>')
-                            .replace(/(?<!\>)\n(?!\<)/g, '<br>\n');
-                    }
-                    // Pure text: wrap in paragraphs
-                    var paragraphs = text
-                        .replace(/\r\n/g, '\n')
-                        .split(/\n{2,}/)
-                        .filter(function (p) { return p.trim(); })
-                        .map(function (p) { return '<p>' + p.replace(/\n/g, '<br>') + '</p>'; });
-                    return paragraphs.join('\n');
-                };
-
-                // Description & Fit — with "Read More" truncation
-                if (product.acf.fabricComposition) {
-                    var descEl = document.getElementById('pdpAccordionDescription');
-                    if (descEl) {
-                        var fullHTML = autoParagraph(product.acf.fabricComposition);
-                        // Strip HTML for character counting
-                        var tempDiv = document.createElement('div');
-                        tempDiv.innerHTML = fullHTML;
-                        var plainText = tempDiv.textContent || tempDiv.innerText || '';
-
-                        var CHAR_LIMIT = 200;
-
-                        if (plainText.length > CHAR_LIMIT) {
-                            // Build truncated preview: cut at limit, find last space
-                            var truncated = plainText.substring(0, CHAR_LIMIT);
-                            var lastSpace = truncated.lastIndexOf(' ');
-                            if (lastSpace > 100) truncated = truncated.substring(0, lastSpace);
-                            truncated += '…';
-
-                            // Build the DOM structure
-                            descEl.innerHTML = '';
-
-                            // Preview (visible by default)
-                            var previewEl = document.createElement('div');
-                            previewEl.className = 'desc-preview';
-                            previewEl.innerHTML = '<p>' + truncated + '</p>';
-                            descEl.appendChild(previewEl);
-
-                            // Full content (hidden by default)
-                            var fullEl = document.createElement('div');
-                            fullEl.className = 'desc-full';
-                            fullEl.innerHTML = fullHTML;
-                            descEl.appendChild(fullEl);
-
-                            // Read More / Read Less toggle
-                            var toggleBtn = document.createElement('button');
-                            toggleBtn.className = 'accordion-read-more';
-                            toggleBtn.type = 'button';
-                            toggleBtn.textContent = 'Read More';
-                            toggleBtn.addEventListener('click', function () {
-                                var isExpanded = descEl.classList.contains('desc-expanded');
-                                descEl.classList.toggle('desc-expanded');
-                                toggleBtn.textContent = isExpanded ? 'Read More' : 'Read Less';
-                            });
-                            descEl.appendChild(toggleBtn);
-                        } else {
-                            // Short content — show without truncation
-                            descEl.innerHTML = fullHTML;
-                        }
-                    }
-                }
-
-                // Materials
-                if (product.acf.materialDetails) {
-                    var matEl = document.getElementById('pdpAccordionMaterials');
-                    if (matEl) matEl.innerHTML = autoParagraph(product.acf.materialDetails);
-                }
-
-                // Care Guide
-                if (product.acf.careInstructions) {
-                    var careEl = document.getElementById('pdpAccordionCare');
-                    if (careEl) careEl.innerHTML = autoParagraph(product.acf.careInstructions);
-                }
-
-                // Delivery, Payment and Returns
-                if (product.acf.deliveryInfo) {
-                    var delEl = document.getElementById('pdpAccordionDelivery');
-                    if (delEl) delEl.innerHTML = autoParagraph(product.acf.deliveryInfo);
-                }
-
-                console.log('PDP: Accordion descriptions populated from WooCommerce ACF fields');
-            }
-        })
-        .catch(function (err) {
-            console.error('PDP Load Error:', err);
-            // Fail silently — placeholders remain
-        });
-});
+// ==================== PDP DYNAMIC PRODUCT LOADING ====================
+// Legacy PDP logic migrated to src/js/main.js for optimistic rendering.
 
 // ==================== COOKIE CONSENT MANAGER ====================
 /**

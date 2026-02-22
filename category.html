@@ -623,6 +623,37 @@
     <div class="container">
       <!-- Page Title -->
       <h1 class="products-title" id="categoryTitle">COLLECTION</h1>
+      <script>
+        // Instant title resolution — runs synchronously before any module loads
+        (function () {
+          var map = {
+            'silk-sarees': 'SILK SAREES', 'vishnupuri-silk': 'VISHNUPURI SILK',
+            'muslin-sarees': 'MUSLIN', 'jamdani-sarees': 'JAMDANI SAREES',
+            'modal-silk': 'MODAL SILK', 'tussar-silk': 'TUSSAR SILK',
+            'matka-jamdani': 'MATKA JAMDANI', 'tussar-jamdani': 'TUSSAR JAMDANI',
+            'tussar-dhakai-jamdani': 'TUSSAR DHAKAI JAMDANI',
+            'muslin-jamdani': 'MUSLIN JAMDANI',
+            'tissue-matka-jamdani': 'TISSUE MATKA JAMDANI',
+            'silk-lenin': 'SILK LENIN',
+            'silk': 'SILK', 'tissue-silk': 'TISSUE SILK', 'lenin': 'LENIN', 'cotton': 'COTTON',
+            'zari-weaving': 'ZARI WEAVING', 'ikat': 'IKAT',
+            'handloom-weaving': 'HANDLOOM WEAVING', 'kalamkari': 'KALAMKARI',
+            'jamdani-weaving': 'JAMDANI WEAVING', 'temple-border': 'TEMPLE BORDER',
+            'hand-painting': 'HAND PAINTING',
+            'red': 'RED', 'yellow': 'YELLOW', 'brown': 'BROWN', 'black': 'BLACK',
+            'blue': 'BLUE', 'pink': 'PINK', 'green': 'GREEN', 'lavender': 'LAVENDER',
+            'orange': 'ORANGE', 'sea-green': 'SEA GREEN', 'multi-color': 'MULTI COLOR',
+            'all': 'COLLECTION'
+          };
+          var slug = new URLSearchParams(window.location.search).get('type');
+          if (slug) {
+            var title = map[slug] || slug.split('-').map(function (w) { return w.toUpperCase(); }).join(' ');
+            var el = document.getElementById('categoryTitle');
+            if (el) el.textContent = title;
+            document.title = title + ' | Loom Saga - Weaving Indian Culture';
+          }
+        })();
+      </script>
 
       <!-- Toolbar -->
       <div class="products-toolbar">
@@ -781,7 +812,37 @@
 
       <!-- Products Grid -->
       <div class="products-grid" id="categoryProductsGrid">
-        <!-- Products will be injected here dynamically -->
+        <!-- Skeleton loading placeholders — removed by JS once products render -->
+        <div class="skeleton-card" aria-hidden="true">
+          <div class="skeleton-image"></div>
+          <div class="skeleton-text skeleton-text--title"></div>
+          <div class="skeleton-text skeleton-text--price"></div>
+        </div>
+        <div class="skeleton-card" aria-hidden="true">
+          <div class="skeleton-image"></div>
+          <div class="skeleton-text skeleton-text--title"></div>
+          <div class="skeleton-text skeleton-text--price"></div>
+        </div>
+        <div class="skeleton-card" aria-hidden="true">
+          <div class="skeleton-image"></div>
+          <div class="skeleton-text skeleton-text--title"></div>
+          <div class="skeleton-text skeleton-text--price"></div>
+        </div>
+        <div class="skeleton-card" aria-hidden="true">
+          <div class="skeleton-image"></div>
+          <div class="skeleton-text skeleton-text--title"></div>
+          <div class="skeleton-text skeleton-text--price"></div>
+        </div>
+        <div class="skeleton-card" aria-hidden="true">
+          <div class="skeleton-image"></div>
+          <div class="skeleton-text skeleton-text--title"></div>
+          <div class="skeleton-text skeleton-text--price"></div>
+        </div>
+        <div class="skeleton-card" aria-hidden="true">
+          <div class="skeleton-image"></div>
+          <div class="skeleton-text skeleton-text--title"></div>
+          <div class="skeleton-text skeleton-text--price"></div>
+        </div>
       </div>
 
     </div>
@@ -929,7 +990,7 @@
       </div>
       <p class="drawer-note">Taxes, Discounts and shipping calculated at checkout</p>
 
-      <button class="drawer-checkout-btn" onclick="window.location.href='checkout.html'">CHECK OUT</button>
+      <button class="drawer-checkout-btn">CHECK OUT</button>
       <button class="drawer-view-cart-btn" onclick="window.location.href='cart.html'">VIEW MY CART</button>
     </div>
 

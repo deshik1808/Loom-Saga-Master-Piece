@@ -70,7 +70,7 @@ const CategoryRouter = {
 
         console.log('Category Router: Loading category ->', slug);
 
-        // 2. Update Page UI (Titles/SEO)
+        // 2. Update Page UI (Titles/SEO) — set title IMMEDIATELY before product fetch
         this.updateUI(slug);
 
         // 3. Fetch and Render Products

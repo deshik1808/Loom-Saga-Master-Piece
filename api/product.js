@@ -96,6 +96,9 @@ export default async function handler(req, res) {
       checkoutUrl: `${WC_API_URL}/cart/?add-to-cart=${product.id}`
     };
 
+    // Cache at Vercel's edge CDN — 5 min fresh, 10 min stale-while-revalidate
+    res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=600');
+
     return res.status(200).json(mapped);
   } catch (error) {
     console.error("Product API Error:", error);
