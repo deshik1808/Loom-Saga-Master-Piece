@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', async () => {
  *
  * Data sources (in priority order):
  *   1. ProductService (already loaded product list)
- *   2. Direct API call to /api/product?id=<id>
+ *   2. Direct API call to /api/products?id=<id>
  *   3. Local fallback data/products.json
  */
 
@@ -852,7 +852,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (!apiProduct && (productId || product.id)) {
           const idToFetch = productId || product.id;
-          const apiRes = await fetch(`/api/product?id=${encodeURIComponent(idToFetch)}`);
+          const apiRes = await fetch(`/api/products?id=${encodeURIComponent(idToFetch)}`);
           if (apiRes.ok) {
             apiProduct = await apiRes.json();
             if (apiProduct && apiProduct.id) {

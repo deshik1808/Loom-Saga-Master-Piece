@@ -90,7 +90,7 @@ class BlogService {
 
         // ── 2. Fetch from API ──
         try {
-            const response = await fetch(`/api/post?slug=${encodeURIComponent(slug)}`);
+            const response = await fetch(`/api/posts?slug=${encodeURIComponent(slug)}`);
 
             if (!response.ok) {
                 if (response.status === 404) {
