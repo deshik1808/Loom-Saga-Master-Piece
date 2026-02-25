@@ -80,11 +80,34 @@ const CategoryRouter = {
 
             const grid = document.getElementById('categoryProductsGrid');
             if (grid) {
-                grid.innerHTML = '';
-                if (products.length > 0) {
-                    window.ProductRenderer.renderGrid(products, grid);
+                const skeletons = grid.querySelectorAll('.skeleton-card');
+
+                if (skeletons.length > 0) {
+                    // Fade out skeletons
+                    skeletons.forEach(s => s.classList.add('fade-out-premium'));
+
+                    // Delay render to allow fade out
+                    setTimeout(() => {
+                        grid.innerHTML = '';
+                        if (products.length > 0) {
+                            window.ProductRenderer.renderGrid(products, grid);
+                            grid.classList.add('fade-in-premium');
+
+                            // Clean up fade class
+                            setTimeout(() => {
+                                grid.classList.remove('fade-in-premium');
+                            }, 800);
+                        } else {
+                            this.showEmpty(`No products found in the ${this.formatTitle(slug)} collection.`);
+                        }
+                    }, 500);
                 } else {
-                    this.showEmpty(`No products found in the ${this.formatTitle(slug)} collection.`);
+                    grid.innerHTML = '';
+                    if (products.length > 0) {
+                        window.ProductRenderer.renderGrid(products, grid);
+                    } else {
+                        this.showEmpty(`No products found in the ${this.formatTitle(slug)} collection.`);
+                    }
                 }
             }
         } catch (error) {
