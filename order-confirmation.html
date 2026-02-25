@@ -819,73 +819,7 @@
 
   <!-- JavaScript -->
   <script type="module" src="src/js/main.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const orderData = JSON.parse(localStorage.getItem('loomSaga_lastOrder'));
-
-      // If no order data, redirect to home
-      if (!orderData) {
-        window.location.href = 'index.html';
-        return;
-      }
-
-      // Display order ID
-      document.getElementById('orderId').textContent = orderData.orderId;
-
-      // Display order items
-      const orderItemsContainer = document.getElementById('orderItems');
-      let itemsHtml = '';
-
-      orderData.items.forEach(item => {
-        itemsHtml += `
-            <div class="order-item">
-              <img src="${item.image}" alt="${item.name}" class="order-item-image">
-              <div class="order-item-info">
-                <p class="order-item-name">${item.name}</p>
-                <p class="order-item-qty">Qty: ${item.quantity}</p>
-              </div>
-              <p class="order-item-price">₹${formatPrice(item.price * item.quantity)}</p>
-            </div>
-          `;
-      });
-      orderItemsContainer.innerHTML = itemsHtml;
-
-      // Display totals
-      document.getElementById('confirmSubtotal').textContent = `₹${formatPrice(orderData.subtotal)}`;
-      document.getElementById('confirmTax').textContent = `₹${formatPrice(orderData.tax)}`;
-      document.getElementById('confirmTotal').textContent = `₹${formatPrice(orderData.total)}`;
-
-      // Display shipping address
-      const shipping = orderData.shipping;
-      document.getElementById('shippingAddress').innerHTML = `
-          <p><strong>${shipping.fullName}</strong></p>
-          <p>${shipping.address1}</p>
-          ${shipping.address2 ? `<p>${shipping.address2}</p>` : ''}
-          <p>${shipping.city}, ${shipping.state} - ${shipping.pincode}</p>
-          <p>Phone: ${shipping.phone}</p>
-        `;
-
-      // Display payment method
-      const paymentMethod = orderData.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online Payment';
-      document.getElementById('paymentMethod').textContent = paymentMethod;
-
-      // Calculate estimated delivery date
-      const orderDate = new Date(orderData.orderDate);
-      const minDelivery = new Date(orderDate);
-      const maxDelivery = new Date(orderDate);
-      minDelivery.setDate(minDelivery.getDate() + 7);
-      maxDelivery.setDate(maxDelivery.getDate() + 10);
-
-      const options = { month: 'short', day: 'numeric' };
-      const deliveryText = `${minDelivery.toLocaleDateString('en-IN', options)} - ${maxDelivery.toLocaleDateString('en-IN', options)}, ${maxDelivery.getFullYear()}`;
-      document.getElementById('deliveryDate').textContent = deliveryText;
-
-      // Helper function
-      function formatPrice(amount) {
-        return amount.toLocaleString('en-IN');
-      }
-    });
-  </script>
+  <script type="module" src="src/js/modules/OrderConfirmation.js"></script>
 </body>
 
 </html>

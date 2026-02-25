@@ -47,13 +47,22 @@ const CartRenderer = {
         const suspendedCart = sessionStorage.getItem('loomSaga_suspendedCart');
         let restoreBanner = document.getElementById('cartRestoreBanner');
 
+        // Find the default empty state content (the text and "Continue Shopping" button)
+        const defaultEmptyContent = cartEmptyEl.querySelector('.cart-empty-content') || cartEmptyEl.firstElementChild;
+
         if (suspendedCart && JSON.parse(suspendedCart).length > 0) {
+          // Hide standard empty state message
+          if (defaultEmptyContent && defaultEmptyContent.id !== 'cartRestoreBanner') {
+            defaultEmptyContent.style.display = 'none';
+          }
+
           if (!restoreBanner) {
             restoreBanner = document.createElement('div');
             restoreBanner.id = 'cartRestoreBanner';
             restoreBanner.style.marginTop = '2rem';
+            restoreBanner.style.textAlign = 'center';
             restoreBanner.innerHTML = `
-              <p style="margin-bottom:1rem;color:var(--color-text-light);">Did you back out of checkout?</p>
+              <p style="margin-bottom:1rem;color:var(--color-text-light);font-size:1.1rem;">It looks like you didn't complete your checkout.</p>
               <button id="restoreCartBtn" class="secondary-btn" style="width:auto;padding:0.75rem 2.5rem;font-size:0.9rem;">Restore Previous Cart</button>
             `;
             cartEmptyEl.appendChild(restoreBanner);
@@ -63,8 +72,14 @@ const CartRenderer = {
             });
           }
           restoreBanner.style.display = 'block';
-        } else if (restoreBanner) {
-          restoreBanner.style.display = 'none';
+        } else {
+          // Show standard empty state message
+          if (defaultEmptyContent && defaultEmptyContent.id !== 'cartRestoreBanner') {
+            defaultEmptyContent.style.display = 'block'; // Or flex, depending on CSS
+          }
+          if (restoreBanner) {
+            restoreBanner.style.display = 'none';
+          }
         }
       }
       return;
@@ -205,7 +220,12 @@ const CartRenderer = {
         const suspendedCart = sessionStorage.getItem('loomSaga_suspendedCart');
         let restoreBanner = document.getElementById('drawerRestoreBanner');
 
+        let emptyStateContent = drawerEmpty.querySelector('.search-no-results') || drawerEmpty.firstElementChild;
+
         if (suspendedCart && JSON.parse(suspendedCart).length > 0) {
+          if (emptyStateContent && emptyStateContent.id !== 'drawerRestoreBanner') {
+            emptyStateContent.style.display = 'none';
+          }
           if (!restoreBanner) {
             restoreBanner = document.createElement('div');
             restoreBanner.id = 'drawerRestoreBanner';
@@ -222,8 +242,13 @@ const CartRenderer = {
             });
           }
           restoreBanner.style.display = 'block';
-        } else if (restoreBanner) {
-          restoreBanner.style.display = 'none';
+        } else {
+          if (emptyStateContent && emptyStateContent.id !== 'drawerRestoreBanner') {
+            emptyStateContent.style.display = 'block';
+          }
+          if (restoreBanner) {
+            restoreBanner.style.display = 'none';
+          }
         }
 
       } else {

@@ -164,7 +164,8 @@ export function updateBadge() {
  * @returns {string} Formatted price
  */
 export function formatPrice(amount) {
-  return `Rs. ${amount.toLocaleString('en-IN', {
+  const safeAmount = Number(amount) || 0;
+  return `Rs. ${safeAmount.toLocaleString('en-IN', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
   })}`;
@@ -217,6 +218,10 @@ export function restoreSuspendedCart() {
   if (suspended) {
     saveItems(JSON.parse(suspended));
     sessionStorage.removeItem('loomSaga_suspendedCart');
+
+    // Dispatch event to force CartRenderer to update
+    const event = new CustomEvent('cartUpdated');
+    window.dispatchEvent(event);
   }
 }
 

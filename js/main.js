@@ -1340,7 +1340,8 @@ const CartManager = {
      * @returns {string} Formatted price
      */
     formatPrice(amount) {
-        return `Rs. ${amount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+        const safeAmount = Number(amount) || 0;
+        return `Rs. ${safeAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
     },
 
     /**
@@ -1662,11 +1663,11 @@ const CartManager = {
      */
     clearCart() {
         this.saveItems([]);
-        this.renderCart();
+        // this.renderCart(); // Handled by CartRenderer
     },
 
     init() {
-        this.initDrawer();
+        // this.initDrawer(); // Handled by CartRenderer
         this.updateBadge();
     }
 };

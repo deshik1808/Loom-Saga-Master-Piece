@@ -40,12 +40,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   CartManager.updateBadge();
   WishlistManager.updateBadge();
 
-  // During migration, only run module checkout/cart UI on pages without legacy script.
-  const hasLegacyMainScript = !!document.querySelector('script[src="js/main.js"]');
-  if (!hasLegacyMainScript) {
-    CartRenderer.init();
-    CheckoutRedirectManager.init();
-  }
+  // Initialize cart and checkout handlers unconditionally
+  CartRenderer.init();
+  CheckoutRedirectManager.init();
 
   // Initialize auth manager (updates header UI based on session)
   AuthManager.init();
