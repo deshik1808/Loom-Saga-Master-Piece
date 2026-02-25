@@ -131,8 +131,8 @@
                         </div>
                     </li>
                     <li class="nav-item has-dropdown">
-                        <a href="/category?type=modal-silk" class="nav-link"><span class="nav-link-text">Sarees</span> <svg
-                                class="dropdown-arrow" width="8" height="5" viewBox="0 0 8 5" fill="none">
+                        <a href="/category?type=modal-silk" class="nav-link"><span class="nav-link-text">Sarees</span>
+                            <svg class="dropdown-arrow" width="8" height="5" viewBox="0 0 8 5" fill="none">
                                 <path d="M1 1L4 4L7 1" stroke="currentColor" stroke-width="1.2" />
                             </svg></a>
                         <div class="mega-menu mega-menu-sarees">
@@ -957,6 +957,9 @@
                 if (emailEl) emailEl.textContent = user.email || '—';
             }
 
+            // Start fetching orders
+            fetchAndRenderOrders(AuthManager.getToken(), user?.email);
+
             // Main Logout button
             const logoutBtn = document.getElementById('logoutBtn');
             if (logoutBtn) {
@@ -965,6 +968,79 @@
                     window.location.href = 'login.html'; // Redirect to login after logout
                 });
             }
+        }
+
+        async function fetchAndRenderOrders(token, userEmail) {
+            const orderHistoryBody = document.getElementById('orderHistoryBody');
+            if (!orderHistoryBody) return;
+
+            try {
+                const emailParam = userEmail ? `?email=${encodeURIComponent(userEmail)}` : '';
+                const response = await fetch(`/api/orders${emailParam}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch orders');
+                }
+
+                const data = await response.json();
+                if (data.success && data.orders && data.orders.length > 0) {
+                    renderOrders(data.orders, orderHistoryBody);
+                }
+                // Else: Keep the default empty state
+            } catch (error) {
+                console.error('Error fetching orders:', error);
+                orderHistoryBody.innerHTML = `<div class="account-empty-state"><p>Error loading your orders. Please try again later.</p></div>`;
+            }
+        }
+
+        function renderOrders(orders, container) {
+            let html = '<div class="orders-list" style="display: flex; flex-direction: column; gap: 1.5rem;">';
+
+            orders.forEach(order => {
+                const date = new Date(order.date_created).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' });
+
+                html += `
+                <div class="order-card" style="border: 1px solid var(--border-color); border-radius: 4px; padding: 1.5rem; background: #fff;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color);">
+                        <div>
+                            <p style="font-weight: 600; font-size: 1.1rem; margin-bottom: 0.25rem;">Order #${order.number}</p>
+                            <p style="color: #666; font-size: 0.9rem;">${date}</p>
+                        </div>
+                        <div style="text-align: right;">
+                            <p style="font-weight: 600; font-size: 1.1rem; margin-bottom: 0.25rem;">${order.currency_symbol || '₹'}${order.total.toFixed(2)}</p>
+                            <span style="display: inline-block; padding: 0.25rem 0.75rem; background: var(--bg-light); border: 1px solid var(--border-color); border-radius: 20px; font-size: 0.8rem; text-transform: uppercase;">
+                                ${order.status}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="order-items" style="display: flex; flex-direction: column; gap: 0.75rem;">
+                `;
+
+                order.line_items.forEach(item => {
+                    const price = (item.total / item.quantity).toFixed(2);
+                    html += `
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div style="width: 50px; height: 65px; flex-shrink: 0; background-color: var(--bg-light); border-radius: 4px; overflow: hidden;">
+                                ${item.image ? `<img src="${item.image}" alt="${item.name}" style="width: 100%; height: 100%; object-fit: cover;">` : ''}
+                            </div>
+                            <div style="flex-grow: 1;">
+                                <a href="product-detail.html?id=${item.id}" style="color: var(--text-dark); text-decoration: none; font-weight: 500; font-size: 0.95rem; display: block; margin-bottom: 0.25rem;" onmouseover="this.style.color='var(--color-gold)'" onmouseout="this.style.color='var(--text-dark)'">${item.name}</a>
+                                <p style="color: #666; font-size: 0.85rem;">Qty: ${item.quantity} × ${order.currency_symbol || '₹'}${price}</p>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += `
+                    </div>
+                </div>
+                `;
+            });
+
+            html += '</div>';
+            container.innerHTML = html;
         }
 
         // Start initialization

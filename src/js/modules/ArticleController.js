@@ -19,9 +19,8 @@ if (!slug) {
 async function loadArticle(slug) {
     const { post, relatedPosts } = await blogService.getPost(slug);
 
-    if (loadingEl) loadingEl.style.display = 'none';
-
     if (!post) {
+        if (loadingEl) loadingEl.style.display = 'none';
         if (notFoundEl) notFoundEl.style.display = '';
         return;
     }
@@ -39,6 +38,10 @@ async function loadArticle(slug) {
         if (post.featuredImage) {
             heroImg.src = post.featuredImage;
             heroImg.alt = post.featuredImageAlt || post.title;
+            // Add premium fade to the hero container once the image is loaded
+            heroImg.onload = () => {
+                heroImg.parentElement.classList.add('loaded');
+            };
         } else {
             heroImg.parentElement.style.display = 'none';
         }
@@ -76,8 +79,22 @@ async function loadArticle(slug) {
         fbBtn.target = '_blank';
     }
 
-    // Show content
-    if (contentEl) contentEl.style.display = '';
+    // Premium Transition: Fade out loading, Fade in content
+    if (loadingEl) {
+        loadingEl.classList.add('fade-out-premium');
+        setTimeout(() => {
+            loadingEl.style.display = 'none';
+            if (contentEl) {
+                contentEl.style.display = '';
+                contentEl.classList.add('fade-in-premium');
+            }
+        }, 600);
+    } else {
+        if (contentEl) {
+            contentEl.style.display = '';
+            contentEl.classList.add('fade-in-premium');
+        }
+    }
 
     // Related articles
     let displayPosts = relatedPosts || [];

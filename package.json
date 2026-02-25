@@ -19,5 +19,8 @@
     "handloom"
   ],
   "author": "Loom Saga",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "jsdom": "^28.1.0"
+  }
 }

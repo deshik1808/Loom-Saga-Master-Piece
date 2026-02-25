@@ -13,6 +13,8 @@ import ProductRenderer from './modules/ProductRenderer.js';
 import NewsletterManager from './modules/NewsletterManager.js';
 import ContactFormManager from './modules/ContactFormManager.js';
 import { AuthManager } from './modules/AuthManager.js';
+import CartRenderer from './modules/CartRenderer.js';
+import CheckoutRedirectManager from './modules/CheckoutRedirectManager.js';
 
 // Export for global access (backward compatibility)
 window.CartManager = CartManager;
@@ -38,6 +40,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   CartManager.updateBadge();
   WishlistManager.updateBadge();
 
+  // During migration, only run module checkout/cart UI on pages without legacy script.
+  const hasLegacyMainScript = !!document.querySelector('script[src="js/main.js"]');
+  if (!hasLegacyMainScript) {
+    CartRenderer.init();
+    CheckoutRedirectManager.init();
+  }
+
   // Initialize auth manager (updates header UI based on session)
   AuthManager.init();
 
@@ -59,6 +68,8 @@ document.addEventListener('DOMContentLoaded', async () => {
  * 
  * ✅ COMPLETED MODULES:
  *   - CartManager.js       (Cart operations with localStorage)
+ *   - CartRenderer.js      (Cart page + drawer rendering)
+ *   - CheckoutRedirectManager.js (Woo checkout handoff from cart actions)
  *   - WishlistManager.js   (Wishlist operations with localStorage)
  *   - ScrollAnimations.js  (Intersection Observer, header scroll)
  *   - ProductService.js    (Product data layer, filtering, search)
@@ -404,7 +415,7 @@ function renderPDP(product) {
       img.alt = `${product.name} - View ${i + 1}`;
       img.loading = 'lazy';
       img.onload = function () {
-        this.parentElement.classList.remove('luxury-shimmer');
+        this.parentElement.classList.add('loaded');
         this.style.opacity = '1';
       };
       // Attach click event for lightbox

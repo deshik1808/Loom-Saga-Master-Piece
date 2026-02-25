@@ -68,14 +68,15 @@ function renderPagination() {
 async function loadPosts() {
     if (!grid) return;
     // Show skeleton
-    grid.querySelectorAll('.skeleton-card').forEach(el => el.style.display = '');
+    grid.querySelectorAll('.skeleton-card').forEach(el => {
+        el.style.display = '';
+        el.classList.remove('fade-out-premium');
+    });
 
     const data = await blogService.getPosts({ perPage: POSTS_PER_PAGE, page: currentPage });
 
-    // Remove skeletons
-    grid.querySelectorAll('.skeleton-card').forEach(el => el.remove());
-
     if (!data.posts || data.posts.length === 0) {
+        grid.querySelectorAll('.skeleton-card').forEach(el => el.remove());
         grid.style.display = 'none';
         if (emptyState) emptyState.style.display = '';
         if (paginationEl) paginationEl.style.display = 'none';
@@ -83,8 +84,24 @@ async function loadPosts() {
     }
 
     totalPages = data.totalPages || 1;
-    grid.innerHTML = data.posts.map(renderCard).join('');
-    renderPagination();
+
+    // Premium Transition: Fade out skeletons, then show content
+    const skeletons = grid.querySelectorAll('.skeleton-card');
+    skeletons.forEach(el => el.classList.add('fade-out-premium'));
+
+    setTimeout(() => {
+        skeletons.forEach(el => el.remove());
+        grid.innerHTML = data.posts.map(renderCard).join('');
+        grid.classList.add('fade-in-premium');
+
+        // Remove individual shimmer/fade classes after animation completes
+        setTimeout(() => {
+            grid.classList.remove('fade-in-premium');
+        }, 800);
+
+        renderPagination();
+    }, 600);
+
 }
 
 // Pagination arrow handlers

@@ -1388,7 +1388,38 @@ const CartManager = {
         if (items.length === 0) {
             // Show empty state
             if (cartContentEl) cartContentEl.style.display = 'none';
-            if (cartEmptyEl) cartEmptyEl.style.display = 'block';
+            if (cartEmptyEl) {
+                cartEmptyEl.style.display = 'block';
+
+                // Look for suspended cart (Soft Clear)
+                const suspendedCart = sessionStorage.getItem('loomSaga_suspendedCart');
+                let restoreBanner = document.getElementById('cartRestoreBanner');
+
+                if (suspendedCart && JSON.parse(suspendedCart).length > 0) {
+                    if (!restoreBanner) {
+                        restoreBanner = document.createElement('div');
+                        restoreBanner.id = 'cartRestoreBanner';
+                        restoreBanner.style.marginTop = '2rem';
+                        restoreBanner.innerHTML = `
+                            <p style="margin-bottom:1rem;color:var(--color-text-light);">Did you back out of checkout?</p>
+                            <button id="restoreCartBtn" class="secondary-btn" style="width:auto;padding:0.75rem 2.5rem;font-size:0.9rem;">Restore Previous Cart</button>
+                        `;
+                        cartEmptyEl.appendChild(restoreBanner);
+
+                        document.getElementById('restoreCartBtn').addEventListener('click', () => {
+                            const suspended = sessionStorage.getItem('loomSaga_suspendedCart');
+                            if (suspended) {
+                                this.saveItems(JSON.parse(suspended));
+                                sessionStorage.removeItem('loomSaga_suspendedCart');
+                                this.renderCart();
+                            }
+                        });
+                    }
+                    restoreBanner.style.display = 'block';
+                } else if (restoreBanner) {
+                    restoreBanner.style.display = 'none';
+                }
+            }
             return;
         }
 
@@ -2108,38 +2139,41 @@ function initCheckout() {
                 return;
             }
 
-            // Show loading state on button
+            // Show high-end luxury loading state
             const originalText = checkoutBtn.textContent;
-            checkoutBtn.textContent = 'PREPARING CHECKOUT...';
+            checkoutBtn.innerHTML = '<span class="loading-dot">.</span> PREPARING SECURE CHECKOUT...';
             checkoutBtn.style.pointerEvents = 'none';
+            checkoutBtn.style.letterSpacing = '0.05em';
             checkoutBtn.style.opacity = '0.7';
 
             try {
-                // Call our serverless function to get the secure checkout URL
+                // Clear the cart before redirecting so that hitting the back button will show an empty cart
+                // BUT save it to a suspended state first so the user can restore it if they backed out
+                sessionStorage.setItem('loomSaga_suspendedCart', JSON.stringify(items));
+                CartManager.saveItems([]);
+
                 const response = await fetch('/api/checkout', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ items })
                 });
 
                 const data = await response.json();
 
                 if (data.url) {
-                    // Redirect to WordPress Checkout
                     window.location.href = data.url;
                 } else {
                     throw new Error(data.error || 'Failed to get checkout URL');
                 }
             } catch (error) {
                 console.error('Checkout Error:', error);
-                alert('Sorry, we encountered an issue redirecting to checkout. Please try again.');
+                checkoutBtn.innerHTML = 'COULD NOT CONNECT TO STORE';
 
-                // Reset button state
-                checkoutBtn.textContent = originalText;
-                checkoutBtn.style.pointerEvents = 'auto';
-                checkoutBtn.style.opacity = '1';
+                setTimeout(() => {
+                    checkoutBtn.textContent = originalText;
+                    checkoutBtn.style.pointerEvents = 'auto';
+                    checkoutBtn.style.opacity = '1';
+                }, 3000);
             }
         });
     });

@@ -104,7 +104,7 @@ class ProductRenderer {
                  alt="${this.escapeHtml(product.name)}" 
                  class="product-card-image-primary"
                  ${loadingAttr}
-                 onload="this.parentElement.classList.remove('luxury-shimmer')">
+                 onload="this.parentElement.classList.add('loaded')">
             ${hoverImageUrl ? `<img src="${hoverImageUrl}" alt="" class="product-card-image-hover" loading="lazy" aria-hidden="true">` : ''}
             ${isOutOfStock ? '<span class="product-badge product-badge--oos">Out of Stock</span>' : ''}
             ${hasSale ? '<span class="product-badge product-badge--sale">Sale</span>' : ''}

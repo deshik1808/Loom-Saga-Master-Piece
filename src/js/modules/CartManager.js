@@ -6,6 +6,11 @@
  */
 
 const STORAGE_KEY = 'loomSaga_cart';
+export const CART_UPDATED_EVENT = 'loomSaga:cart-updated';
+
+function emitCartUpdated(items) {
+  window.dispatchEvent(new CustomEvent(CART_UPDATED_EVENT, { detail: { items } }));
+}
 
 /**
  * Get all cart items
@@ -23,6 +28,7 @@ export function getItems() {
 export function saveItems(items) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
   updateBadge();
+  emitCartUpdated(items);
 }
 
 /**
@@ -90,11 +96,6 @@ export function addItem(product) {
 export function removeItem(productId) {
   const items = getItems().filter(item => String(item.id) !== String(productId));
   saveItems(items);
-
-  // Re-render cart if on cart page
-  if (typeof window.renderCart === 'function') {
-    window.renderCart();
-  }
 }
 
 /**
@@ -119,11 +120,6 @@ export function updateQuantity(productId, quantity) {
       items[itemIndex].quantity = quantity;
     }
     saveItems(items);
-  }
-
-  // Re-render cart if on cart page
-  if (typeof window.renderCart === 'function') {
-    window.renderCart();
   }
 
   return { success: true, message: 'Updated' };
@@ -205,6 +201,25 @@ export function showNotification(message) {
   }, 3000);
 }
 
+/**
+ * Save cart to session storage before clearing (Soft Clear)
+ * @param {Array} items - Cart items array
+ */
+export function saveSuspendedCart(items) {
+  sessionStorage.setItem('loomSaga_suspendedCart', JSON.stringify(items));
+}
+
+/**
+ * Restore suspended cart from session storage
+ */
+export function restoreSuspendedCart() {
+  const suspended = sessionStorage.getItem('loomSaga_suspendedCart');
+  if (suspended) {
+    saveItems(JSON.parse(suspended));
+    sessionStorage.removeItem('loomSaga_suspendedCart');
+  }
+}
+
 // Object export for backward compatibility
 const CartManager = {
   getItems,
@@ -216,7 +231,9 @@ const CartManager = {
   getItemCount,
   updateBadge,
   formatPrice,
-  showNotification
+  showNotification,
+  saveSuspendedCart,
+  restoreSuspendedCart
 };
 
 export default CartManager;
