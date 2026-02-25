@@ -5932,13 +5932,8 @@ section.fashion-insights-section {
   transition: opacity 0.6s ease;
 }
 
-.luxury-shimmer img {
+.luxury-shimmer:not(.loaded) img {
   opacity: 0;
-  transition: opacity 0.6s ease;
-}
-
-.luxury-shimmer.loaded img {
-  opacity: 1;
 }
 
 .luxury-shimmer.loaded::after {

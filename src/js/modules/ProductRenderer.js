@@ -56,14 +56,15 @@ class ProductRenderer {
     const images = product.images || {};
     const gallery = Array.isArray(images) ? images : (images.gallery || []);
 
-    const primaryUrl = gallery[0]
-      || product.primaryImage
+    const primaryUrl = product.primaryImage
       || images.primary
+      || (Array.isArray(images) ? images[0] : false)
+      || gallery[0]
       || images.placeholder;
     const imageUrl = this.getOptimizedImage(primaryUrl, 600);
 
     // Second gallery image shown on hover (if present)
-    const secondaryRaw = gallery[1] || null;
+    const secondaryRaw = Array.isArray(images) ? images[1] : gallery[0];
     const hoverImageUrl = secondaryRaw ? this.getOptimizedImage(secondaryRaw, 600) : null;
 
     const loadingAttr = lazy ? 'loading="lazy"' : 'loading="eager"';
