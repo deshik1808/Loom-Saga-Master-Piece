@@ -56,15 +56,14 @@ class ProductRenderer {
     const images = product.images || {};
     const gallery = Array.isArray(images) ? images : (images.gallery || []);
 
-    const primaryUrl = product.primaryImage
+    const primaryUrl = gallery[0]
+      || product.primaryImage
       || images.primary
-      || (Array.isArray(images) ? images[0] : false)
-      || gallery[0]
       || images.placeholder;
     const imageUrl = this.getOptimizedImage(primaryUrl, 600);
 
     // Second gallery image shown on hover (if present)
-    const secondaryRaw = Array.isArray(images) ? images[1] : gallery[0];
+    const secondaryRaw = gallery[1] || null;
     const hoverImageUrl = secondaryRaw ? this.getOptimizedImage(secondaryRaw, 600) : null;
 
     const loadingAttr = lazy ? 'loading="lazy"' : 'loading="eager"';
@@ -105,7 +104,7 @@ class ProductRenderer {
                  alt="${this.escapeHtml(product.name)}" 
                  class="product-card-image-primary"
                  ${loadingAttr}
-                 onload="this.parentElement.classList.add('loaded')">
+                 onload="this.parentElement.classList.remove('luxury-shimmer')">
             ${hoverImageUrl ? `<img src="${hoverImageUrl}" alt="" class="product-card-image-hover" loading="lazy" aria-hidden="true">` : ''}
             ${isOutOfStock ? '<span class="product-badge product-badge--oos">Out of Stock</span>' : ''}
             ${hasSale ? '<span class="product-badge product-badge--sale">Sale</span>' : ''}

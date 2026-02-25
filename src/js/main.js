@@ -415,7 +415,7 @@ function renderPDP(product) {
       img.alt = `${product.name} - View ${i + 1}`;
       img.loading = 'lazy';
       img.onload = function () {
-        this.parentElement.classList.add('loaded');
+        this.parentElement.classList.remove('luxury-shimmer');
         this.style.opacity = '1';
       };
       // Attach click event for lightbox

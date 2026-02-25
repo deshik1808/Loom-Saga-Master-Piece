@@ -38,9 +38,8 @@ async function loadArticle(slug) {
         if (post.featuredImage) {
             heroImg.src = post.featuredImage;
             heroImg.alt = post.featuredImageAlt || post.title;
-            // Add premium fade to the hero container once the image is loaded
             heroImg.onload = () => {
-                heroImg.parentElement.classList.add('loaded');
+                heroImg.parentElement.classList.remove('luxury-shimmer');
             };
         } else {
             heroImg.parentElement.style.display = 'none';
