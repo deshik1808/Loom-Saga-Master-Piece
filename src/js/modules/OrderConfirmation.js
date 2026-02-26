@@ -1,107 +1,140 @@
 /**
  * Order Confirmation Controller
- * Handles the display and logic for the post-checkout order confirmation page.
+ * Fetches real order data from WooCommerce via /api/order
+ * and renders the confirmation page dynamically.
  */
 
 class OrderConfirmationController {
-    init() {
-        this.renderOrderDetails();
-    }
-
-    renderOrderDetails() {
+    async init() {
         const urlParams = new URLSearchParams(window.location.search);
-        const orderIdFromUrl = urlParams.get('order');
+        const orderId = urlParams.get('order');
 
-        let orderData = JSON.parse(localStorage.getItem('loomSaga_lastOrder'));
-
-        // If returning straight from checkout with an ID but no local order data
-        if (orderIdFromUrl && !orderData) {
-            // Create a synthetic order data object so the page renders beautifully
-            orderData = {
-                orderId: 'LS-' + orderIdFromUrl.padStart(6, '0'),
-                items: [],
-                subtotal: 0,
-                tax: 0,
-                total: 0,
-                shipping: { fullName: 'Customer', address1: '', city: '', state: '', pincode: '', phone: '' },
-                paymentMethod: 'Online Payment',
-                orderDate: new Date().toISOString()
-            };
-            // We could fetch actual details from a secure endpoints in the future
-        } else if (!orderData && !orderIdFromUrl) {
+        if (!orderId) {
             window.location.href = 'index.html';
             return;
         }
 
-        // Automatically empty the shopping cart (and suspended cart) since the order was successful
+        // Clear cart immediately — checkout was completed
         localStorage.removeItem('loomSaga_cart');
         localStorage.removeItem('loomSaga_suspendedCart');
         window.dispatchEvent(new Event('cartUpdated'));
 
-        // Display order ID
-        document.getElementById('orderId').textContent = orderData.orderId;
+        // Show the loading state
+        this.showLoading();
 
-        // Display order items
-        const orderItemsContainer = document.getElementById('orderItems');
-        let itemsHtml = '';
+        try {
+            const res = await fetch(`/api/orders?id=${orderId}`);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const data = await res.json();
 
-        orderData.items.forEach(item => {
-            itemsHtml += `
-          <div class="oc-item">
-            <img src="${item.image}" alt="${item.name}" class="oc-item__img">
-            <div>
-              <p class="oc-item__name">${item.name}</p>
-              <p class="oc-item__qty">Qty: ${item.quantity}</p>
-            </div>
-            <p class="oc-item__price">&#x20B9;${this.formatPrice(item.price * item.quantity)}</p>
-          </div>
-        `;
-        });
-
-        if (!itemsHtml) {
-            itemsHtml = '<p class="oc-items-empty">Your order details are available in your confirmation email.</p>';
-        }
-        orderItemsContainer.innerHTML = itemsHtml;
-
-        // Display totals
-        document.getElementById('confirmSubtotal').textContent = `₹${this.formatPrice(orderData.subtotal)}`;
-        document.getElementById('confirmTax').textContent = `₹${this.formatPrice(orderData.tax)}`;
-        document.getElementById('confirmTotal').textContent = `₹${this.formatPrice(orderData.total)}`;
-
-        // Display shipping address
-        if (orderData.shipping && document.getElementById('shippingAddress')) {
-            const shipping = orderData.shipping;
-            document.getElementById('shippingAddress').innerHTML = `
-            <p><strong>${shipping.fullName}</strong></p>
-            <p>${shipping.address1}</p>
-            ${shipping.address2 ? `<p>${shipping.address2}</p>` : ''}
-            <p>${shipping.city}, ${shipping.state} - ${shipping.pincode}</p>
-            <p>Phone: ${shipping.phone}</p>
-          `;
-        }
-
-        // Display payment method
-        if (document.getElementById('paymentMethod')) {
-            const paymentMethod = orderData.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online Payment';
-            document.getElementById('paymentMethod').textContent = paymentMethod;
-        }
-
-        // Calculate estimated delivery date
-        if (document.getElementById('deliveryDate')) {
-            const orderDate = new Date(orderData.orderDate);
-            const minDelivery = new Date(orderDate);
-            const maxDelivery = new Date(orderDate);
-            minDelivery.setDate(minDelivery.getDate() + 7);
-            maxDelivery.setDate(maxDelivery.getDate() + 10);
-
-            const options = { month: 'short', day: 'numeric' };
-            const deliveryText = `${minDelivery.toLocaleDateString('en-IN', options)} - ${maxDelivery.toLocaleDateString('en-IN', options)}, ${maxDelivery.getFullYear()}`;
-            document.getElementById('deliveryDate').textContent = deliveryText;
+            if (data.success && data.order) {
+                this.render(data.order);
+            } else {
+                this.renderFallback(orderId);
+            }
+        } catch (err) {
+            console.warn('Could not fetch order from API, using fallback:', err.message);
+            this.renderFallback(orderId);
         }
     }
 
-    // Helper function
+    showLoading() {
+        const orderIdEl = document.getElementById('orderId');
+        if (orderIdEl) orderIdEl.textContent = '...';
+    }
+
+    /**
+     * Render with real WooCommerce order data
+     */
+    render(order) {
+        // Order number — use WooCommerce's own order number
+        const orderIdEl = document.getElementById('orderId');
+        if (orderIdEl) orderIdEl.textContent = `#${order.number}`;
+
+        // Line items
+        const itemsContainer = document.getElementById('orderItems');
+        if (itemsContainer) {
+            if (order.line_items && order.line_items.length > 0) {
+                itemsContainer.innerHTML = order.line_items.map(item => `
+                    <div class="oc-item">
+                        ${item.image ? `<img src="${item.image}" alt="${item.name}" class="oc-item__img">` : '<div class="oc-item__img-placeholder"></div>'}
+                        <div>
+                            <p class="oc-item__name">${item.name}</p>
+                            <p class="oc-item__qty">Qty: ${item.quantity}</p>
+                        </div>
+                        <p class="oc-item__price">${order.currency_symbol}${this.formatPrice(parseFloat(item.total))}</p>
+                    </div>
+                `).join('');
+            } else {
+                itemsContainer.innerHTML = '<p class="oc-items-empty">Order details sent to your email.</p>';
+            }
+        }
+
+        // Total
+        const totalEl = document.getElementById('confirmTotal');
+        if (totalEl) totalEl.textContent = `${order.currency_symbol}${this.formatPrice(parseFloat(order.total))}`;
+
+        // Payment method
+        const paymentEl = document.getElementById('paymentMethod');
+        if (paymentEl) paymentEl.textContent = order.payment_method_title || 'Online Payment';
+
+        // Order status
+        const statusEl = document.getElementById('orderStatus');
+        if (statusEl) {
+            const statusMap = {
+                'processing': 'Processing',
+                'completed': 'Completed',
+                'on-hold': 'On Hold',
+                'pending': 'Pending Payment',
+                'cancelled': 'Cancelled',
+                'refunded': 'Refunded',
+                'failed': 'Failed',
+            };
+            statusEl.textContent = statusMap[order.status] || order.status;
+        }
+
+        // Delivery estimate (calculated from order date)
+        const deliveryEl = document.getElementById('deliveryDate');
+        if (deliveryEl && order.date_created) {
+            const orderDate = new Date(order.date_created);
+            const min = new Date(orderDate); min.setDate(min.getDate() + 7);
+            const max = new Date(orderDate); max.setDate(max.getDate() + 10);
+            const opts = { month: 'short', day: 'numeric' };
+            deliveryEl.textContent = `${min.toLocaleDateString('en-IN', opts)} - ${max.toLocaleDateString('en-IN', opts)}, ${max.getFullYear()}`;
+        }
+
+        // Email confirmation line
+        const emailEl = document.getElementById('confirmEmail');
+        if (emailEl && order.billing?.email) {
+            emailEl.textContent = order.billing.email;
+            emailEl.closest('.oc-email-line')?.classList.remove('oc-hidden');
+        }
+    }
+
+    /**
+     * Fallback when API is unavailable (dev mode / local)
+     */
+    renderFallback(orderId) {
+        const orderIdEl = document.getElementById('orderId');
+        if (orderIdEl) orderIdEl.textContent = `#${orderId}`;
+
+        const itemsContainer = document.getElementById('orderItems');
+        if (itemsContainer) {
+            itemsContainer.innerHTML = '<p class="oc-items-empty">Order details sent to your email.</p>';
+        }
+
+        const totalEl = document.getElementById('confirmTotal');
+        if (totalEl) totalEl.closest('.oc-totals')?.classList.add('oc-hidden');
+
+        const paymentEl = document.getElementById('paymentMethod');
+        if (paymentEl) paymentEl.textContent = 'Online Payment';
+
+        const deliveryEl = document.getElementById('deliveryDate');
+        if (deliveryEl) deliveryEl.textContent = '7-10 business days';
+    }
+
     formatPrice(amount) {
+        if (isNaN(amount)) return '0';
         return amount.toLocaleString('en-IN');
     }
 }

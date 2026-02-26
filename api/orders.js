@@ -9,6 +9,57 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
+  const credentials = Buffer.from(`${WC_CONSUMER_KEY}:${WC_CONSUMER_SECRET}`).toString("base64");
+
+  // ─── SINGLE ORDER MODE (public, for order confirmation page) ───
+  // GET /api/orders?id=299
+  const singleOrderId = req.query.id;
+  if (singleOrderId && req.method === "GET") {
+    try {
+      const response = await fetch(`${WC_API_URL}/wp-json/wc/v3/orders/${singleOrderId}`, {
+        method: "GET",
+        headers: { Authorization: `Basic ${credentials}` },
+      });
+
+      if (!response.ok) {
+        const status = response.status;
+        if (status === 404) return res.status(404).json({ error: "Order not found" });
+        return res.status(status).json({ error: "Failed to fetch order" });
+      }
+
+      const order = await response.json();
+
+      const mapped = {
+        id: order.id,
+        number: order.number,
+        status: order.status,
+        date_created: order.date_created,
+        total: order.total,
+        currency_symbol: order.currency_symbol || "\u20B9",
+        payment_method_title: order.payment_method_title || "Online Payment",
+        line_items: (order.line_items || []).map(item => ({
+          name: item.name,
+          quantity: item.quantity,
+          total: item.total,
+          image: item.image?.src || "",
+        })),
+        billing: {
+          first_name: order.billing?.first_name || "",
+          last_name: order.billing?.last_name || "",
+          email: order.billing?.email || "",
+        },
+      };
+
+      res.setHeader("Cache-Control", "s-maxage=60, stale-while-revalidate=120");
+      return res.status(200).json({ success: true, order: mapped });
+
+    } catch (error) {
+      console.error("Single Order API Error:", error);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  }
+
+  // ─── USER ORDERS MODE (authenticated, for my-account page) ───
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(401).json({ error: "Unauthorized: Missing or invalid token" });
@@ -39,8 +90,6 @@ export default async function handler(req, res) {
     }
 
     // 2. Fetch WooCommerce Orders for this user ID AND by billing email
-    const credentials = Buffer.from(`${WC_CONSUMER_KEY}:${WC_CONSUMER_SECRET}`).toString("base64");
-
     // Fetch orders by user ID
     const urlById = `${WC_API_URL}/wp-json/wc/v3/orders?customer=${wpUserId}`;
     // Fetch recent orders (for guest checkouts matching this user's email missing in search index)
