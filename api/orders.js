@@ -88,6 +88,7 @@ export default async function handler(req, res) {
       currency_symbol: order.currency_symbol,
       line_items: order.line_items.map(item => ({
         id: item.id,
+        product_id: item.product_id,
         name: item.name,
         quantity: item.quantity,
         total: parseFloat(item.total),

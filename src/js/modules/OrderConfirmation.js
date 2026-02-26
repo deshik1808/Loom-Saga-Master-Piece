@@ -47,16 +47,20 @@ class OrderConfirmationController {
 
         orderData.items.forEach(item => {
             itemsHtml += `
-          <div class="order-item">
-            <img src="${item.image}" alt="${item.name}" class="order-item-image">
-            <div class="order-item-info">
-              <p class="order-item-name">${item.name}</p>
-              <p class="order-item-qty">Qty: ${item.quantity}</p>
+          <div class="oc-item">
+            <img src="${item.image}" alt="${item.name}" class="oc-item__img">
+            <div>
+              <p class="oc-item__name">${item.name}</p>
+              <p class="oc-item__qty">Qty: ${item.quantity}</p>
             </div>
-            <p class="order-item-price">₹${this.formatPrice(item.price * item.quantity)}</p>
+            <p class="oc-item__price">&#x20B9;${this.formatPrice(item.price * item.quantity)}</p>
           </div>
         `;
         });
+
+        if (!itemsHtml) {
+            itemsHtml = '<p class="oc-items-empty">Your order details are available in your confirmation email.</p>';
+        }
         orderItemsContainer.innerHTML = itemsHtml;
 
         // Display totals
@@ -104,7 +108,7 @@ class OrderConfirmationController {
 
 // Initialize on DOM load
 document.addEventListener('DOMContentLoaded', () => {
-    if (document.querySelector('.confirmation-page')) {
+    if (document.querySelector('.oc-page')) {
         const controller = new OrderConfirmationController();
         controller.init();
     }

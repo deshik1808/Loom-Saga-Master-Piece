@@ -19,9 +19,9 @@
         rel="stylesheet" />
 
     <!-- Main Stylesheet -->
-  <script type="module" crossorigin src="/assets/main-B4jP60yJ.js"></script>
+  <script type="module" crossorigin src="/assets/main-CNSC0I_Q.js"></script>
   <script type="module" crossorigin src="/assets/main-B8nrthpD.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/main-Bv7zkO1n.css">
+  <link rel="stylesheet" crossorigin href="/assets/main-DZfKqc8E.css">
 </head>
 
 <body>
@@ -996,51 +996,90 @@
         }
 
         function renderOrders(orders, container) {
-            let html = '<div class="orders-list" style="display: flex; flex-direction: column; gap: 1.5rem;">';
+            const statusConfig = {
+                'completed': { label: 'Delivered', color: '#2d6a4f', bg: '#d8f3dc' },
+                'processing': { label: 'Processing', color: '#7b5e2a', bg: '#fdf3dc' },
+                'on-hold': { label: 'On Hold', color: '#5c5470', bg: '#ede7f6' },
+                'pending': { label: 'Pending', color: '#8b6914', bg: '#fff8e1' },
+                'cancelled': { label: 'Cancelled', color: '#7f3b3b', bg: '#fce8e6' },
+                'refunded': { label: 'Refunded', color: '#555', bg: '#f0f0f0' },
+                'failed': { label: 'Failed', color: '#9b1c1c', bg: '#fde8e8' },
+            };
 
-            orders.forEach(order => {
-                const date = new Date(order.date_created).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' });
+            let html = '<div class="lux-orders-list">';
 
-                html += `
-                <div class="order-card" style="border: 1px solid var(--border-color); border-radius: 4px; padding: 1.5rem; background: #fff;">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color);">
-                        <div>
-                            <p style="font-weight: 600; font-size: 1.1rem; margin-bottom: 0.25rem;">Order #${order.number}</p>
-                            <p style="color: #666; font-size: 0.9rem;">${date}</p>
-                        </div>
-                        <div style="text-align: right;">
-                            <p style="font-weight: 600; font-size: 1.1rem; margin-bottom: 0.25rem;">${order.currency_symbol || '₹'}${order.total.toFixed(2)}</p>
-                            <span style="display: inline-block; padding: 0.25rem 0.75rem; background: var(--bg-light); border: 1px solid var(--border-color); border-radius: 20px; font-size: 0.8rem; text-transform: uppercase;">
-                                ${order.status}
-                            </span>
-                        </div>
-                    </div>
-                    <div class="order-items" style="display: flex; flex-direction: column; gap: 0.75rem;">
-                `;
+            orders.forEach((order, idx) => {
+                const date = new Date(order.date_created).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+                const sc = statusConfig[order.status] || { label: order.status, color: '#555', bg: '#f0f0f0' };
+                const sym = order.currency_symbol || '₹';
+                const total = parseFloat(order.total).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                const itemCount = order.line_items.reduce((s, i) => s + i.quantity, 0);
 
+                // Thumbnails strip (max 3)
+                const thumbs = order.line_items.slice(0, 3).map((item, ti) => {
+                    const more = ti === 2 && order.line_items.length > 3 ? `<span class="lux-thumb-more">+${order.line_items.length - 3}</span>` : '';
+                    return item.image
+                        ? `<div class="lux-thumb">${more}<img src="${item.image}" alt="${item.name}"></div>`
+                        : `<div class="lux-thumb lux-thumb--empty">${more}</div>`;
+                }).join('');
+
+                // Items detail rows
+                let itemsHtml = '';
                 order.line_items.forEach(item => {
-                    const price = (item.total / item.quantity).toFixed(2);
-                    html += `
-                        <div style="display: flex; align-items: center; gap: 1rem;">
-                            <div style="width: 50px; height: 65px; flex-shrink: 0; background-color: var(--bg-light); border-radius: 4px; overflow: hidden;">
-                                ${item.image ? `<img src="${item.image}" alt="${item.name}" style="width: 100%; height: 100%; object-fit: cover;">` : ''}
+                    const price = parseFloat(item.total / item.quantity).toLocaleString('en-IN', { minimumFractionDigits: 2 });
+                    itemsHtml += `
+                        <div class="lux-order-item">
+                            <div class="lux-order-item-img">
+                                ${item.image ? `<img src="${item.image}" alt="${item.name}">` : '<span class="lux-img-placeholder"></span>'}
                             </div>
-                            <div style="flex-grow: 1;">
-                                <a href="product-detail.html?id=${item.id}" style="color: var(--text-dark); text-decoration: none; font-weight: 500; font-size: 0.95rem; display: block; margin-bottom: 0.25rem;" onmouseover="this.style.color='var(--color-gold)'" onmouseout="this.style.color='var(--text-dark)'">${item.name}</a>
-                                <p style="color: #666; font-size: 0.85rem;">Qty: ${item.quantity} × ${order.currency_symbol || '₹'}${price}</p>
+                            <div class="lux-order-item-info">
+                                <a href="product-detail.html?id=${item.product_id}" class="lux-item-name">${item.name}</a>
+                                <span class="lux-item-meta">Qty ${item.quantity} &nbsp;·&nbsp; ${sym}${price} each</span>
                             </div>
-                        </div>
-                    `;
+                            <span class="lux-item-subtotal">${sym}${parseFloat(item.total).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                        </div>`;
                 });
 
                 html += `
+                <div class="lux-order-card" id="lux-order-${idx}">
+                    <button class="lux-order-header" onclick="luxToggleOrder(${idx})" aria-expanded="false">
+                        <div class="lux-order-meta">
+                            <span class="lux-order-num">#${order.number}</span>
+                            <span class="lux-order-date">${date}</span>
+                        </div>
+                        <div class="lux-thumb-strip">${thumbs}</div>
+                        <div class="lux-order-right">
+                            <span class="lux-status-badge" style="color:${sc.color};background:${sc.bg};">${sc.label}</span>
+                            <span class="lux-order-total">${sym}${total}</span>
+                            <span class="lux-item-count">${itemCount} item${itemCount !== 1 ? 's' : ''}</span>
+                        </div>
+                        <svg class="lux-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="lux-order-body" id="lux-body-${idx}">
+                        <div class="lux-order-items">${itemsHtml}</div>
+                        <div class="lux-order-footer">
+                            <span class="lux-footer-total-label">Order Total</span>
+                            <span class="lux-footer-total-val">${sym}${total}</span>
+                        </div>
                     </div>
-                </div>
-                `;
+                </div>`;
             });
 
             html += '</div>';
             container.innerHTML = html;
+        }
+
+        function luxToggleOrder(idx) {
+            const card = document.getElementById(`lux-order-${idx}`);
+            const body = document.getElementById(`lux-body-${idx}`);
+            const btn = card.querySelector('.lux-order-header');
+            const isOpen = card.classList.toggle('lux-order--open');
+            btn.setAttribute('aria-expanded', isOpen);
+            if (isOpen) {
+                body.style.maxHeight = body.scrollHeight + 'px';
+            } else {
+                body.style.maxHeight = '0';
+            }
         }
 
         // Start initialization

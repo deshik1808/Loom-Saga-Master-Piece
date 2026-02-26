@@ -10,7 +10,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { items } = req.body || {};
+    const { items, customer } = req.body || {};
 
     if (!items || !Array.isArray(items) || items.length === 0) {
       return res.status(400).json({ error: "Cart is empty" });
@@ -35,6 +35,17 @@ export default async function handler(req, res) {
 
     let checkoutUrl = `${WC_API_URL}/checkout/?ls_checkout=${ids}&ls_qty=${quantities}`;
 
+    // Pre-fill checkout fields for logged-in users
+    if (customer?.email) {
+      checkoutUrl += `&billing_email=${encodeURIComponent(customer.email)}`;
+    }
+    if (customer?.firstName) {
+      checkoutUrl += `&billing_first_name=${encodeURIComponent(customer.firstName)}`;
+    }
+    if (customer?.lastName) {
+      checkoutUrl += `&billing_last_name=${encodeURIComponent(customer.lastName)}`;
+    }
+
     // Forward the authentication token if provided, so WP snippet can log user in instantly
     const authHeader = req.headers.authorization;
     if (authHeader && authHeader.startsWith('Bearer ')) {
@@ -46,12 +57,6 @@ export default async function handler(req, res) {
       url: checkoutUrl,
       itemCount: normalizedItems.length,
       note: "Custom Sync: Redirecting to Checkout with full cart data."
-    });
-
-    return res.status(200).json({
-      url: checkoutUrl,
-      itemCount: normalizedItems.length,
-      note: "Bypassing cart: Direct redirect to Checkout."
     });
   } catch (error) {
     console.error("Checkout API Error:", error);

@@ -50,10 +50,33 @@ const CheckoutRedirectManager = {
         headers['Authorization'] = `Bearer ${AuthManager.getToken()}`;
       }
 
+      // Build customer profile from session for checkout pre-fill
+      let customer = null;
+      if (AuthManager && AuthManager.isLoggedIn()) {
+        const session = AuthManager.getSession();
+        if (session) {
+          let first = session.firstName || '';
+          let last = session.lastName || '';
+
+          // Fallback: derive name from displayName if first/last are missing
+          if (!first && session.displayName) {
+            const parts = session.displayName.trim().split(/\s+/);
+            first = parts[0] || '';
+            last = parts.slice(1).join(' ') || '';
+          }
+
+          customer = {
+            email: session.email || '',
+            firstName: first,
+            lastName: last
+          };
+        }
+      }
+
       const response = await fetch('/api/checkout', {
         method: 'POST',
         headers: headers,
-        body: JSON.stringify({ items })
+        body: JSON.stringify({ items, customer })
       });
 
       const payload = await response.json().catch(() => ({}));

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -576,112 +576,540 @@
   </div>
 
 
-  <!-- ==================== HERO SECTION ==================== -->
-  <main class="confirmation-page">
-    <div class="container">
-      <div class="confirmation-container">
 
-        <!-- Success Icon -->
-        <div class="confirmation-icon">
-          <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+  <!-- ==================== ORDER CONFIRMATION ==================== -->
+  <main class="oc-page">
+
+    <!-- Ambient background texture -->
+    <div class="oc-bg-texture" aria-hidden="true"></div>
+
+    <div class="oc-wrapper">
+
+      <!-- Ceremony Header -->
+      <header class="oc-ceremony">
+        <!-- Animated check seal -->
+        <div class="oc-seal" id="ocSeal">
+          <svg class="oc-seal__svg" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle class="oc-seal__ring" cx="28" cy="28" r="26" stroke="#c9a962" stroke-width="1.5"/>
+            <polyline class="oc-seal__check" points="16,28 24,36 40,20" stroke="#c9a962" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </div>
 
-        <!-- Success Message -->
-        <h1 class="confirmation-title">Thank You for Your Order!</h1>
-        <p class="confirmation-subtitle">Your order has been placed successfully.</p>
+        <p class="oc-ceremony__eyebrow">Order Confirmed</p>
+        <h1 class="oc-ceremony__title">A Moment of&nbsp;Gratitude</h1>
+        <p class="oc-ceremony__sub">Your saree is being prepared with the same care woven into its threads.</p>
 
-        <!-- Order Number -->
-        <div class="order-number-box">
-          <span class="order-label">Order Number</span>
-          <span class="order-id" id="orderId">LS-XXXXXXXX</span>
+        <!-- Order number pill -->
+        <div class="oc-order-pill">
+          <span class="oc-order-pill__label">ORDER</span>
+          <span class="oc-order-pill__id" id="orderId">LS-XXXXXX</span>
         </div>
+      </header>
 
-        <!-- Order Details Card -->
-        <div class="order-details-card">
-          <h2 class="details-heading">Order Details</h2>
+      <!-- Horizontal Rule -->
+      <div class="oc-rule" aria-hidden="true"><span></span></div>
 
-          <!-- Order Items -->
-          <div class="order-items" id="orderItems">
-            <!-- Items will be rendered by JavaScript -->
+      <!-- Two-Column Body -->
+      <div class="oc-body">
+
+        <!-- LEFT: Order Items + Totals -->
+        <section class="oc-card oc-items-card">
+          <h2 class="oc-card__heading">Your Selection</h2>
+          <div class="oc-items-list" id="orderItems">
+            <!-- Rendered by JS -->
           </div>
 
-          <!-- Order Summary -->
-          <div class="order-summary-section">
-            <div class="summary-line">
+          <div class="oc-totals">
+            <div class="oc-totals__row">
               <span>Subtotal</span>
-              <span id="confirmSubtotal">₹0</span>
+              <span id="confirmSubtotal">0</span>
             </div>
-            <div class="summary-line">
+            <div class="oc-totals__row">
               <span>Shipping</span>
-              <span>FREE</span>
+              <span class="oc-totals__free">Complimentary</span>
             </div>
-            <div class="summary-line">
+            <div class="oc-totals__row">
               <span>Tax (GST 5%)</span>
-              <span id="confirmTax">₹0</span>
+              <span id="confirmTax">0</span>
             </div>
-            <div class="summary-line total">
-              <span>Total</span>
-              <span id="confirmTotal">₹0</span>
-            </div>
-          </div>
-
-          <!-- Shipping Address -->
-          <div class="shipping-details">
-            <h3>Shipping To</h3>
-            <div class="address-block" id="shippingAddress">
-              <!-- Address will be rendered by JavaScript -->
+            <div class="oc-totals__row oc-totals__row--grand">
+              <span>Grand Total</span>
+              <span id="confirmTotal">0</span>
             </div>
           </div>
+        </section>
 
-          <!-- Payment Method -->
-          <div class="payment-details">
-            <h3>Payment Method</h3>
-            <p id="paymentMethod">Cash on Delivery</p>
+        <!-- RIGHT: Dispatch + Delivery Info -->
+        <aside class="oc-sidebar">
+
+          <!-- Shipping To -->
+          <div class="oc-info-block">
+            <div class="oc-info-block__icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+              </svg>
+            </div>
+            <div>
+              <p class="oc-info-block__label">Shipping To</p>
+              <div class="oc-info-block__content" id="shippingAddress">-</div>
+            </div>
           </div>
 
-          <!-- Delivery Estimate -->
-          <div class="delivery-details">
-            <h3>Estimated Delivery</h3>
-            <p class="delivery-date" id="deliveryDate">7-10 business days</p>
+          <!-- Payment -->
+          <div class="oc-info-block">
+            <div class="oc-info-block__icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/>
+              </svg>
+            </div>
+            <div>
+              <p class="oc-info-block__label">Payment</p>
+              <p class="oc-info-block__content" id="paymentMethod">-</p>
+            </div>
           </div>
-        </div>
 
-        <!-- What's Next Section -->
-        <div class="whats-next">
-          <h2>What's Next?</h2>
-          <ul class="next-steps">
-            <li>
-              <span class="step-icon">📧</span>
-              <span>You'll receive an order confirmation email shortly</span>
-            </li>
-            <li>
-              <span class="step-icon">📦</span>
-              <span>We'll notify you when your order ships</span>
-            </li>
-            <li>
-              <span class="step-icon">🚚</span>
-              <span>Track your order anytime in your account</span>
-            </li>
-          </ul>
-        </div>
+          <!-- Delivery -->
+          <div class="oc-info-block">
+            <div class="oc-info-block__icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+              </svg>
+            </div>
+            <div>
+              <p class="oc-info-block__label">Estimated Delivery</p>
+              <p class="oc-info-block__content" id="deliveryDate">7-10 business days</p>
+            </div>
+          </div>
 
-        <!-- Action Buttons -->
-        <div class="confirmation-actions">
-          <a href="index.html" class="primary-btn">Continue Shopping</a>
-          <a href="#" class="secondary-btn">Track Order</a>
-        </div>
+          <!-- What happens next -->
+          <div class="oc-next-card">
+            <p class="oc-next-card__heading">What happens next</p>
+            <ul class="oc-next-list">
+              <li>
+                <span class="oc-next-list__dot"></span>
+                <span>Confirmation email on its way to you</span>
+              </li>
+              <li>
+                <span class="oc-next-list__dot"></span>
+                <span>Our artisans begin careful packaging</span>
+              </li>
+              <li>
+                <span class="oc-next-list__dot"></span>
+                <span>Shipping notification with tracking details</span>
+              </li>
+              <li>
+                <span class="oc-next-list__dot"></span>
+                <span>Your saree arrives at your door</span>
+              </li>
+            </ul>
+          </div>
 
-        <!-- Need Help -->
-        <p class="help-text">
-          Need help? <a href="contact.html">Contact Us</a>
-        </p>
-
+        </aside>
       </div>
+
+      <!-- Horizontal Rule -->
+      <div class="oc-rule" aria-hidden="true"><span></span></div>
+
+      <!-- Bottom CTA -->
+      <footer class="oc-footer-cta">
+        <a href="index.html" class="oc-btn oc-btn--primary">Continue Shopping</a>
+        <a href="my-account.html" class="oc-btn oc-btn--outline">View My Orders</a>
+        <p class="oc-help">Questions? <a href="contact.html">We're here to help.</a></p>
+      </footer>
+
     </div>
   </main>
+
+  <!-- Page-Scoped Styles for Order Confirmation -->
+  <style>
+    .oc-page {
+      min-height: 100vh;
+      padding-top: var(--header-height);
+      background-color: var(--color-bg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .oc-bg-texture {
+      position: absolute;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(201,169,98,0.04) 39px, rgba(201,169,98,0.04) 40px),
+        repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(201,169,98,0.04) 39px, rgba(201,169,98,0.04) 40px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .oc-wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 920px;
+      margin: 0 auto;
+      padding: clamp(3rem, 8vw, 6rem) var(--spacing-md) 5rem;
+    }
+
+    /* --- Ceremony Header --- */
+    .oc-ceremony {
+      text-align: center;
+      animation: oc-fade-up 0.8s var(--motion-ease-out) both;
+    }
+
+    .oc-seal {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 2.2rem;
+      width: 72px;
+      height: 72px;
+    }
+
+    .oc-seal__svg { width: 72px; height: 72px; overflow: visible; }
+
+    .oc-seal__ring {
+      stroke-dasharray: 165;
+      stroke-dashoffset: 165;
+      animation: oc-draw-ring 0.9s 0.2s cubic-bezier(0.4,0,0.2,1) forwards;
+    }
+
+    .oc-seal__check {
+      stroke-dasharray: 40;
+      stroke-dashoffset: 40;
+      animation: oc-draw-check 0.5s 1.05s ease-out forwards;
+    }
+
+    @keyframes oc-draw-ring { to { stroke-dashoffset: 0; } }
+    @keyframes oc-draw-check { to { stroke-dashoffset: 0; } }
+
+    .oc-ceremony__eyebrow {
+      font-family: var(--font-body);
+      font-size: 0.68rem;
+      font-weight: var(--font-weight-semibold);
+      letter-spacing: var(--letter-spacing-xwide);
+      text-transform: uppercase;
+      color: var(--color-gold);
+      margin-bottom: 0.75rem;
+      animation: oc-fade-up 0.7s 0.3s var(--motion-ease-out) both;
+    }
+
+    .oc-ceremony__title {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 300;
+      letter-spacing: 0.02em;
+      color: var(--color-black);
+      line-height: 1.2;
+      margin-bottom: 0.9rem;
+      animation: oc-fade-up 0.7s 0.45s var(--motion-ease-out) both;
+    }
+
+    .oc-ceremony__sub {
+      font-size: 0.88rem;
+      color: var(--color-text-light);
+      line-height: 1.85;
+      max-width: 400px;
+      margin: 0 auto 2rem;
+      animation: oc-fade-up 0.7s 0.6s var(--motion-ease-out) both;
+    }
+
+    .oc-order-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      border: 1px solid rgba(201,169,98,0.35);
+      padding: 0.55rem 1.6rem;
+      background: rgba(201,169,98,0.05);
+      animation: oc-fade-up 0.7s 0.75s var(--motion-ease-out) both;
+    }
+
+    .oc-order-pill__label {
+      font-size: 0.62rem;
+      font-weight: var(--font-weight-semibold);
+      letter-spacing: var(--letter-spacing-xwide);
+      text-transform: uppercase;
+      color: var(--color-gold);
+    }
+
+    .oc-order-pill__id {
+      font-family: var(--font-serif);
+      font-size: 1.1rem;
+      letter-spacing: 0.1em;
+      color: var(--color-black);
+    }
+
+    /* --- Separator --- */
+    .oc-rule {
+      display: flex;
+      align-items: center;
+      margin: 3rem 0;
+      animation: oc-fade-up 0.5s 0.9s var(--motion-ease-out) both;
+    }
+
+    .oc-rule span {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(201,169,98,0.4), transparent);
+    }
+
+    /* --- Two-column body --- */
+    .oc-body {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 2.5rem;
+      align-items: start;
+      animation: oc-fade-up 0.7s 1s var(--motion-ease-out) both;
+    }
+
+    @media (max-width: 720px) {
+      .oc-body { grid-template-columns: 1fr; }
+    }
+
+    /* --- Card --- */
+    .oc-card {
+      border: 1px solid rgba(201,169,98,0.2);
+      padding: 2rem;
+      background: rgba(255,255,245,0.6);
+    }
+
+    .oc-card__heading {
+      font-family: var(--font-body);
+      font-size: 0.62rem;
+      font-weight: var(--font-weight-semibold);
+      letter-spacing: var(--letter-spacing-xwide);
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(201,169,98,0.15);
+    }
+
+    /* --- Items --- */
+    .oc-items-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+
+    .oc-item {
+      display: grid;
+      grid-template-columns: 64px 1fr auto;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .oc-item__img {
+      width: 64px;
+      height: 80px;
+      object-fit: cover;
+    }
+
+    .oc-item__name {
+      font-size: 0.85rem;
+      font-weight: var(--font-weight-medium);
+      color: var(--color-black);
+      line-height: 1.4;
+      margin-bottom: 0.2rem;
+    }
+
+    .oc-item__qty {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      letter-spacing: 0.04em;
+    }
+
+    .oc-item__price {
+      font-family: var(--font-serif);
+      font-size: 0.95rem;
+      color: var(--color-black);
+      white-space: nowrap;
+    }
+
+    .oc-items-empty {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      font-style: italic;
+      text-align: center;
+      padding: 1.5rem 0;
+    }
+
+    /* --- Totals --- */
+    .oc-totals {
+      border-top: 1px solid rgba(201,169,98,0.15);
+      padding-top: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .oc-totals__row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      color: var(--color-text-light);
+    }
+
+    .oc-totals__free { color: var(--color-gold-dark); font-style: italic; }
+
+    .oc-totals__row--grand {
+      font-family: var(--font-serif);
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: var(--color-black);
+      border-top: 1px solid rgba(201,169,98,0.2);
+      margin-top: 0.5rem;
+      padding-top: 0.8rem;
+    }
+
+    /* --- Sidebar --- */
+    .oc-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border: 1px solid rgba(201,169,98,0.2);
+      background: rgba(255,255,245,0.6);
+      overflow: hidden;
+    }
+
+    .oc-info-block {
+      display: flex;
+      gap: 0.9rem;
+      align-items: flex-start;
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid rgba(201,169,98,0.1);
+    }
+
+    .oc-info-block__icon {
+      color: var(--color-gold);
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+
+    .oc-info-block__label {
+      font-size: 0.62rem;
+      font-weight: var(--font-weight-semibold);
+      letter-spacing: var(--letter-spacing-wide);
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+      margin-bottom: 0.3rem;
+    }
+
+    .oc-info-block__content {
+      font-size: 0.83rem;
+      color: var(--color-text);
+      line-height: 1.65;
+    }
+
+    .oc-next-card {
+      padding: 1.5rem;
+      background: rgba(201,169,98,0.04);
+      border-top: 1px solid rgba(201,169,98,0.15);
+    }
+
+    .oc-next-card__heading {
+      font-size: 0.62rem;
+      font-weight: var(--font-weight-semibold);
+      letter-spacing: var(--letter-spacing-wide);
+      text-transform: uppercase;
+      color: var(--color-gold);
+      margin-bottom: 1rem;
+    }
+
+    .oc-next-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      list-style: none;
+    }
+
+    .oc-next-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      font-size: 0.78rem;
+      color: var(--color-text-light);
+      line-height: 1.55;
+    }
+
+    .oc-next-list__dot {
+      flex-shrink: 0;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--color-gold);
+      margin-top: 0.44rem;
+    }
+
+    /* --- Footer CTA --- */
+    .oc-footer-cta {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      animation: oc-fade-up 0.7s 1.1s var(--motion-ease-out) both;
+    }
+
+    .oc-btn {
+      display: inline-block;
+      padding: 0.85rem 2.5rem;
+      font-family: var(--font-body);
+      font-size: 0.7rem;
+      font-weight: var(--font-weight-semibold);
+      letter-spacing: var(--letter-spacing-xwide);
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all var(--transition-smooth);
+      cursor: pointer;
+    }
+
+    .oc-btn--primary {
+      background: var(--color-black);
+      color: var(--color-white);
+    }
+
+    .oc-btn--primary:hover {
+      background: var(--color-gold-dark);
+      color: var(--color-white);
+      transform: translateY(-2px);
+    }
+
+    .oc-btn--outline {
+      border: 1px solid rgba(26,26,26,0.35);
+      color: var(--color-black);
+    }
+
+    .oc-btn--outline:hover {
+      border-color: var(--color-gold);
+      color: var(--color-gold-dark);
+      transform: translateY(-2px);
+    }
+
+    .oc-help {
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .oc-help a {
+      color: var(--color-gold-dark);
+      border-bottom: 1px solid rgba(168,138,74,0.3);
+      transition: border-color var(--transition-fast);
+    }
+
+    .oc-help a:hover { border-color: var(--color-gold); }
+
+    @keyframes oc-fade-up {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 480px) {
+      .oc-wrapper { padding: 2.5rem 1rem 4rem; }
+      .oc-card { padding: 1.5rem; }
+      .oc-item { grid-template-columns: 50px 1fr auto; gap: 0.75rem; }
+      .oc-item__img { width: 50px; height: 64px; }
+    }
+  </style>
 
   <!-- ==================== FOOTER ==================== -->
   <!-- ==================== FOOTER ==================== -->
@@ -768,7 +1196,7 @@
       <!-- Footer Bottom -->
       <div class="footer-bottom">
         <div class="footer-separator"></div>
-        <p class="footer-copyright">© 2026, Loom Saga</p>
+        <p class="footer-copyright">Â© 2026, Loom Saga</p>
       </div>
     </div>
   </footer>
@@ -823,4 +1251,5 @@
 </body>
 
 </html>
+
 
