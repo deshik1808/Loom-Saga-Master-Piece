@@ -18,10 +18,10 @@ export default async function handler(req, res) {
 
     const normalizedItems = items
       .map((item) => ({
-        id: Number(item?.id),
+        id: item?.id, // Can be string for local products or integer for Woo
         quantity: Number(item?.quantity),
       }))
-      .filter((item) => Number.isInteger(item.id) && item.id > 0 && Number.isInteger(item.quantity) && item.quantity > 0);
+      .filter((item) => item.id && Number.isInteger(item.quantity) && item.quantity > 0);
 
     if (normalizedItems.length === 0) {
       return res.status(400).json({ error: "Invalid cart items" });

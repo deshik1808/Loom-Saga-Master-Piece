@@ -24,6 +24,8 @@ const CheckoutRedirectManager = {
 
   async handleCheckoutClick(event, button) {
     event.preventDefault();
+    console.log('--- NEW CHECKOUT REDIRECT LOGIC v5 RUNNING ---');
+    console.log('If you see this, the cache has been successfully bypassed, and no cart clearing should happen natively!');
 
     const items = CartManager.getItems().map(item => ({
       id: item.id,
@@ -59,10 +61,8 @@ const CheckoutRedirectManager = {
         throw new Error(payload.error || 'Failed to get checkout URL');
       }
 
-      // Clear the cart before redirecting so that hitting the back button will show an empty cart
-      // BUT save it to a suspended state first so the user can restore it if they backed out
-      CartManager.saveSuspendedCart(items);
-      CartManager.saveItems([]);
+      // Keep the cart intact during the redirect to prevent "Your cart is empty" flash.
+      // The cart will be cleared automatically on the order-confirmation page.
 
       window.location.href = payload.url;
     } catch (error) {

@@ -42,7 +42,7 @@ const CartRenderer = {
     if (items.length === 0) {
       if (cartContentEl) cartContentEl.style.display = 'none';
       if (cartEmptyEl) {
-        cartEmptyEl.style.display = 'block';
+        cartEmptyEl.style.display = 'flex';
 
         const suspendedCart = sessionStorage.getItem('loomSaga_suspendedCart');
         let restoreBanner = document.getElementById('cartRestoreBanner');
@@ -75,7 +75,7 @@ const CartRenderer = {
         } else {
           // Show standard empty state message
           if (defaultEmptyContent && defaultEmptyContent.id !== 'cartRestoreBanner') {
-            defaultEmptyContent.style.display = 'block'; // Or flex, depending on CSS
+            defaultEmptyContent.style.display = 'flex'; // Preserve flex centering for the icon container
           }
           if (restoreBanner) {
             restoreBanner.style.display = 'none';
@@ -163,6 +163,15 @@ const CartRenderer = {
         CartManager.removeItem(id);
       });
     });
+
+    // Rebind checkout button to prevent native navigation issues
+    import('./CheckoutRedirectManager.js').then(module => {
+      // Force init to re-scan for new dynamically added buttons
+      document.querySelectorAll('#checkoutBtn, .drawer-checkout-btn').forEach(btn => {
+        btn.dataset.checkoutBound = 'false'; // force rebind
+      });
+      module.default.init();
+    });
   },
 
   initDrawer() {
@@ -244,7 +253,7 @@ const CartRenderer = {
           restoreBanner.style.display = 'block';
         } else {
           if (emptyStateContent && emptyStateContent.id !== 'drawerRestoreBanner') {
-            emptyStateContent.style.display = 'block';
+            emptyStateContent.style.display = 'flex';
           }
           if (restoreBanner) {
             restoreBanner.style.display = 'none';
@@ -309,6 +318,14 @@ const CartRenderer = {
     }
 
     this.bindDrawerItemEvents();
+
+    // Drawer checkout buttons need explicit rebinding after rendering
+    import('./CheckoutRedirectManager.js').then(module => {
+      document.querySelectorAll('#cartDrawerFooter .drawer-checkout-btn').forEach(btn => {
+        btn.dataset.checkoutBound = 'false';
+      });
+      module.default.init();
+    });
   },
 
   bindDrawerItemEvents() {

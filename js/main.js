@@ -2125,59 +2125,7 @@ function getWishlist() {
  * Connects the local cart to the WordPress/WooCommerce checkout
  */
 function initCheckout() {
-    const checkoutBtns = document.querySelectorAll('#checkoutBtn, .drawer-checkout-btn');
-
-    checkoutBtns.forEach(checkoutBtn => {
-        // Remove old inline onclick redirect if present in HTML
-        checkoutBtn.removeAttribute('onclick');
-
-        checkoutBtn.addEventListener('click', async (e) => {
-            e.preventDefault();
-
-            const items = CartManager.getItems();
-            if (items.length === 0) {
-                alert('Your cart is empty!');
-                return;
-            }
-
-            // Show high-end luxury loading state
-            const originalText = checkoutBtn.textContent;
-            checkoutBtn.innerHTML = '<span class="loading-dot">.</span> PREPARING SECURE CHECKOUT...';
-            checkoutBtn.style.pointerEvents = 'none';
-            checkoutBtn.style.letterSpacing = '0.05em';
-            checkoutBtn.style.opacity = '0.7';
-
-            try {
-                // Clear the cart before redirecting so that hitting the back button will show an empty cart
-                // BUT save it to a suspended state first so the user can restore it if they backed out
-                sessionStorage.setItem('loomSaga_suspendedCart', JSON.stringify(items));
-                CartManager.saveItems([]);
-
-                const response = await fetch('/api/checkout', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ items })
-                });
-
-                const data = await response.json();
-
-                if (data.url) {
-                    window.location.href = data.url;
-                } else {
-                    throw new Error(data.error || 'Failed to get checkout URL');
-                }
-            } catch (error) {
-                console.error('Checkout Error:', error);
-                checkoutBtn.innerHTML = 'COULD NOT CONNECT TO STORE';
-
-                setTimeout(() => {
-                    checkoutBtn.textContent = originalText;
-                    checkoutBtn.style.pointerEvents = 'auto';
-                    checkoutBtn.style.opacity = '1';
-                }, 3000);
-            }
-        });
-    });
+    // Moved to CheckoutRedirectManager.js to prevent duplicate bindings and race conditions.
 }
 
 // ==================== CAROUSEL DRAG SCROLL ====================

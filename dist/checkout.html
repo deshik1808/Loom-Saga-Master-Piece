@@ -18,7 +18,7 @@
     rel="stylesheet" />
 
   <!-- Main Stylesheet -->
-  <script type="module" crossorigin src="/assets/main-D0EAMZaE.js"></script>
+  <script type="module" crossorigin src="/assets/main-B4jP60yJ.js"></script>
   <link rel="stylesheet" crossorigin href="/assets/main-Bv7zkO1n.css">
 </head>
 
@@ -360,8 +360,7 @@
             throw new Error(data.error || 'Failed to get checkout URL');
           }
 
-          // Clear cart locally and hand off to WooCommerce checkout only.
-          localStorage.setItem('loomSaga_cart', JSON.stringify([]));
+          // Keep cart locally and hand off to WooCommerce checkout.
           window.location.href = data.url;
           return;
         } catch (error) {
@@ -420,7 +419,7 @@
         return amount.toLocaleString('en-IN');
       }
     });
-  </script>
+  </script>
 </body>
 
 </html>

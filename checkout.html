@@ -359,8 +359,7 @@
             throw new Error(data.error || 'Failed to get checkout URL');
           }
 
-          // Clear cart locally and hand off to WooCommerce checkout only.
-          localStorage.setItem('loomSaga_cart', JSON.stringify([]));
+          // Keep cart locally and hand off to WooCommerce checkout.
           window.location.href = data.url;
           return;
         } catch (error) {
@@ -424,3 +423,4 @@
 </body>
 
 </html>
+

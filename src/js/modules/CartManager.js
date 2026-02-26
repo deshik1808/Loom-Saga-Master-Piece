@@ -202,13 +202,7 @@ export function showNotification(message) {
   }, 3000);
 }
 
-/**
- * Save cart to session storage before clearing (Soft Clear)
- * @param {Array} items - Cart items array
- */
-export function saveSuspendedCart(items) {
-  sessionStorage.setItem('loomSaga_suspendedCart', JSON.stringify(items));
-}
+// Removed saveSuspendedCart to prevent cart clearing
 
 /**
  * Restore suspended cart from session storage
@@ -237,7 +231,6 @@ const CartManager = {
   updateBadge,
   formatPrice,
   showNotification,
-  saveSuspendedCart,
   restoreSuspendedCart
 };
 

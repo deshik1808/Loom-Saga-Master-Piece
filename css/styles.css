@@ -6536,8 +6536,17 @@ section.fashion-insights-section {
 }
 
 .empty-cart-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
   margin-bottom: var(--spacing-md);
   opacity: 0.3;
+}
+
+.empty-cart-icon img {
+  width: 80px;
+  height: auto;
 }
 
 .empty-cart-icon svg {
@@ -10053,7 +10062,7 @@ section.fashion-insights-section {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 120px;
+  width: 100%;
   height: 120px;
 }
 
@@ -11416,7 +11425,15 @@ section.fashion-insights-section {
   align-items: center;
   justify-content: center;
   text-align: center;
+  width: 100%;
   padding: var(--spacing-md) 0;
+}
+
+.empty-cart-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
 .empty-cart-icon img {
