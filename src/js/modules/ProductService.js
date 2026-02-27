@@ -423,6 +423,9 @@ class ProductService {
         product.description,
         product.category,
         product.categoryName,
+        ...(product.categories?.map(c => typeof c === 'string' ? c : c?.name) || []),
+        ...(product.categories?.map(c => typeof c === 'string' ? '' : c?.slug) || []),
+        ...(product.collections || []),
         ...(product.tags || []),
         colorName,
         product.attributes?.fabric,
@@ -629,9 +632,7 @@ class ProductService {
   // ==================== SESSION CACHE ====================
 
   /**
-   * Read cached product data from sessionStorage.
-   * Returns the raw API-shaped array if cache is fresh, or null.
-   * @private
+   * Read cache from sessionStorage
    */
   _readCache() {
     try {
@@ -639,13 +640,15 @@ class ProductService {
       if (!raw) return null;
 
       const { ts, data } = JSON.parse(raw);
-      if (Date.now() - ts > this._CACHE_TTL) {
+
+      // Temporarily bypass cache (1 second TTL) to ensure instant updates during testing/development
+      if (Date.now() - ts > 1000) {
         sessionStorage.removeItem(this._CACHE_KEY);
         return null;
       }
 
       return data;
-    } catch {
+    } catch (e) {
       return null;
     }
   }

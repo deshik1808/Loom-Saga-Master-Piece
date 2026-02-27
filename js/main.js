@@ -789,8 +789,11 @@ const SearchOverlayManager = {
     categories: [
         { name: 'Silk Sarees', url: '/category?type=silk-sarees' },
         { name: 'Vishnupuri Collection', url: '/category?type=vishnupuri-silk' },
+        { name: 'Muslin Sarees', url: '/category?type=muslin-sarees' },
+        { name: 'Jamdani Sarees', url: '/category?type=jamdani-sarees' },
         { name: 'Handloom Sarees', url: 'handloom.html' },
         { name: 'Wedding Collection', url: '/category?type=all' },
+        { name: 'Cotton Sarees', url: '/category?type=cotton' },
         { name: 'New Arrivals', url: '/category?type=all' },
     ],
 
@@ -911,11 +914,28 @@ const SearchOverlayManager = {
             return;
         }
 
-        // Filter products
-        const matchedProducts = this.products.filter(product =>
-            product.name.toLowerCase().includes(trimmedQuery) ||
-            product.category.toLowerCase().includes(trimmedQuery)
-        );
+        let matchedProducts = [];
+
+        // Use robust search from ProductService if available
+        if (window.ProductService && window.ProductService.getProductCount && window.ProductService.getProductCount() > 0) {
+            const rawProducts = window.ProductService.searchProducts(trimmedQuery);
+            matchedProducts = rawProducts.map(p => ({
+                id: p.id,
+                name: p.name,
+                price: p.price,
+                regularPrice: p.regularPrice,
+                salePrice: p.salePrice,
+                image: p.images?.primary || p.primaryImage || p.images?.gallery?.[0] || 'https://placehold.co/140x180/e0e0e0/666?text=No+Image',
+                url: 'product-detail.html?id=' + p.id,
+                category: p.categoryName || p.category || 'Uncategorized'
+            }));
+        } else {
+            // Fallback for hardcoded products
+            matchedProducts = this.products.filter(product =>
+                product.name.toLowerCase().includes(trimmedQuery) ||
+                product.category.toLowerCase().includes(trimmedQuery)
+            );
+        }
 
         // Filter matching categories for suggestions
         const matchedCategories = this.categories.filter(cat =>
@@ -938,7 +958,7 @@ const SearchOverlayManager = {
         if (categories.length === 0) {
             this.suggestionList.innerHTML = `
                 <li class="search-overlay__suggestion-item">
-                    <a href="/category?type=silk-sarees?q=${encodeURIComponent(query)}" class="search-overlay__suggestion-link">
+                    <a href="/category?q=${encodeURIComponent(query)}" class="search-overlay__suggestion-link">
                         Search for "${query}"
                     </a>
                 </li>

@@ -52,9 +52,10 @@ const CategoryRouter = {
         // Priority: ?type=slug > path based (if configured in rewrites)
         const urlParams = new URLSearchParams(window.location.search);
         let slug = urlParams.get('type');
+        let searchQuery = urlParams.get('q');
 
         // Fallback: If no type param, try to infer from pathname (for vercel rewrites)
-        if (!slug) {
+        if (!slug && !searchQuery) {
             const path = window.location.pathname.replace(/^\/|\.html$/g, '');
             // Only use path if it's not the actual file name
             if (path && path !== 'category') {
@@ -62,21 +63,27 @@ const CategoryRouter = {
             }
         }
 
-        if (!slug) {
-            console.warn('Category Router: No category slug found in URL');
+        if (!slug && !searchQuery) {
+            console.warn('Category Router: No category slug or search query found in URL');
             this.showEmpty('Please select a collection to browse.');
             return;
         }
 
-        console.log('Category Router: Loading category ->', slug);
+        console.log('Category Router: Loading category or search ->', slug || searchQuery);
 
         // 2. Update Page UI (Titles/SEO) — set title IMMEDIATELY before product fetch
-        this.updateUI(slug);
+        this.updateUI(slug, searchQuery);
 
         // 3. Fetch and Render Products
         try {
             await window.ProductService.init();
-            const products = window.ProductService.getProductsByCategory(slug);
+            let products = [];
+
+            if (searchQuery) {
+                products = window.ProductService.searchProducts(searchQuery);
+            } else {
+                products = window.ProductService.getProductsByCategory(slug);
+            }
 
             const grid = document.getElementById('categoryProductsGrid');
             if (grid) {
@@ -98,7 +105,9 @@ const CategoryRouter = {
                                 grid.classList.remove('fade-in-premium');
                             }, 800);
                         } else {
-                            this.showEmpty(`No products found in the ${this.formatTitle(slug)} collection.`);
+                            this.showEmpty(searchQuery
+                                ? `No products found for "${searchQuery}".`
+                                : `No products found in the ${this.formatTitle(slug)} collection.`);
                         }
                     }, 500);
                 } else {
@@ -106,7 +115,9 @@ const CategoryRouter = {
                     if (products.length > 0) {
                         window.ProductRenderer.renderGrid(products, grid);
                     } else {
-                        this.showEmpty(`No products found in the ${this.formatTitle(slug)} collection.`);
+                        this.showEmpty(searchQuery
+                            ? `No products found for "${searchQuery}".`
+                            : `No products found in the ${this.formatTitle(slug)} collection.`);
                     }
                 }
             }
@@ -116,19 +127,26 @@ const CategoryRouter = {
         }
     },
 
-    updateUI: function (slug) {
+    updateUI: function (slug, searchQuery) {
         const titleEl = document.getElementById('categoryTitle');
-        const prettyTitle = this.formatTitle(slug);
+        let prettyTitle = "";
+
+        if (searchQuery) {
+            prettyTitle = `SEARCH RESULTS FOR "${searchQuery.toUpperCase()}"`;
+        } else {
+            prettyTitle = this.formatTitle(slug);
+        }
 
         if (titleEl) titleEl.textContent = prettyTitle;
         document.title = `${prettyTitle} | Loom Saga - Weaving Indian Culture`;
 
         // Update canonical if possible
         const canonical = document.querySelector('link[rel="canonical"]');
-        if (canonical) canonical.href = `https://loomsaga.com/${slug}`;
+        if (canonical) canonical.href = searchQuery ? `https://loomsaga.com/search?q=${encodeURIComponent(searchQuery)}` : `https://loomsaga.com/${slug}`;
     },
 
     formatTitle: function (slug) {
+        if (!slug) return '';
         // Use map if exists, otherwise format slug (hyphen to space + uppercase)
         if (this.slugToTitle[slug]) return this.slugToTitle[slug];
 
