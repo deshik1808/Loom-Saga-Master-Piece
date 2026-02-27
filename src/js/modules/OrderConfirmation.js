@@ -70,9 +70,62 @@ class OrderConfirmationController {
             }
         }
 
-        // Total
-        const totalEl = document.getElementById('confirmTotal');
-        if (totalEl) totalEl.textContent = `${order.currency_symbol}${this.formatPrice(parseFloat(order.total))}`;
+        // Totals Breakdown
+        const totalsContainer = document.querySelector('.oc-totals');
+        if (totalsContainer) {
+            const sym = order.currency_symbol || '₹';
+            const total = parseFloat(order.total || 0);
+            const tax = parseFloat(order.total_tax || 0);
+            const shipping = parseFloat(order.shipping_total || 0);
+            const discount = parseFloat(order.discount_total || 0);
+
+            // Subtotal = (Total - Tax - Shipping + Discount) 
+            // Better to calculate from line items to avoid rounding issues if available
+            let subtotal = 0;
+            if (order.line_items && order.line_items.length > 0) {
+                subtotal = order.line_items.reduce((sum, item) => sum + parseFloat(item.total), 0);
+            } else {
+                subtotal = total - tax - shipping + discount;
+            }
+
+            // Subtotal
+            const subtotalEl = document.getElementById('confirmSubtotal');
+            if (subtotalEl) {
+                subtotalEl.textContent = `${sym}${this.formatPrice(subtotal)}`;
+                document.getElementById('rowSubtotal')?.classList.remove('oc-hidden');
+            }
+
+            // Discount
+            if (discount > 0) {
+                const discountEl = document.getElementById('confirmDiscount');
+                if (discountEl) {
+                    discountEl.textContent = `-${sym}${this.formatPrice(discount)}`;
+                    document.getElementById('rowDiscount')?.classList.remove('oc-hidden');
+                }
+            }
+
+            // Shipping
+            const shippingEl = document.getElementById('confirmShipping');
+            if (shippingEl) {
+                shippingEl.textContent = shipping === 0 ? 'Complimentary' : `${sym}${this.formatPrice(shipping)}`;
+                if (shipping === 0) shippingEl.classList.add('oc-totals__free');
+                else shippingEl.classList.remove('oc-totals__free');
+                document.getElementById('rowShipping')?.classList.remove('oc-hidden');
+            }
+
+            // Tax
+            if (tax > 0) {
+                const taxEl = document.getElementById('confirmTax');
+                if (taxEl) {
+                    taxEl.textContent = `${sym}${this.formatPrice(tax)}`;
+                    document.getElementById('rowTax')?.classList.remove('oc-hidden');
+                }
+            }
+
+            // Grand Total
+            const totalEl = document.getElementById('confirmTotal');
+            if (totalEl) totalEl.textContent = `${sym}${this.formatPrice(total)}`;
+        }
 
         // Payment method
         const paymentEl = document.getElementById('paymentMethod');
@@ -109,11 +162,41 @@ class OrderConfirmationController {
             emailEl.textContent = order.billing.email;
             emailEl.closest('.oc-email-line')?.classList.remove('oc-hidden');
         }
+
+        // Shipping Address
+        this.renderAddress('shippingAddressHtml', 'blockShipping', order.shipping);
+
+        // Billing Address
+        this.renderAddress('billingAddressHtml', 'blockBilling', order.billing);
+    }
+
+    /**
+     * Helper to render address HTML
+     */
+    renderAddress(elementId, blockId, addressObj) {
+        if (!addressObj || !addressObj.first_name) return;
+
+        const el = document.getElementById(elementId);
+        const block = document.getElementById(blockId);
+        if (!el || !block) return;
+
+        const { first_name, last_name, address_1, address_2, city, state, postcode, country } = addressObj;
+
+        const lines = [
+            `<strong>${first_name} ${last_name}</strong>`,
+            address_1,
+            address_2,
+            `${city}${state ? `, ${state}` : ''} ${postcode}`,
+            country
+        ].filter(Boolean); // Remove empty values
+
+        el.innerHTML = lines.join('<br>');
+        block.classList.remove('oc-hidden');
     }
 
     /**
      * Fallback when API is unavailable (dev mode / local)
-     */
+         */
     renderFallback(orderId) {
         const orderIdEl = document.getElementById('orderId');
         if (orderIdEl) orderIdEl.textContent = `#${orderId}`;
@@ -123,8 +206,8 @@ class OrderConfirmationController {
             itemsContainer.innerHTML = '<p class="oc-items-empty">Order details sent to your email.</p>';
         }
 
-        const totalEl = document.getElementById('confirmTotal');
-        if (totalEl) totalEl.closest('.oc-totals')?.classList.add('oc-hidden');
+        const totalsContainer = document.querySelector('.oc-totals');
+        if (totalsContainer) totalsContainer.classList.add('oc-hidden');
 
         const paymentEl = document.getElementById('paymentMethod');
         if (paymentEl) paymentEl.textContent = 'Online Payment';

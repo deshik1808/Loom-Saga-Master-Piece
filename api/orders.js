@@ -35,6 +35,9 @@ export default async function handler(req, res) {
         status: order.status,
         date_created: order.date_created,
         total: order.total,
+        total_tax: order.total_tax,
+        discount_total: order.discount_total,
+        shipping_total: order.shipping_total,
         currency_symbol: order.currency_symbol || "\u20B9",
         payment_method_title: order.payment_method_title || "Online Payment",
         line_items: (order.line_items || []).map(item => ({
@@ -43,11 +46,8 @@ export default async function handler(req, res) {
           total: item.total,
           image: item.image?.src || "",
         })),
-        billing: {
-          first_name: order.billing?.first_name || "",
-          last_name: order.billing?.last_name || "",
-          email: order.billing?.email || "",
-        },
+        billing: order.billing || {},
+        shipping: order.shipping || {},
       };
 
       res.setHeader("Cache-Control", "s-maxage=60, stale-while-revalidate=120");
