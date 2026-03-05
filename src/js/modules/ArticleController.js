@@ -78,6 +78,34 @@ async function loadArticle(slug) {
         fbBtn.target = '_blank';
     }
 
+    const igBtn = document.getElementById('shareInstagram');
+    if (igBtn) {
+        igBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: document.title,
+                        url: window.location.href
+                    });
+                } catch (err) {
+                    console.error('Error sharing to Instagram via Web Share API', err);
+                }
+            } else {
+                // Fallback for desktop: Copy link to clipboard
+                try {
+                    await navigator.clipboard.writeText(window.location.href);
+                    const originalHTML = igBtn.innerHTML;
+                    igBtn.innerHTML = '<span style="font-size:12px; font-weight:500;">Copied!</span>';
+                    setTimeout(() => { igBtn.innerHTML = originalHTML; }, 2000);
+                } catch (err) {
+                    console.error('Error copying text for Instagram share fallback: ', err);
+                }
+            }
+        });
+    }
+
+
     // Premium Transition: Fade out loading, Fade in content
     if (loadingEl) {
         loadingEl.classList.add('fade-out-premium');

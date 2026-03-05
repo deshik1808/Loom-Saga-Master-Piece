@@ -121,6 +121,9 @@ class BlogService {
      */
     _readCache(key, ttl) {
         try {
+            // Skip cache if ?nocache is in the URL (for development/testing)
+            if (new URLSearchParams(window.location.search).has('nocache')) return null;
+
             const raw = sessionStorage.getItem(key);
             if (!raw) return null;
 
