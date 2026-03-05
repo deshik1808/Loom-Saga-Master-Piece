@@ -730,7 +730,7 @@ ul {
 .header:hover .logo-image,
 .header:hover .icon-btn img,
 .header:hover .icon-btn svg {
-  filter: none;
+  filter: brightness(0) invert(0.12);
 }
 
 .header:hover .hamburger span {
@@ -747,7 +747,7 @@ ul {
 .header.scrolled .logo-image,
 .header.scrolled .icon-btn img,
 .header.scrolled .icon-btn svg {
-  filter: none;
+  filter: brightness(0) invert(0.12);
 }
 
 .header.scrolled .tagline,
@@ -783,7 +783,7 @@ ul {
 .header.header-dark .logo-image,
 .header.header-dark .icon-btn img,
 .header.header-dark .icon-btn svg {
-  filter: none;
+  filter: brightness(0) invert(0.12);
 }
 
 .header.header-dark .hamburger span {
@@ -828,15 +828,21 @@ ul {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.15rem;
+  gap: 0;
   flex: 1;
   justify-content: center;
 }
 
 .logo-image {
-  height: 40px;
+  height: 70px;
   width: auto;
   object-fit: contain;
+  image-rendering: auto;
+  /* Fixes sharp scaling artifacts from global img rules */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  /* Hardware acceleration for smoother scaling */
   filter: brightness(0) invert(1);
   /* Premium unified transition - synced with variable */
   transition: filter var(--header-transition-timing);
@@ -879,6 +885,12 @@ ul {
   width: 18px;
   height: 18px;
   object-fit: contain;
+  image-rendering: auto;
+  /* Fixes sharp scaling artifacts from global img rules */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  /* Hardware acceleration for smoother scaling */
   /* Default State: Inverted (White) */
   filter: brightness(0) invert(1);
   /* Premium unified transition - synced with variable */
@@ -6741,7 +6753,7 @@ h1.brand-section-title {
   }
 
   .logo-image {
-    height: 35px;
+    height: 60px;
   }
 
   .hero-title {
@@ -6870,7 +6882,7 @@ h1.brand-section-title {
   }
 
   .logo-image {
-    height: 50px;
+    height: 75px;
   }
 
   .logo-text {
@@ -10181,15 +10193,14 @@ h1.brand-section-title {
     width: auto;
     flex-direction: column;
     align-items: center;
-    gap: 6px;
-    /* Visible spacing between logo mark and brand name */
+    gap: 0;
   }
 
   .logo-image {
-    height: 38px;
+    height: 53px;
     /* Dominant visual anchor */
     width: auto;
-    filter: none !important;
+    filter: brightness(0) invert(0.12) !important;
     /* Always black/original, never white/inverted */
   }
 

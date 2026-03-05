@@ -50,6 +50,10 @@
   <!-- Main Stylesheet -->
   <link rel="stylesheet" href="css/styles.css?v=2" />
 
+  <!-- Preload logo PNG so it loads in sync with header elements -->
+  <link rel="preload" href="assets/Assets Loom Saga/Vertical logo.png" as="image" type="image/png"
+    fetchpriority="high" />
+
   <!-- Structured Data for SEO -->
   <script type="application/ld+json">
       {
@@ -81,8 +85,8 @@
 
         <!-- Logo - Center -->
         <a href="index.html" class="logo" aria-label="Loom Saga Home">
-          <img src="assets/images/optimized/logo.webp" alt="Loom Saga Logo" class="logo-image" />
-          <span class="logo-text">Loom Saga</span>
+          <img src="assets/Assets Loom Saga/Vertical logo.png" alt="Loom Saga Logo" class="logo-image"
+            fetchpriority="high" loading="eager" />
         </a>
 
         <!-- Icons - Right -->
@@ -1026,4 +1030,3 @@
 </body>
 
 </html>
-
