@@ -2643,6 +2643,7 @@ section.fashion-insights-section {
   color: var(--color-text);
   background-color: #ffffff;
   border: 1px solid transparent;
+  border-radius: 0;
   transition: all var(--transition-fast);
 }
 
@@ -2650,6 +2651,7 @@ section.fashion-insights-section {
 .contact-form .form-group textarea:focus {
   outline: none;
   background-color: #ffffff;
+  border-color: transparent;
   box-shadow: 0 0 0 1px var(--color-gold);
 }
 
@@ -2836,7 +2838,7 @@ section.fashion-insights-section {
 
 /* Intro Section */
 .handloom-intro-section {
-  padding: var(--spacing-lg) 0 var(--spacing-sm) 0;
+  padding: var(--spacing-md) 0 var(--spacing-sm) 0;
   text-align: center;
   background-color: var(--color-cream);
 }
@@ -2863,7 +2865,7 @@ section.fashion-insights-section {
 
 /* Craft Sections - Uniform Spacing */
 .craft-section {
-  padding: var(--spacing-sm) var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-md);
   background-color: var(--color-white);
 }
 
@@ -2889,7 +2891,7 @@ section.fashion-insights-section {
 .craft-block-centered .craft-image {
   width: 100%;
   max-width: 600px;
-  margin: 16px auto 12px auto !important;
+  margin: 8px auto 12px auto !important;
 }
 
 .craft-block-centered .craft-content {
@@ -2936,7 +2938,7 @@ section.fashion-insights-section {
   font-size: clamp(1rem, 2vw, 1.3rem);
   font-weight: 400;
   color: var(--color-black);
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
   letter-spacing: 0.03em;
 }
 
@@ -2961,16 +2963,16 @@ section.fashion-insights-section {
 
 .promise-title {
   font-family: var(--font-heading);
-  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
-  font-weight: 450;
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  font-weight: 400;
   color: var(--color-black);
-  letter-spacing: 0.08em;
-  margin-bottom: var(--spacing-lg);
+  letter-spacing: 0.03em;
+  margin-bottom: 0.5rem;
 }
 
 .promise-image {
   max-width: 650px;
-  margin: 0 auto var(--spacing-lg);
+  margin: 12px auto var(--spacing-md);
   overflow: hidden;
 }
 
@@ -4031,6 +4033,7 @@ section.fashion-insights-section {
   min-height: 500px;
   max-height: 800px;
   overflow: hidden;
+  margin-bottom: var(--spacing-xl);
 }
 
 @media (max-width: 768px) {
@@ -4050,36 +4053,41 @@ section.fashion-insights-section {
 
 /* About Sections */
 .about-section {
-  padding: var(--spacing-lg) 0;
+  padding: var(--spacing-md) 0;
 }
 
 .about-section-label {
-  display: block;
-  font-family: var(--font-body);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-semibold);
-  letter-spacing: var(--letter-spacing-wide);
+  font-family: var(--font-heading);
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  font-weight: 400;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--color-text);
-  margin-bottom: var(--spacing-md);
+  color: var(--color-black);
+  margin: 0 0 0.5rem 0;
 }
 
 .about-section-title {
-  font-family: var(--font-body);
-  font-size: var(--font-size-h2);
-  font-weight: var(--font-weight-medium);
-  letter-spacing: var(--letter-spacing-xwide);
+  font-family: var(--font-heading);
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  font-weight: 400;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--color-black);
   text-align: center;
-  margin-bottom: 0;
+  margin-bottom: 0.5rem;
+}
+
+h1.about-section-title {
+  font-size: clamp(1.1rem, 2.2vw, 1.45rem);
+  font-weight: 500;
+  letter-spacing: 0.12em;
 }
 
 /* About Block - Two Column */
 .about-block {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--spacing-lg);
+  gap: var(--spacing-md);
   align-items: start;
 }
 
@@ -4101,22 +4109,23 @@ section.fashion-insights-section {
 
 .about-heading {
   font-family: var(--font-heading);
-  font-size: clamp(1.8rem, 5vw, 2.8rem);
-  font-weight: var(--font-weight-light);
+  font-size: clamp(1.1rem, 2.2vw, 1.45rem);
+  font-weight: 500;
   color: var(--color-black);
   line-height: 1.25;
-  letter-spacing: 0.04em;
-  margin-bottom: var(--spacing-md);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
 }
 
 .about-heading-small {
-  font-family: var(--font-body);
-  font-size: var(--font-size-h2);
-  font-weight: var(--font-weight-medium);
-  letter-spacing: var(--letter-spacing-wide);
+  font-family: var(--font-heading);
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  font-weight: 400;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--color-black);
-  margin-bottom: var(--spacing-md);
+  margin-bottom: 0.5rem;
 }
 
 .about-block-content p {
@@ -4133,7 +4142,7 @@ section.fashion-insights-section {
 
 /* About Text Block */
 .about-text-block {
-  margin-top: var(--spacing-md);
+  margin-top: var(--spacing-sm);
   max-width: 800px;
 }
 
@@ -4159,7 +4168,7 @@ section.fashion-insights-section {
 }
 
 .about-feature-image {
-  margin: 24px auto 16px auto;
+  margin: 12px auto 16px auto;
   max-width: 600px;
   width: 100%;
 }
@@ -4204,8 +4213,8 @@ section.fashion-insights-section {
 }
 
 .saga-continues .about-section-title {
-  margin-top: var(--spacing-md);
-  margin-bottom: var(--spacing-sm);
+  margin-top: var(--spacing-sm);
+  margin-bottom: 0.5rem;
 }
 
 .about-closing-text {
@@ -4244,6 +4253,7 @@ section.fashion-insights-section {
   min-height: auto;
   max-height: none;
   overflow: hidden;
+  margin-bottom: var(--spacing-xl);
 }
 
 @media (max-width: 768px) {
@@ -4263,18 +4273,24 @@ section.fashion-insights-section {
 
 /* Brand About Section */
 .brand-about {
-  padding: var(--spacing-lg) 0 var(--spacing-md) 0;
+  padding: var(--spacing-md) 0;
   text-align: center;
 }
 
 .brand-section-title {
   font-family: var(--font-heading);
-  font-size: var(--font-size-h2);
-  font-weight: var(--font-weight-medium);
-  letter-spacing: var(--letter-spacing-xwide);
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  font-weight: 400;
+  letter-spacing: 0.08em;
   color: var(--color-black);
-  margin-bottom: var(--spacing-md);
+  margin-bottom: 0.5rem;
   text-transform: uppercase;
+}
+
+h1.brand-section-title {
+  font-size: clamp(1.1rem, 2.2vw, 1.45rem);
+  font-weight: 500;
+  letter-spacing: 0.12em;
 }
 
 .brand-subtitle {
@@ -4297,12 +4313,12 @@ section.fashion-insights-section {
 
 /* Brand Stands For Section */
 .brand-stands-for {
-  padding: var(--spacing-md) 0 var(--spacing-lg) 0;
+  padding: var(--spacing-md) 0;
   text-align: center;
 }
 
 .brand-featured-image {
-  margin: 12px auto var(--spacing-lg) auto;
+  margin: 12px auto var(--spacing-md) auto;
   width: 100%;
   max-width: 600px;
 }
@@ -4330,13 +4346,13 @@ section.fashion-insights-section {
 /* Brand Block (Two Column) */
 .brand-philosophy,
 .brand-journey {
-  padding: var(--spacing-lg) 0;
+  padding: var(--spacing-md) 0;
 }
 
 .brand-block {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--spacing-lg);
+  gap: var(--spacing-md);
   align-items: center;
 }
 
@@ -4348,11 +4364,11 @@ section.fashion-insights-section {
 
 .brand-block-title {
   font-family: var(--font-heading);
-  font-size: 1.3rem;
-  font-weight: var(--font-weight-medium);
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  font-weight: 400;
   color: var(--color-black);
-  letter-spacing: var(--letter-spacing-wide);
-  margin-bottom: var(--spacing-md);
+  letter-spacing: 0.08em;
+  margin-bottom: 0.5rem;
 }
 
 .brand-block-content p {
@@ -4366,7 +4382,7 @@ section.fashion-insights-section {
 
 /* Why Choose Table Section */
 .brand-why-table {
-  padding: var(--spacing-lg) 0 var(--spacing-sm) 0;
+  padding: var(--spacing-md) 0;
 }
 
 /* Left-align heading to match table's left edge */
@@ -4431,7 +4447,7 @@ section.fashion-insights-section {
 
 /* Final Section */
 .brand-final {
-  padding: var(--spacing-md) 0 var(--spacing-lg) 0;
+  padding: var(--spacing-md) 0;
   text-align: center;
 }
 
@@ -7132,7 +7148,7 @@ section.fashion-insights-section {
   }
 
   .about-heading {
-    font-size: 2.5rem;
+    font-size: 1.45rem;
   }
 
   /* Collections Grid - 3 Columns on Desktop */
@@ -11491,7 +11507,7 @@ section.fashion-insights-section {
   .craft-block.craft-block-centered {
     flex-direction: column !important;
     text-align: center;
-    gap: 2rem !important;
+    gap: 0 !important;
   }
 
   .craft-block-centered .craft-image,
@@ -11518,7 +11534,7 @@ section.fashion-insights-section {
 .craft-block-centered .craft-image {
   width: 100%;
   max-width: 600px;
-  margin: 24px auto 16px auto !important;
+  margin: 12px auto 12px auto !important;
 }
 
 .craft-block-centered .craft-image img {
@@ -11536,17 +11552,17 @@ section.fashion-insights-section {
 
 .promise-title {
   font-family: var(--font-heading);
-  font-size: clamp(1.4rem, 3vw, 2rem);
-  font-weight: 450;
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  font-weight: 400;
   color: var(--color-black);
-  margin-bottom: var(--spacing-lg);
-  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.03em;
 }
 
 .promise-image {
   width: 100%;
   max-width: 600px;
-  margin: 0 auto var(--spacing-lg) auto;
+  margin: 12px auto var(--spacing-md) auto;
   overflow: hidden;
 }
 
@@ -11589,7 +11605,7 @@ section.fashion-insights-section {
 
 /* Intro Section - Uniform spacing before Section 1 */
 .handloom-intro-section {
-  padding: var(--spacing-lg) var(--spacing-md) var(--spacing-sm) var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-md) var(--spacing-sm) var(--spacing-md);
   text-align: center;
   background-color: var(--color-white);
 }
