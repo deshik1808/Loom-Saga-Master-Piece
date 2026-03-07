@@ -63,7 +63,8 @@ class ProductRenderer {
     const imageUrl = this.getOptimizedImage(primaryUrl, 600);
 
     // Second gallery image shown on hover (if present)
-    const secondaryRaw = gallery[1] || null;
+    // Find the first image in the gallery that is different from the primary image
+    const secondaryRaw = gallery.find(img => img !== primaryUrl) || null;
     const hoverImageUrl = secondaryRaw ? this.getOptimizedImage(secondaryRaw, 600) : null;
 
     const loadingAttr = lazy ? 'loading="lazy"' : 'loading="eager"';
@@ -182,10 +183,12 @@ class ProductRenderer {
     const salePrice = Number(product.salePrice) || 0;
     const hasSale = salePrice > 0 && regularPrice > salePrice;
     const currentPrice = hasSale ? salePrice : (Number(product.price) || 0);
+    const inStock = ProductRenderer.isPurchasable(product);
 
     return `
-      <a href="product-detail?id=${product.id}" class="search-product-card">
-        <img src="${imageUrl}" alt="${this.escapeHtml(product.name)}" class="search-product-card__image" loading="lazy">
+      <article class="search-product-card__wrapper" data-product-id="${product.id}" data-in-stock="${inStock}">
+        <a href="product-detail?id=${product.id}" class="search-product-card">
+          <img src="${imageUrl}" alt="${this.escapeHtml(product.name)}" class="search-product-card__image" loading="lazy">
         <div class="search-product-card__info">
           <p class="search-product-card__name">${this.escapeHtml(product.name)}</p>
           <p class="search-product-card__price">

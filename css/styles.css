@@ -419,7 +419,7 @@ ul {
 .hero-section,
 .product-card,
 .collection-card,
-.discovery-section,
+.discover-section,
 .story-section {
   min-width: 0;
   /* Prevent overflow */
@@ -435,7 +435,7 @@ ul {
 .hero-section img,
 .product-card img,
 .collection-card img,
-.discovery-section img,
+.discover-section img,
 .story-section img {
   width: 100%;
   height: 100%;
@@ -1279,9 +1279,19 @@ ul {
 .video-wrapper-full {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 9;
+  height: 90vh;
+  min-height: 500px;
+  max-height: 800px;
   overflow: hidden;
   cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .video-wrapper-full {
+    height: 50vh;
+    min-height: 400px;
+    max-height: 600px;
+  }
 }
 
 .video-thumbnail-full {
@@ -1788,22 +1798,38 @@ input[type="text"]::-ms-clear {
   position: relative;
   width: 100%;
   aspect-ratio: 4 / 5;
-  /* Portrait aspect ratio */
   overflow: hidden;
 }
 
-.discover-image {
+@media (max-width: 768px) {
+  .discover-image-wrapper {
+    aspect-ratio: 4 / 5;
+  }
+}
+
+.discover-image-wrapper .discover-image {
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none;
+  object-fit: cover !important;
   object-position: center;
+  transform: scale(var(--img-scale, 1));
   transition: transform 0.6s ease;
 }
 
 .discover-card:hover .discover-image {
-  transform: scale(1.05);
+  transform: scale(calc(var(--img-scale, 1) + 0.05));
+}
+
+/* Removed conflicting video-wrapper-full height as it is defined globally */
+.video-thumbnail-full {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
 }
 
 .discover-overlay {
@@ -1955,10 +1981,7 @@ input[type="text"]::-ms-clear {
 
 .product-card {
   flex: 0 0 auto;
-  width: calc(25% - 1.5rem);
-  min-width: 280px;
-  max-width: 400px;
-  /* Prevent over-expansion at zoom-out */
+  width: 100%;
   display: block;
   overflow: hidden;
   border-radius: 4px;
@@ -2021,8 +2044,7 @@ input[type="text"]::-ms-clear {
 .story-image {
   width: 100%;
   overflow: hidden;
-  aspect-ratio: 4 / 5;
-  /* Enforce consistent portrait ratio */
+  /* aspect-ratio removed for desktop - grid controls height */
 }
 
 .story-image img {
@@ -7001,11 +7023,12 @@ h1.brand-section-title {
   .story-wrapper {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
     gap: 0;
     width: 100%;
     margin: 0;
     padding: 0;
-    /* Removed overflow: hidden - not needed without scale */
+    overflow: hidden;
   }
 
   /* Flatten the hierarchy to make children direct grid items */
@@ -7019,7 +7042,7 @@ h1.brand-section-title {
   .story-image {
     width: 100%;
     height: 100%;
-
+    overflow: hidden;
     border-radius: 0;
     position: relative;
     z-index: 1;
@@ -9714,19 +9737,27 @@ h1.brand-section-title {
 }
 
 .explore-swiper .swiper-slide {
-  width: auto;
   height: auto;
+  overflow: hidden;
 }
 
 .explore-swiper .product-card {
   display: block;
-  width: 100%;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
   height: 100%;
+  overflow: hidden;
+  border-radius: 4px;
+  flex: 0 0 auto !important;
+  box-sizing: border-box;
 }
 
 .explore-swiper .product-card img {
   width: 100%;
-  height: auto;
+  max-width: 100%;
+  height: 100%;
+  object-fit: cover;
   display: block;
 }
 
@@ -11206,14 +11237,16 @@ h1.brand-section-title {
 .story-wrapper {
   display: grid !important;
   grid-template-columns: 1fr 1fr !important;
+  grid-template-rows: auto auto !important;
   gap: 0 !important;
   margin-top: var(--section-gap) !important;
   margin-bottom: var(--section-gap) !important;
-  margin-left: 0 !important;
-  margin-right: 0 !important;
   padding: 0 !important;
-  width: 100% !important;
+  width: 100vw !important;
   max-width: none !important;
+  margin-left: calc(-50vw + 50%) !important;
+  margin-right: calc(-50vw + 50%) !important;
+  overflow: hidden !important;
 }
 
 /* 6. FASHION INSIGHTS - gap after story sections */
@@ -11242,11 +11275,16 @@ h1.brand-section-title {
   padding: 0 !important;
   border: none !important;
   border-radius: 0 !important;
+  width: 100% !important;
+  height: auto !important;
+  max-height: none !important;
+  overflow: hidden !important;
+  aspect-ratio: unset !important;
 }
 
 .story-image img {
   width: 100% !important;
-  height: 100% !important;
+  height: auto !important;
   object-fit: cover !important;
   display: block !important;
   margin: 0 !important;
@@ -11261,6 +11299,9 @@ h1.brand-section-title {
   flex-direction: column !important;
   justify-content: center !important;
   align-items: center !important;
+  height: 100% !important;
+  max-height: none !important;
+  overflow: hidden !important;
 }
 
 /* Grid order for correct layout:

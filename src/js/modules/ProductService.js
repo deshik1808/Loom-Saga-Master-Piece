@@ -152,6 +152,11 @@ class ProductService {
         raw: p.attributes?.raw || []
       },
 
+      // ── Related Products & Upsells ──
+      relatedIds: p.relatedIds || [],
+      upsellIds: p.upsellIds || [],
+      crossSellIds: p.crossSellIds || [],
+
       // ── Checkout ──
       checkoutUrl: p.checkoutUrl || ''
     };
@@ -190,6 +195,9 @@ class ProductService {
       featured: p.featured || false,
       newArrival: p.newArrival || false,
       attributes: p.attributes || {},
+      relatedIds: p.relatedIds || [],
+      upsellIds: p.upsellIds || [],
+      crossSellIds: p.crossSellIds || [],
       checkoutUrl: ''
     };
   }
@@ -231,6 +239,11 @@ class ProductService {
   /** Get all products */
   getAllProducts() {
     return this.products;
+  }
+
+  /** Get total number of loaded products */
+  getProductCount() {
+    return this.products ? this.products.length : 0;
   }
 
   /** Get a product by ID */
@@ -292,18 +305,76 @@ class ProductService {
     const product = this.getProductById(productId);
     if (!product) return [];
 
-    // If the product has explicit relatedProducts, use those
-    if (product.relatedProducts && product.relatedProducts.length > 0) {
-      return product.relatedProducts
-        .map(id => this.getProductById(id))
-        .filter(p => p !== null)
-        .slice(0, limit);
+    let results = [];
+    const addedIds = new Set([product.id]); // Exclude current product
+
+    // 1. Prioritize explicitly specified upsells, cross-sells, or related products
+    let explicitIds = [];
+    if (product.upsellIds && product.upsellIds.length > 0) {
+      explicitIds = product.upsellIds;
+    } else if (product.crossSellIds && product.crossSellIds.length > 0) {
+      explicitIds = product.crossSellIds;
+    } else if (product.relatedIds && product.relatedIds.length > 0) {
+      explicitIds = product.relatedIds;
+    } else if (product.relatedProducts && product.relatedProducts.length > 0) {
+      explicitIds = product.relatedProducts; // legacy fallback
     }
 
-    // Otherwise, return products from the same category (excluding self)
-    return this.products
-      .filter(p => p.id !== product.id && p.category === product.category)
-      .slice(0, limit);
+    if (explicitIds.length > 0) {
+      const explicit = explicitIds
+        .map(id => this.getProductById(id))
+        .filter(p => p !== null && !addedIds.has(p.id));
+
+      for (const p of explicit) {
+        if (results.length < limit) {
+          results.push(p);
+          addedIds.add(p.id);
+        }
+      }
+    }
+
+    if (results.length >= limit) return results;
+
+    // 2. Same Category Fallback
+    const currentSlugs = new Set();
+    if (product.category) currentSlugs.add(product.category);
+    if (product.categorySlug) currentSlugs.add(product.categorySlug);
+    if (Array.isArray(product.categories)) {
+      product.categories.forEach(c => {
+        if (c && c.slug) currentSlugs.add(c.slug);
+      });
+    }
+
+    const others = this.products.filter(p => !addedIds.has(p.id));
+    const sameCat = others.filter(p => {
+      if (currentSlugs.has(p.category) || currentSlugs.has(p.categorySlug)) return true;
+      if (Array.isArray(p.categories)) {
+        return p.categories.some(c => c && c.slug && currentSlugs.has(c.slug));
+      }
+      return false;
+    });
+
+    for (const p of sameCat) {
+      if (results.length < limit) {
+        results.push(p);
+        addedIds.add(p.id);
+      }
+    }
+
+    if (results.length >= limit) return results;
+
+    // 3. Completely random fallback
+    const remaining = this.products.filter(p => !addedIds.has(p.id));
+    const shuffled = remaining.sort(() => 0.5 - Math.random());
+
+    for (const p of shuffled) {
+      if (results.length < limit) {
+        results.push(p);
+        addedIds.add(p.id);
+      }
+    }
+
+    return results;
   }
 
   /**

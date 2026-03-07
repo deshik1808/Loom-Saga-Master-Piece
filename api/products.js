@@ -61,6 +61,11 @@ export default async function handler(req, res) {
         categoryName: categories[0]?.name || "Uncategorized",
         categories: categories,
 
+        // Related Products & Upsells
+        relatedIds: product.related_ids || [],
+        upsellIds: product.upsell_ids || [],
+        crossSellIds: product.cross_sell_ids || [],
+
         // Stock
         inStock: product.stock_status === "instock",
         stockQuantity: product.stock_quantity ?? null,
@@ -71,9 +76,9 @@ export default async function handler(req, res) {
 
         // Attributes
         attributes: {
-          color: product.attributes?.find(a => a.name.toLowerCase() === "color")?.options?.[0] || null,
-          fabric: product.attributes?.find(a => a.name.toLowerCase() === "fabric")?.options?.[0] || null,
-          occasion: product.attributes?.find(a => a.name.toLowerCase() === "occasion")?.options || [],
+          color: product.attributes?.find(a => a.name.toLowerCase().includes("color"))?.options?.[0] || null,
+          fabric: product.attributes?.find(a => a.name.toLowerCase().includes("fabric"))?.options?.[0] || null,
+          occasion: product.attributes?.find(a => a.name.toLowerCase().includes("occasion"))?.options || [],
           raw: (product.attributes || []).map(a => ({
             name: a.name,
             options: a.options
@@ -156,6 +161,11 @@ export default async function handler(req, res) {
           categoryName: primaryCategoryName,
           categories: categories,
 
+          // Related Products & Upsells
+          relatedIds: product.related_ids || [],
+          upsellIds: product.upsell_ids || [],
+          crossSellIds: product.cross_sell_ids || [],
+
           // Stock
           inStock: product.stock_status === "instock",
           stockQuantity: product.stock_quantity ?? null,    // null = unlimited
@@ -167,9 +177,9 @@ export default async function handler(req, res) {
 
           // Attributes — pass full options arrays so multi-value attributes work correctly
           attributes: {
-            color: product.attributes?.find(a => a.name.toLowerCase() === "color")?.options || [],
-            fabric: product.attributes?.find(a => a.name.toLowerCase() === "fabric")?.options || [],
-            occasion: product.attributes?.find(a => a.name.toLowerCase() === "occasion")?.options || [],
+            color: product.attributes?.find(a => a.name.toLowerCase().includes("color"))?.options || [],
+            fabric: product.attributes?.find(a => a.name.toLowerCase().includes("fabric"))?.options || [],
+            occasion: product.attributes?.find(a => a.name.toLowerCase().includes("occasion"))?.options || [],
             // Raw attributes for any custom needs
             raw: (product.attributes || []).map(a => ({
               name: a.name,

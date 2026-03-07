@@ -38,7 +38,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Montserrat:wght@300;400;500;600&family=Pinyon+Script&family=Roboto:wght@300;400;500;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Montserrat:wght@300;400;500;600&family=Pinyon+Script&family=Roboto:wght@300;400;500;600;700&display=swap"
     rel="stylesheet" />
   <!---Bootstrap--->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -48,6 +48,10 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
   <!-- Main Stylesheet -->
+
+  <!-- Preload logo PNG so it loads in sync with header elements -->
+  <link rel="preload" href="/assets/Vertical%20logo-nWbUhlLG.png" as="image" type="image/png"
+    fetchpriority="high" />
 
   <!-- Structured Data for SEO -->
   <script type="application/ld+json">
@@ -60,9 +64,9 @@
         "logo": "assets/images/logo.png"
       }
     </script>
-  <script type="module" crossorigin src="/assets/main-CNSC0I_Q.js"></script>
-  <script type="module" crossorigin src="/assets/main-B8nrthpD.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/main-DZfKqc8E.css">
+  <script type="module" crossorigin src="/assets/main-DPZcHeUF.js"></script>
+  <script type="module" crossorigin src="/assets/main-WRQV5Ju9.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/main-DQkF44cX.css">
 </head>
 
 <body>
@@ -83,8 +87,8 @@
 
         <!-- Logo - Center -->
         <a href="index.html" class="logo" aria-label="Loom Saga Home">
-          <img src="/assets/logo-CAZJBRgj.webp" alt="Loom Saga Logo" class="logo-image" />
-          <span class="logo-text">Loom Saga</span>
+          <img src="/assets/Vertical%20logo-nWbUhlLG.png" alt="Loom Saga Logo" class="logo-image"
+            fetchpriority="high" loading="eager" />
         </a>
 
         <!-- Icons - Right -->
@@ -93,7 +97,7 @@
             <img src="/assets/search-CTirtJuf.png" alt="Search" width="20" height="20" />
           </button>
           <a href="wishlist.html" class="icon-btn" aria-label="Wishlist">
-            <img src="/assets/heart-SSPBcZ82.png" alt="Wishlist" width="20" height="20" />
+            <img src="/assets/heart-orwlBO01.png" alt="Wishlist" width="20" height="20" />
             <span class="icon-badge" id="wishlistCount">0</span>
           </a>
           <a href="login.html" class="icon-btn" id="accountBtn" aria-label="Account">
@@ -129,11 +133,13 @@
                 <!-- Right side: Product Images -->
                 <div class="mega-menu-images">
                   <a href="product-detail.html" class="mega-menu-img-wrapper">
-                    <img src="/assets/Yellow%20Saree-OJsbNqwx.webp" alt="Yellow Vishnupuri Silk Saree"
-                      loading="lazy">
+                    <img src="/assets/sarees-collection-muslin-image-07-BEY_NICK.webp"
+                      alt="Yellow Vishnupuri Silk Saree" loading="lazy">
                   </a>
                   <a href="product-detail.html" class="mega-menu-img-wrapper">
-                    <img src="/assets/Golden%20Beauty-CYI9MJWT.webp" alt="Black Embroidered Saree" loading="lazy">
+                    <img
+                      src="/assets/sarees-collection-modal-silk-image-06-1d1R4O29.webp"
+                      alt="Black Embroidered Saree" loading="lazy">
                   </a>
                 </div>
               </div>
@@ -163,10 +169,13 @@
                 <div class="mega-menu-images">
                   <!-- Re-using images based on design intent -->
                   <a href="#" class="mega-menu-img-wrapper">
-                    <img src="/assets/Yellow%20Saree-OJsbNqwx.webp" alt="Collection 1" loading="lazy">
+                    <img src="/assets/sarees-collection-muslin-image-07-BEY_NICK.webp"
+                      alt="Collection 1" loading="lazy">
                   </a>
                   <a href="#" class="mega-menu-img-wrapper">
-                    <img src="/assets/Golden%20Beauty-CYI9MJWT.webp" alt="Collection 2" loading="lazy">
+                    <img
+                      src="/assets/sarees-collection-modal-silk-image-06-1d1R4O29.webp"
+                      alt="Collection 2" loading="lazy">
                   </a>
                 </div>
               </div>
@@ -219,10 +228,13 @@
                 </div>
                 <div class="mega-menu-images">
                   <a href="#" class="mega-menu-img-wrapper">
-                    <img src="/assets/Yellow%20Saree-OJsbNqwx.webp" alt="Sarees 1" loading="lazy">
+                    <img src="/assets/sarees-collection-muslin-image-07-BEY_NICK.webp"
+                      alt="Sarees 1" loading="lazy">
                   </a>
                   <a href="#" class="mega-menu-img-wrapper">
-                    <img src="/assets/Golden%20Beauty-CYI9MJWT.webp" alt="Sarees 2" loading="lazy">
+                    <img
+                      src="/assets/sarees-collection-modal-silk-image-06-1d1R4O29.webp"
+                      alt="Sarees 2" loading="lazy">
                   </a>
                 </div>
               </div>
@@ -258,10 +270,13 @@
                 </div>
                 <div class="mega-menu-images">
                   <a href="#" class="mega-menu-img-wrapper">
-                    <img src="/assets/Yellow%20Saree-OJsbNqwx.webp" alt="Crafts 1" loading="lazy">
+                    <img src="/assets/sarees-collection-muslin-image-07-BEY_NICK.webp"
+                      alt="Crafts 1" loading="lazy">
                   </a>
                   <a href="#" class="mega-menu-img-wrapper">
-                    <img src="/assets/Golden%20Beauty-CYI9MJWT.webp" alt="Crafts 2" loading="lazy">
+                    <img
+                      src="/assets/sarees-collection-modal-silk-image-06-1d1R4O29.webp"
+                      alt="Crafts 2" loading="lazy">
                   </a>
                 </div>
               </div>
@@ -286,10 +301,13 @@
                 </div>
                 <div class="mega-menu-images">
                   <a href="#" class="mega-menu-img-wrapper">
-                    <img src="/assets/Yellow%20Saree-OJsbNqwx.webp" alt="About Us 1" loading="lazy">
+                    <img src="/assets/sarees-collection-muslin-image-07-BEY_NICK.webp"
+                      alt="About Us 1" loading="lazy">
                   </a>
                   <a href="#" class="mega-menu-img-wrapper">
-                    <img src="/assets/Golden%20Beauty-CYI9MJWT.webp" alt="About Us 2" loading="lazy">
+                    <img
+                      src="/assets/sarees-collection-modal-silk-image-06-1d1R4O29.webp"
+                      alt="About Us 2" loading="lazy">
                   </a>
                 </div>
               </div>
@@ -659,8 +677,8 @@
         <!-- Card 1 -->
         <a href="./collection-sage.html" class="discover-card">
           <div class="discover-image-wrapper">
-            <img src="/assets/hero-bg-CG9l4GbV.webp" alt="Model wearing elegant sage green traditional saree"
-              class="discover-image" loading="lazy">
+            <img src="/assets/home-page-image-04-D4mGCSjy.webp"
+              alt="Model wearing elegant sage green traditional saree" class="discover-image" loading="lazy">
             <div class="discover-overlay">
               <span class="discover-text">Discover</span>
             </div>
@@ -705,7 +723,7 @@
           <!-- Product 1 -->
           <div class="swiper-slide">
             <a href="#" class="product-card" aria-label="View Red & Black Print Saree">
-              <img src="https://placehold.co/350x500/e8e0d8/333333?text=Red+Print+Saree"
+              <img src="/assets/home-page-cover-01-yuxmLHAP.webp"
                 alt="Model wearing elegant red and black printed saree in urban setting" loading="lazy">
             </a>
           </div>
@@ -713,7 +731,7 @@
           <!-- Product 2 -->
           <div class="swiper-slide">
             <a href="#" class="product-card" aria-label="View Blue Border Saree">
-              <img src="https://placehold.co/350x500/d4e4e8/333333?text=Blue+Border+Saree"
+              <img src="/assets/home-page-image-01-ChtVz139.webp"
                 alt="Model wearing light blue bordered saree with vintage car" loading="lazy">
             </a>
           </div>
@@ -721,7 +739,7 @@
           <!-- Product 3 -->
           <div class="swiper-slide">
             <a href="#" class="product-card" aria-label="View White Print Saree">
-              <img src="https://placehold.co/350x500/f0ebe5/333333?text=White+Print+Saree"
+              <img src="/assets/home-page-image-02-DRE43kPo.webp"
                 alt="Model wearing elegant white printed saree in cafe setting" loading="lazy">
             </a>
           </div>
@@ -729,7 +747,7 @@
           <!-- Product 4 -->
           <div class="swiper-slide">
             <a href="#" class="product-card" aria-label="View Lime Green Saree">
-              <img src="https://placehold.co/350x500/d4e8c8/333333?text=Lime+Saree"
+              <img src="/assets/home-page-image-03-CbxMD6Em.webp"
                 alt="Model wearing vibrant lime green floral saree" loading="lazy">
             </a>
           </div>
@@ -737,7 +755,7 @@
           <!-- Product 5 -->
           <div class="swiper-slide">
             <a href="#" class="product-card" aria-label="View Pink Silk Saree">
-              <img src="https://placehold.co/350x500/f0d4d8/333333?text=Pink+Silk+Saree"
+              <img src="/assets/sarees-collection-kachi-work-image-09-F3pggBMT.webp"
                 alt="Model wearing elegant pink silk saree" loading="lazy">
             </a>
           </div>
@@ -745,7 +763,7 @@
           <!-- Product 6 -->
           <div class="swiper-slide">
             <a href="#" class="product-card" aria-label="View Gold Embroidered Saree">
-              <img src="https://placehold.co/350x500/e8d4a0/333333?text=Gold+Embroidered"
+              <img src="/assets/sarees-collection-muslin-image-05-DF4ssLgU.webp"
                 alt="Model wearing gold embroidered traditional saree" loading="lazy">
             </a>
           </div>
@@ -761,7 +779,7 @@
       <!-- Story 1: An Artist's Legacy (Image Left, Text Right) -->
       <div class="story-block" id="artist-legacy">
         <div class="story-image">
-          <img src="/assets/pexels-rachel-fernandes-407276623-14953193-DEJ1uWry.webp"
+          <img src="/assets/ChatGPT%20Image%20Mar%207_%202026_%2007_27_01%20PM-B-E98jMm.png"
             alt="Master artisan hand block printing traditional patterns on fabric" loading="lazy">
         </div>
         <div class="story-content">
@@ -789,7 +807,7 @@
           <a href="#" class="story-link">Discover</a>
         </div>
         <div class="story-image">
-          <img src="/assets/pexels-rachel-fernandes-407276623-14953193-DEJ1uWry.webp"
+          <img src="/assets/ChatGPT%20Image%20Mar%207_%202026_%2007_27_01%20PM-B-E98jMm.png"
             alt="Skilled craftswoman carefully inspecting handwoven saree fabric" loading="lazy">
         </div>
       </div>
@@ -1026,4 +1044,3 @@
 </body>
 
 </html>
-

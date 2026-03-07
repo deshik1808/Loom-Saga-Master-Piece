@@ -756,16 +756,15 @@ const SearchOverlayManager = {
     noResults: null,
     debounceTimer: null,
 
-    // Fallback product data (used only when ProductService is not available)
     _fallbackProducts: [
-        { id: 'LS-VSK-001', name: 'Lime Green Hand-printed Vishnupuri Silk Saree', price: 5199, image: 'https://placehold.co/140x180/9acd32/333', url: 'product-detail.html', category: 'Vishnupuri' },
-        { id: 'LS-VSK-002', name: 'Mustard Yellow Vishnupuri Silk Saree', price: 5199, image: 'https://placehold.co/140x180/d4a017/333', url: 'product-detail.html', category: 'Vishnupuri' },
-        { id: 'LS-VSK-003', name: 'Red Vishnupuri Silk Saree with Zari Border', price: 5499, image: 'https://placehold.co/140x180/c41e3a/fff', url: 'product-detail.html', category: 'Vishnupuri' },
-        { id: 'LS-SLK-001', name: 'Royal Blue Tussar Silk Saree', price: 6499, image: 'https://placehold.co/140x180/4169e1/fff', url: 'product-detail.html', category: 'Silk Sarees' },
-        { id: 'LS-SLK-002', name: 'Ivory White Modal Silk Saree', price: 4599, image: 'https://placehold.co/140x180/fffff0/333', url: 'product-detail.html', category: 'Silk Sarees' },
-        { id: 'LS-HLM-001', name: 'Traditional Handloom Cotton Saree', price: 3999, image: 'https://placehold.co/140x180/f5deb3/333', url: 'product-detail.html', category: 'Handloom' },
-        { id: 'LS-HLM-002', name: 'Hand-woven Jamdani Saree', price: 4299, image: 'https://placehold.co/140x180/dda0dd/333', url: 'product-detail.html', category: 'Handloom' },
-        { id: 'LS-WED-001', name: 'Bridal Red Banarasi Silk Saree', price: 12999, image: 'https://placehold.co/140x180/8b0000/fff', url: 'product-detail.html', category: 'Wedding' },
+        { id: 'LS-VSK-001', name: 'Lime Green Hand-printed Vishnupuri Silk Saree', price: 5199, image: 'https://placehold.co/140x180/9acd32/333', url: 'product-detail?id=LS-VSK-001', category: 'Vishnupuri' },
+        { id: 'LS-VSK-002', name: 'Mustard Yellow Vishnupuri Silk Saree', price: 5199, image: 'https://placehold.co/140x180/d4a017/333', url: 'product-detail?id=LS-VSK-002', category: 'Vishnupuri' },
+        { id: 'LS-VSK-003', name: 'Red Vishnupuri Silk Saree with Zari Border', price: 5499, image: 'https://placehold.co/140x180/c41e3a/fff', url: 'product-detail?id=LS-VSK-003', category: 'Vishnupuri' },
+        { id: 'LS-SLK-001', name: 'Royal Blue Tussar Silk Saree', price: 6499, image: 'https://placehold.co/140x180/4169e1/fff', url: 'product-detail?id=LS-SLK-001', category: 'Silk Sarees' },
+        { id: 'LS-SLK-002', name: 'Ivory White Modal Silk Saree', price: 4599, image: 'https://placehold.co/140x180/fffff0/333', url: 'product-detail?id=LS-SLK-002', category: 'Silk Sarees' },
+        { id: 'LS-HLM-001', name: 'Traditional Handloom Cotton Saree', price: 3999, image: 'https://placehold.co/140x180/f5deb3/333', url: 'product-detail?id=LS-HLM-001', category: 'Handloom' },
+        { id: 'LS-HLM-002', name: 'Hand-woven Jamdani Saree', price: 4299, image: 'https://placehold.co/140x180/dda0dd/333', url: 'product-detail?id=LS-HLM-002', category: 'Handloom' },
+        { id: 'LS-WED-001', name: 'Bridal Red Banarasi Silk Saree', price: 12999, image: 'https://placehold.co/140x180/8b0000/fff', url: 'product-detail?id=LS-WED-001', category: 'Wedding' },
     ],
 
     // Dynamically get products from ProductService (live WooCommerce data) or fallback
@@ -777,7 +776,7 @@ const SearchOverlayManager = {
                     name: p.name,
                     price: p.price,
                     image: p.primaryImage || p.images?.[0] || 'https://placehold.co/140x180/e0e0e0/666?text=No+Image',
-                    url: 'product-detail?id=' + p.id,
+                    url: 'product-detail.html?id=' + p.id,
                     category: p.category || 'Uncategorized'
                 };
             });
@@ -787,14 +786,16 @@ const SearchOverlayManager = {
 
     // Category suggestions mapping
     categories: [
-        { name: 'Silk Sarees', url: '/category?type=silk-sarees' },
-        { name: 'Vishnupuri Collection', url: '/category?type=vishnupuri-silk' },
-        { name: 'Muslin Sarees', url: '/category?type=muslin-sarees' },
-        { name: 'Jamdani Sarees', url: '/category?type=jamdani-sarees' },
+        { name: 'Silk Sarees', url: '/category.html?type=silk-sarees' },
+        { name: 'Vishnupuri Collection', url: '/category.html?type=vishnupuri-silk' },
+        { name: 'Kosa Silk', url: '/category.html?type=kosa-silk' },
+        { name: 'Organza Sarees', url: '/category.html?type=organza' },
+        { name: 'Muslin Sarees', url: '/category.html?type=muslin-sarees' },
+        { name: 'Jamdani Sarees', url: '/category.html?type=jamdani-sarees' },
         { name: 'Handloom Sarees', url: 'handloom.html' },
-        { name: 'Wedding Collection', url: '/category?type=all' },
-        { name: 'Cotton Sarees', url: '/category?type=cotton' },
-        { name: 'New Arrivals', url: '/category?type=all' },
+        { name: 'Wedding Collection', url: '/category.html?type=all' },
+        { name: 'Cotton Sarees', url: '/category.html?type=cotton' },
+        { name: 'New Arrivals', url: '/category.html?type=all' },
     ],
 
     init() {
@@ -926,7 +927,7 @@ const SearchOverlayManager = {
                 regularPrice: p.regularPrice,
                 salePrice: p.salePrice,
                 image: p.images?.primary || p.primaryImage || p.images?.gallery?.[0] || 'https://placehold.co/140x180/e0e0e0/666?text=No+Image',
-                url: 'product-detail.html?id=' + p.id,
+                url: 'product-detail?id=' + p.id,
                 category: p.categoryName || p.category || 'Uncategorized'
             }));
         } else {
@@ -1452,11 +1453,11 @@ const CartManager = {
         cartItemsEl.innerHTML = items.map(item => `
             <div class="cart-item" data-id="${item.id}">
                 <div class="cart-item-product">
-                    <a href="/product-detail?id=${item.id}" class="cart-item-image-link" style="display:block;text-decoration:none;">
+                    <a href="/product-detail.html?id=${item.id}" class="cart-item-image-link" style="display:block;text-decoration:none;">
                         <img src="${item.image}" alt="${item.name}" class="cart-item-image">
                     </a>
                     <div class="cart-item-details">
-                        <a href="/product-detail?id=${item.id}" class="cart-item-name-link" style="text-decoration:none;color:inherit;">
+                        <a href="/product-detail.html?id=${item.id}" class="cart-item-name-link" style="text-decoration:none;color:inherit;">
                             <h3 class="cart-item-name">${item.name}</h3>
                         </a>
                         <p class="cart-item-price">${this.formatPrice(item.price)}</p>
@@ -1615,11 +1616,11 @@ const CartManager = {
 
         drawerItemsEl.innerHTML = items.map(item => `
             <div class="drawer-item">
-                <a href="/product-detail?id=${item.id}" class="drawer-item-image-link" style="display:block;text-decoration:none;flex-shrink:0;">
+                <a href="/product-detail.html?id=${item.id}" class="drawer-item-image-link" style="display:block;text-decoration:none;flex-shrink:0;">
                     <img src="${item.image}" alt="${item.name}" class="drawer-item-image">
                 </a>
                 <div class="drawer-item-details">
-                    <a href="/product-detail?id=${item.id}" class="drawer-item-name-link" style="text-decoration:none;color:inherit;">
+                    <a href="/product-detail.html?id=${item.id}" class="drawer-item-name-link" style="text-decoration:none;color:inherit;">
                         <h4 class="drawer-item-name">${item.name}</h4>
                     </a>
                     <p class="drawer-item-price">${this.formatPrice(item.price)}</p>
@@ -3451,12 +3452,15 @@ function initExploreSwiper() {
         breakpoints: {
             640: {
                 slidesPerView: 2,
+                spaceBetween: 20,
             },
             768: {
                 slidesPerView: 3,
+                spaceBetween: 20,
             },
             1024: {
-                slidesPerView: 4, // Desktop
+                slidesPerView: 4,
+                spaceBetween: 20,
             },
         },
     });
@@ -3548,11 +3552,11 @@ document.addEventListener('DOMContentLoaded', function () {
             var inStock = product.inStock;
 
             var imageHTML = image
-                ? '<a href="product-detail?id=' + product.id + '"><img src="' + image + '" alt="' + name + '" style="width:100%;display:block;aspect-ratio:3/4;object-fit:cover;" /></a>'
+                ? '<a href="product-detail.html?id=' + product.id + '"><img src="' + image + '" alt="' + name + '" style="width:100%;display:block;aspect-ratio:3/4;object-fit:cover;" /></a>'
                 : '';
 
             var ctaHTML = inStock
-                ? '<a href="product-detail?id=' + product.id + '" style="display:inline-block;margin-top:16px;padding:12px 32px;border:1px solid #2c2c2c;font-family:inherit;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:#2c2c2c;text-decoration:none;">View Product</a>'
+                ? '<a href="product-detail.html?id=' + product.id + '" style="display:inline-block;margin-top:16px;padding:12px 32px;border:1px solid #2c2c2c;font-family:inherit;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:#2c2c2c;text-decoration:none;">View Product</a>'
                 : '<span style="display:inline-block;margin-top:16px;font-family:inherit;font-size:12px;letter-spacing:1.5px;color:#999;text-transform:uppercase;">Currently Unavailable</span>';
 
             container.innerHTML =
