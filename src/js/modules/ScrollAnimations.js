@@ -13,6 +13,13 @@ export function initScrollReveal() {
 
   if (revealElements.length === 0) return;
 
+  // Mobile/Luxury Refinement: No scroll animations on mobile (≤ 768px)
+  // Shows all elements immediately for a faster, app-like feel
+  if (window.innerWidth <= 768) {
+    revealElements.forEach(el => el.classList.add('revealed'));
+    return;
+  }
+
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {

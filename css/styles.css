@@ -13426,6 +13426,34 @@ body.cookie-modal-open {
   }
 
   /* ------------------------------------------------------------------
+     STRICT HOVER CLEANUP — No sticky touch states or image zooms
+     ------------------------------------------------------------------ */
+  *:hover {
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
+
+  /* ------------------------------------------------------------------
+     2. NO SCROLL REVEAL — Show all content immediately for speed
+     ------------------------------------------------------------------ */
+  .reveal,
+  .reveal-left,
+  .reveal-right,
+  .reveal-scale,
+  .reveal-stagger,
+  .reveal-card,
+  .reveal-stagger>*,
+  .fade-in-premium {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    transition-delay: 0s !important;
+    visibility: visible !important;
+    animation: none !important;
+  }
+
+  /* ------------------------------------------------------------------
      2. CATEGORY PAGE — CLEAN 2-COLUMN PRODUCT GRID
      The old 45px gap caused "1.5 card" appearance on narrow screens.
      Luxury brands show COMPLETE cards in neat rows.
@@ -13447,31 +13475,39 @@ body.cookie-modal-open {
   }
 
   /* ------------------------------------------------------------------
-     3. DISCOVER SECTION — TWO EDITORIAL CARDS SIDE BY SIDE
-     Instead of a clunky "peek" carousel, show both cards at once.
-     This creates the clean, editorial grid feel of manishmalhotra.in.
+     3. DISCOVER SECTION — 1.5 CARDS HORIZONTAL SCROLL
+     Instead of a clunky "peek" carousel or a 2-column grid, show 1.5 cards.
+     This creates the clean, editorial "peek" feel of manishmalhotra.in.
      ------------------------------------------------------------------ */
   .discover-section,
   #discover {
-    padding-left: 16px !important;
-    padding-right: 16px !important;
-    overflow: hidden !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    overflow-x: hidden !important;
   }
 
   .discover-grid {
-    display: grid !important;
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 10px !important;
-    overflow-x: unset !important;
-    scroll-snap-type: none !important;
-    padding-right: 0 !important;
+    display: flex !important;
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    gap: 12px !important;
+    padding: 0 20px !important;
+    -webkit-overflow-scrolling: touch !important;
+    grid-template-columns: none !important;
+  }
+
+  /* Hide scrollbar but keep functionality */
+  .discover-grid::-webkit-scrollbar {
+    display: none !important;
   }
 
   .discover-card {
-    min-width: unset !important;
-    width: 100% !important;
-    scroll-snap-align: unset !important;
-    flex-shrink: unset !important;
+    flex: 0 0 75% !important;
+    width: 75% !important;
+    min-width: 75% !important;
+    scroll-snap-align: start !important;
+    margin: 0 !important;
   }
 
   /* Portrait aspect ratio for discover images — luxury feel */
@@ -13479,12 +13515,31 @@ body.cookie-modal-open {
     aspect-ratio: 3 / 4 !important;
     height: auto !important;
     overflow: hidden !important;
+    border-radius: 0 !important;
   }
 
   .discover-image {
     width: 100% !important;
     height: 100% !important;
     object-fit: cover !important;
+  }
+
+  /* Always show text overlay on mobile for clear CTAs */
+  .discover-overlay {
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.4), transparent) !important;
+    display: flex !important;
+    align-items: flex-end !important;
+    padding: 20px !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  .discover-text {
+    font-family: var(--font-body) !important;
+    font-size: 0.85rem !important;
+    letter-spacing: 0.18em !important;
+    text-transform: uppercase !important;
+    color: #ffffff !important;
   }
 
   /* ------------------------------------------------------------------
@@ -13833,12 +13888,18 @@ body.cookie-modal-open {
     touch-action: auto !important;
     overflow-x: hidden !important;
     /* Prevent horizontal sway */
-    overflow-y: auto !important;
-    /* Force native vertical scroll */
-    height: auto !important;
-    /* Prevent height-clipping locks */
+    /* Remove overflow-y and height overrides to let the viewport handle scroll natively */
     -webkit-overflow-scrolling: touch !important;
     /* Legacy momentum support */
+  }
+
+  /* 1.1 CAROUSEL TOUCH OPTIMIZATION: Allow vertical scroll over carousels */
+  .carousel-track,
+  .explore-carousel,
+  .insights-carousel,
+  .explore-swiper {
+    touch-action: pan-y !important;
+    /* Allow native vertical scroll, let browser handle horizontal */
   }
 
   /* 2. GAP FIX: Explicitly collapse the Story -> Fashion Insights void */
@@ -13852,7 +13913,7 @@ body.cookie-modal-open {
   /* Target the Fashion Insights entrance */
   #fashion-insights,
   .fashion-insights-section {
-    padding-top: 6rem !important;
+    padding-top: 4rem !important;
     /* Tight, intentional editorial gap */
     margin-top: 0 !important;
   }

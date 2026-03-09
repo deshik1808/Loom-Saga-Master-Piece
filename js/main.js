@@ -21,6 +21,17 @@ const navOverlay = document.getElementById('navOverlay');
 let lastScrollY = window.scrollY;
 let headerVisible = true;
 let mobileMenuOpenFlag = false; // Flag to disable scroll-based header logic when mobile menu is open
+let cachedFooterTop = null;
+
+/**
+ * Update cached footer position - call on load and resize
+ */
+function updateFooterCache() {
+    const footer = document.getElementById('footer');
+    if (footer) {
+        cachedFooterTop = footer.offsetTop;
+    }
+}
 
 function handleHeaderScroll() {
     // If mobile menu is open, do NOT update header visibility - it must stay fixed and visible
@@ -29,8 +40,13 @@ function handleHeaderScroll() {
     }
 
     const currentScrollY = window.scrollY;
-    const footer = document.getElementById('footer');
-    const footerTop = footer ? footer.offsetTop : Infinity;
+    
+    // PERFORMANCE: Use cached footer top if available to avoid layout thrashing
+    if (cachedFooterTop === null) {
+        updateFooterCache();
+    }
+    
+    const footerTop = cachedFooterTop || Infinity;
     const windowHeight = window.innerHeight;
 
     // If mega menu is active, do nothing - let the absolute positioning handle it
@@ -90,6 +106,11 @@ window.addEventListener('scroll', function () {
         });
         ticking = true;
     }
+});
+
+// Update footer cache on resize
+window.addEventListener('resize', () => {
+    updateFooterCache();
 });
 
 // ==================== HEADER INITIALIZATION ====================
@@ -2186,17 +2207,20 @@ function initCarousels() {
             carousel.scrollLeft = scrollLeft - walk;
         });
 
-        // Touch support for mobile
-        carousel.addEventListener('touchstart', (e) => {
-            startX = e.touches[0].pageX - carousel.offsetLeft;
-            scrollLeft = carousel.scrollLeft;
-        }, { passive: true });
+        // Touch support for mobile - ONLY add if NOT on a touch device or width > 768
+        // Native overflow-x: auto handles this better on mobile
+        if (window.innerWidth > 768) {
+            carousel.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].pageX - carousel.offsetLeft;
+                scrollLeft = carousel.scrollLeft;
+            }, { passive: true });
 
-        carousel.addEventListener('touchmove', (e) => {
-            const x = e.touches[0].pageX - carousel.offsetLeft;
-            const walk = (x - startX) * 2;
-            carousel.scrollLeft = scrollLeft - walk;
-        }, { passive: true });
+            carousel.addEventListener('touchmove', (e) => {
+                const x = e.touches[0].pageX - carousel.offsetLeft;
+                const walk = (x - startX) * 2;
+                carousel.scrollLeft = scrollLeft - walk;
+            }, { passive: true });
+        }
     });
 }
 
@@ -3335,12 +3359,13 @@ function initCarouselArrows() {
  * Adds elegant fade-in animations as sections enter the viewport
  */
 function initScrollReveal() {
-    // Check for reduced motion preference
+    // Check for reduced motion preference or mobile (≤ 768px)
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isMobile = window.innerWidth <= 768;
 
-    if (prefersReducedMotion) {
-        // If user prefers reduced motion, show all elements immediately
-        document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-stagger').forEach(el => {
+    if (prefersReducedMotion || isMobile) {
+        // If user prefers reduced motion or on mobile, show all elements immediately
+        document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-stagger, .reveal-card').forEach(el => {
             el.classList.add('revealed');
         });
         return;
