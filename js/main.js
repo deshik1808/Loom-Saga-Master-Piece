@@ -3436,8 +3436,8 @@ document.addEventListener('DOMContentLoaded', () => {
 // ==================== EXPLORE SWIPER ====================
 function initExploreSwiper() {
     const swiper = new Swiper('.explore-swiper', {
-        slidesPerView: 1, // Mobile default
-        spaceBetween: 20,
+        slidesPerView: 2, // Mobile default (2 columns)
+        spaceBetween: 15,
         autoplay: {
             delay: 3500,
             disableOnInteraction: false,

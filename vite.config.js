@@ -13,9 +13,9 @@ function categoryRewritePlugin() {
       server.middlewares.use((req, res, next) => {
         const match = req.url && req.url.match(/^\/category\/([^?./]+)/);
         if (match) {
-          req.url = `/category.html?category=${match[1]}`;
+          req.url = `/category.html?type=${match[1]}`;
         } else if (req.url === '/category' || req.url === '/category/') {
-          req.url = '/category.html?category=all';
+          req.url = '/category.html?type=all';
         }
         next();
       });
@@ -41,7 +41,6 @@ export default defineConfig({
         cart: resolve(__dirname, 'cart.html'),
         category: resolve(__dirname, 'category.html'),
         checkout: resolve(__dirname, 'checkout.html'),
-        collections: resolve(__dirname, 'collections.html'),
         contact: resolve(__dirname, 'contact.html'),
         'cookie-policy': resolve(__dirname, 'cookie-policy.html'),
         'fashion-insights': resolve(__dirname, 'fashion-insights.html'),
@@ -52,8 +51,6 @@ export default defineConfig({
         'order-confirmation': resolve(__dirname, 'order-confirmation.html'),
         'product-detail': resolve(__dirname, 'product-detail.html'),
         register: resolve(__dirname, 'register.html'),
-        'silk-sarees': resolve(__dirname, 'silk-sarees.html'),
-        'vishnupuri-silk': resolve(__dirname, 'vishnupuri-silk.html'),
         wishlist: resolve(__dirname, 'wishlist.html'),
         'brand-story': resolve(__dirname, 'brand-story.html'),
         'article-golden-beauty': resolve(__dirname, 'article-golden-beauty.html'),

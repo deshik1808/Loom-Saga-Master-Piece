@@ -3,6 +3,7 @@
  * Redirects cart checkout actions to the serverless WooCommerce checkout endpoint.
  */
 import CartManager from './CartManager.js';
+import { AuthManager } from './AuthManager.js';
 
 const CHECKOUT_BTN_SELECTOR = '#checkoutBtn, .drawer-checkout-btn';
 
@@ -45,7 +46,7 @@ const CheckoutRedirectManager = {
     try {
       // Include Authorization header if the user is logged in
       const headers = { 'Content-Type': 'application/json' };
-      const AuthManager = window.AuthManager || (await import('./AuthManager.js')).AuthManager;
+      
       if (AuthManager && AuthManager.getToken()) {
         headers['Authorization'] = `Bearer ${AuthManager.getToken()}`;
       }

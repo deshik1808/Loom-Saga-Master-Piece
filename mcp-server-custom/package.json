@@ -1,0 +1,16 @@
+{
+    "name": "mcp-server-custom",
+    "version": "1.0.0",
+    "description": "A custom MCP server template",
+    "main": "index.js",
+    "bin": {
+        "mcp-server-custom": "./index.js"
+    },
+    "type": "module",
+    "scripts": {
+        "start": "node index.js"
+    },
+    "dependencies": {
+        "@modelcontextprotocol/sdk": "^1.0.1"
+    }
+}

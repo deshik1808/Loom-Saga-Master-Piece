@@ -62,6 +62,16 @@ To preview the production build locally, use the following command:
 npm run preview
 ```
 
+## Strict Development Rules (CRITICAL)
+
+> [!IMPORTANT]
+> The desktop version of this site is **FINAL and STABLE**. All refinements must target mobile only.
+
+1.  **Mobile-Only Scoping**: All CSS changes must be strictly wrapped inside `@media (max-width: 768px)` blocks.
+2.  **No Global Changes**: Never modify top-level CSS properties or variables that could affect the desktop layout unless specifically requested.
+3.  **JS Guarding**: All JavaScript refinements must be guarded with `window.innerWidth <= 768` checks.
+4.  **Touch-First Optimization**: Focus on touch targets, swipe interactions, and viewport-filling layouts as defined in the `mobile-refinement` skill.
+
 ## Development Conventions
 
 *   **Styling**: The project uses a custom CSS file (`css/styles.css`) for styling. The CSS is well-structured and uses a consistent naming convention. It uses CSS variables extensively for colors, fonts, spacing, and transitions.

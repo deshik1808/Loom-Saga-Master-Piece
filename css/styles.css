@@ -138,9 +138,6 @@
 html {
   scroll-behavior: smooth;
   font-size: 16px;
-  /* Prevent horizontal scroll using clip - doesn't cause scroll resistance like hidden */
-  width: 100%;
-  overflow-x: clip;
   -webkit-text-size-adjust: 100%;
 }
 
@@ -152,10 +149,8 @@ body {
   background-color: var(--color-bg);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* Enforce containment using clip - doesn't cause scroll resistance */
   width: 100%;
   position: relative;
-  overflow-x: clip;
   /* Premium zoom-stable bounds for ultra-wide screens */
   max-width: 2560px;
   margin-left: auto;
@@ -772,6 +767,7 @@ ul {
   transform: translateY(0) !important;
   position: fixed !important;
   top: 0 !important;
+  z-index: 2500 !important;
 }
 
 /* Header Dark Variant (for pages with light background like Cart) */
@@ -1834,44 +1830,56 @@ input[type="text"]::-ms-clear {
 
 .discover-overlay {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: var(--spacing-md);
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.4), transparent);
+  inset: 0;
+  padding: 1rem 1rem;
+  /* Breathable offset */
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.45) 0%, transparent 45%);
   pointer-events: none;
   /* Let clicks pass through */
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
 }
 
 .discover-text {
   font-family: var(--font-body);
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   font-weight: 450;
   color: var(--color-white);
   letter-spacing: 0.05em;
   position: relative;
   display: inline-block;
   padding-bottom: 2px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Golden Underline Animation - Same as View More & Navbar */
+/* Golden Underline Animation - anchored to the left */
 .discover-text::after {
   content: "";
   position: absolute;
   bottom: 0;
-  left: 50%;
+  left: 0;
   width: 0;
   height: 2px;
   background-color: var(--color-gold);
-  transition:
-    width var(--transition-elegant),
-    left var(--transition-elegant);
+  transition: width var(--transition-elegant);
 }
 
 /* Trigger animation on Card Hover */
-.discover-card:hover .discover-text::after {
-  width: 100%;
-  left: 0;
+@media (hover: hover) {
+  .discover-card:hover .discover-text::after {
+    width: 100%;
+  }
+}
+
+/* Ensure no hover/active stickiness on mobile for this element */
+@media (max-width: 768px) {
+
+  .discover-card:hover .discover-text::after,
+  .discover-card:active .discover-text::after {
+    width: 0 !important;
+    transition: none !important;
+  }
 }
 
 /* Play button styles shared across video sections */
@@ -9764,11 +9772,13 @@ h1.brand-section-title {
 /* Custom Navigation Arrows */
 .explore-swiper .swiper-button-next,
 .explore-swiper .swiper-button-prev {
-  background-color: var(--color-white);
-  width: 44px;
-  height: 44px;
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   /* Subtle premium shadow */
   transition:
     transform 0.3s ease,
@@ -9779,15 +9789,15 @@ h1.brand-section-title {
 
 .explore-swiper .swiper-button-next::after,
 .explore-swiper .swiper-button-prev::after {
-  font-size: 1.2rem;
-  font-weight: bold;
+  font-size: 1rem;
+  font-weight: 500;
 }
 
 .explore-swiper .swiper-button-next:hover,
 .explore-swiper .swiper-button-prev:hover {
   transform: scale(1.1);
-  background-color: var(--color-white);
-  /* Ensure it stays white on hover */
+  background-color: rgba(255, 255, 255, 0.95);
+  /* More opaque on hover */
 }
 
 /* ==================== OFF-CANVAS CART DRAWER ==================== */
@@ -10171,6 +10181,44 @@ h1.brand-section-title {
   color: var(--color-black);
 }
 
+/* ==================== MOBILE CART DRAWER ==================== */
+/* Scopes: Mobile Only (max-width: 768px)
+   Purpose: 90% width drawer with sharp edges, reliable close button */
+
+@media screen and (max-width: 768px) {
+  .cart-drawer {
+    top: 0 !important;
+    height: 100% !important;
+    width: 90% !important;
+    max-width: none !important;
+    border-radius: 0 !important;
+    overflow: hidden;
+  }
+
+  .cart-drawer.active {
+    transform: translateX(0) !important;
+  }
+
+  /* Enlarge close button touch target on mobile */
+  .drawer-close {
+    width: 44px !important;
+    height: 44px !important;
+    padding: 10px !important;
+    position: relative;
+    z-index: 10010 !important;
+    /* Above everything else in the drawer */
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    cursor: pointer !important;
+    pointer-events: auto !important;
+  }
+
+  .drawer-close svg {
+    pointer-events: none;
+    /* Prevent SVG from blocking clicks */
+  }
+}
+
 /* ==================== MOBILE HEADER REFINEMENTS ==================== */
 /* 
    Scopes: Mobile Only (max-width: 768px)
@@ -10186,6 +10234,7 @@ h1.brand-section-title {
     background-color: var(--color-white) !important;
     backdrop-filter: none !important;
     height: 76px;
+    z-index: 2500 !important;
     /* Premium breathing room for brand dominance */
     box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04) !important;
     /* Subtle divider */
@@ -10266,10 +10315,12 @@ h1.brand-section-title {
   /* Show original spans - revert hide */
   .hamburger span {
     display: block;
-    width: 20px;
+    width: 18px;
     height: 1.5px;
-    background-color: var(--color-black);
-    margin: 3px 0;
+    min-height: 1.5px;
+    flex-shrink: 0;
+    background-color: var(--color-black) !important;
+    margin: 1px 0;
     transition: var(--transition-smooth);
   }
 
@@ -10282,7 +10333,7 @@ h1.brand-section-title {
 
   /* Keep original active state animation */
   .hamburger.active span:nth-child(1) {
-    transform: rotate(45deg) translate(5px, 5px);
+    transform: translateY(5.5px) rotate(45deg);
   }
 
   .hamburger.active span:nth-child(2) {
@@ -10290,7 +10341,7 @@ h1.brand-section-title {
   }
 
   .hamburger.active span:nth-child(3) {
-    transform: rotate(-45deg) translate(5px, -5px);
+    transform: translateY(-5.5px) rotate(-45deg);
   }
 
   /* 4. Icons - Curated Selection with Better Spacing */
@@ -10853,14 +10904,29 @@ h1.brand-section-title {
     padding: var(--spacing-md) var(--spacing-sm);
   }
 
-  /* Fashion Insights: Reduce heavy spacing */
-  section.fashion-insights-section {
-    padding: var(--spacing-md) 0 !important;
+  /* Zero out gap between story wrapper and Fashion Insights */
+  .story-wrapper {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
   }
 
+  /* Target the specific block directly above the gap */
+  #craft-matters .story-content {
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* Fashion Insights: Reduce heavy spacing */
+  section.fashion-insights-section {
+    padding-top: 1rem !important;
+    padding-bottom: var(--spacing-md) !important;
+    margin-top: 0 !important;
+  }
+
+  /* Explicitly defeat Bootstrap heading margins */
   .fashion-insights-title {
-    margin-bottom: 2rem !important;
-    /* Reduced from 3rem */
+    margin-top: 0 !important;
+    margin-bottom: 1rem !important;
   }
 
   /* ==================== PHASE 2: VISUAL ELEVATION & SECTION EMPHASIS ==================== */
@@ -12222,15 +12288,8 @@ h1.brand-section-title {
 }
 
 /* ==================== FULLSCREEN MOBILE MENU (Manish Malhotra Style) ==================== */
+/* Global defaults — position/size are fully controlled by the mobile media query below */
 .mobile-menu {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  /* Fallback */
-  height: 100svh;
-  z-index: 2000;
   pointer-events: none;
   visibility: hidden;
   overflow: hidden;
@@ -13347,3 +13406,464 @@ body.cookie-modal-open {
     display: none;
   }
 }
+
+/* ==========================================================================
+   LOOM SAGA — MOBILE LUXURY REFINEMENTS (Manish Malhotra Standard)
+   Applied globally on mobile to ensure a premium, app-like feel.
+   Priority: High — these are targeted corrections on top of existing styles.
+   ========================================================================== */
+
+@media screen and (max-width: 768px) {
+
+  /* ------------------------------------------------------------------
+     1. GLOBAL APP FEEL — No horizontal spillage, no accidental scroll
+     ------------------------------------------------------------------ */
+  html,
+  body {
+    overflow-x: hidden !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+  }
+
+  /* ------------------------------------------------------------------
+     2. CATEGORY PAGE — CLEAN 2-COLUMN PRODUCT GRID
+     The old 45px gap caused "1.5 card" appearance on narrow screens.
+     Luxury brands show COMPLETE cards in neat rows.
+     ------------------------------------------------------------------ */
+  .products-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 20px 12px !important;
+    /* Tighter, balanced gap — 20px vertical, 12px horizontal */
+    padding: 0 16px !important;
+    /* Edge breathing room */
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Skeleton cards in the grid should also respect 2-col layout */
+  .skeleton-card {
+    width: 100% !important;
+  }
+
+  /* ------------------------------------------------------------------
+     3. DISCOVER SECTION — TWO EDITORIAL CARDS SIDE BY SIDE
+     Instead of a clunky "peek" carousel, show both cards at once.
+     This creates the clean, editorial grid feel of manishmalhotra.in.
+     ------------------------------------------------------------------ */
+  .discover-section,
+  #discover {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    overflow: hidden !important;
+  }
+
+  .discover-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+    overflow-x: unset !important;
+    scroll-snap-type: none !important;
+    padding-right: 0 !important;
+  }
+
+  .discover-card {
+    min-width: unset !important;
+    width: 100% !important;
+    scroll-snap-align: unset !important;
+    flex-shrink: unset !important;
+  }
+
+  /* Portrait aspect ratio for discover images — luxury feel */
+  .discover-image-wrapper {
+    aspect-ratio: 3 / 4 !important;
+    height: auto !important;
+    overflow: hidden !important;
+  }
+
+  .discover-image {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+
+  /* ------------------------------------------------------------------
+     3.5. VIDEO SECTION — ALIGN HEIGHT WITH DISCOVER SECTION
+     Matches the exact height of the two-column discover grid.
+     ------------------------------------------------------------------ */
+  .video-section-full {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  .video-wrapper-full {
+    height: calc((100vw - 42px) * 0.66666) !important;
+    min-height: unset !important;
+    max-height: unset !important;
+  }
+
+  /* ------------------------------------------------------------------
+     4. INDEX.HTML STORY SECTIONS — PROPER MOBILE STACKING
+     On very small screens, the 2-column side-by-side layout is too
+     cramped. Stack them vertically for better readability.
+     Text should be READABLE without zooming.
+     ------------------------------------------------------------------ */
+  .story-wrapper {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    margin-top: var(--section-gap, 45px) !important;
+    margin-bottom: var(--section-gap, 45px) !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+  }
+
+  /* Each story block stacks as a card */
+  .story-block,
+  #artist-legacy,
+  #craft-matters {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Image takes full width */
+  .story-image {
+    width: 100% !important;
+    height: auto !important;
+    max-height: 125vw !important;
+    /* Prevents excessively tall images, but allows portrait orientation */
+    overflow: hidden !important;
+    order: 1 !important;
+  }
+
+  .story-image img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center top !important;
+  }
+
+  /* Text block below the image */
+  .story-content {
+    order: 2 !important;
+    padding: 28px 20px !important;
+    text-align: center !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 12px !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  /* Override the flat order values from previous media queries */
+  #artist-legacy .story-image {
+    order: 1 !important;
+  }
+
+  #artist-legacy .story-content {
+    order: 2 !important;
+  }
+
+  #craft-matters .story-content {
+    order: 4 !important;
+  }
+
+  #craft-matters .story-image {
+    order: 3 !important;
+  }
+
+  .story-title {
+    font-size: 1.1rem !important;
+    letter-spacing: 0.18em !important;
+    line-height: 1.4 !important;
+  }
+
+  .story-text {
+    font-size: 0.88rem !important;
+    line-height: 1.75 !important;
+    color: var(--color-text-light) !important;
+    max-width: 90% !important;
+  }
+
+  .story-link {
+    font-size: 0.75rem !important;
+    letter-spacing: 0.18em !important;
+    padding-bottom: 4px !important;
+  }
+
+  /* ------------------------------------------------------------------
+     5. HAMBURGER MENU — ORGANIZED & LUXURY TOUCH TARGETS
+     Menu items MUST have minimum 44px touch target height.
+     Add a subtle gold separator for section breaks (instead of raw borders).
+     ------------------------------------------------------------------ */
+  .mobile-menu__link,
+  .mobile-menu__subgroup-btn {
+    padding: 20px 0 !important;
+    /* Generous 20px = well above 44px total height */
+    font-size: 0.8rem !important;
+    letter-spacing: 0.16em !important;
+    min-height: 44px !important;
+    line-height: 1 !important;
+  }
+
+  .mobile-menu__item {
+    border-bottom: 1px solid rgba(201, 169, 98, 0.18) !important;
+    /* Gold-tinted separator */
+  }
+
+  .mobile-menu__item:last-child {
+    border-bottom: 1px solid rgba(201, 169, 98, 0.18) !important;
+  }
+
+  /* Secondary links (Wishlist / Login) — equal visual weight */
+  .mobile-menu__secondary {
+    padding: 28px 0 16px !important;
+    border-top: 1px solid rgba(201, 169, 98, 0.12) !important;
+    margin-top: auto !important;
+    gap: 4px !important;
+  }
+
+  .mobile-menu__secondary-link {
+    padding: 14px 0 !important;
+    /* Increased from 12px */
+    font-size: 0.78rem !important;
+    letter-spacing: 0.14em !important;
+    min-height: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  /* Panel content top spacing — adds logo clearance */
+  .mobile-menu__content {
+    padding-top: 28px !important;
+  }
+
+  /* Sub-panel list links */
+  .mobile-menu__sublist a {
+    padding: 17px 0 !important;
+    font-size: 0.82rem !important;
+    letter-spacing: 0.06em !important;
+    min-height: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  /* Sub-group title in gold */
+  .mobile-menu__subgroup-title {
+    font-size: 0.65rem !important;
+    letter-spacing: 0.2em !important;
+    color: var(--color-gold-dark) !important;
+    margin-top: 24px !important;
+    margin-bottom: 4px !important;
+  }
+
+  /* Social icons — centered, generous tap targets */
+  .mobile-menu__social-icons a {
+    padding: 8px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  /* ------------------------------------------------------------------
+     6. HEADER ICON BUTTONS — Ensure 44x44 touch targets
+     ------------------------------------------------------------------ */
+  .icon-btn {
+    min-width: 44px !important;
+    min-height: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .hamburger {
+    min-width: 44px !important;
+    min-height: 44px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 5px !important;
+    padding: 8px !important;
+  }
+
+  /* ------------------------------------------------------------------
+     7. PRODUCTS PAGE TOOLBAR — Touch-friendly filter/sort buttons
+     ------------------------------------------------------------------ */
+  .products-sort,
+  .products-filter {
+    min-height: 44px !important;
+    padding: 10px 16px !important;
+    font-size: 0.8rem !important;
+    letter-spacing: 0.1em !important;
+  }
+
+  /* ------------------------------------------------------------------
+     8. INTRO SECTION — Clean centered copy, no overflow
+     ------------------------------------------------------------------ */
+  .intro-section {
+    padding: 40px 20px !important;
+    text-align: center !important;
+  }
+
+  .intro-title {
+    font-size: clamp(0.95rem, 4vw, 1.2rem) !important;
+    letter-spacing: 0.18em !important;
+    line-height: 1.5 !important;
+    margin-bottom: 16px !important;
+  }
+
+  .intro-text {
+    font-size: 0.88rem !important;
+    line-height: 1.8 !important;
+    color: var(--color-text-light) !important;
+    max-width: 90% !important;
+    margin: 0 auto !important;
+  }
+
+  /* ------------------------------------------------------------------
+     9. STRICT HOVER CLEANUP & MOBILE HEADER FIX
+     ------------------------------------------------------------------ */
+  /* Mobile Header - Always White */
+  .header,
+  .header:hover,
+  .header.scrolled,
+  .header.scrolled:hover {
+    background-color: var(--color-white) !important;
+    color: var(--color-black) !important;
+  }
+
+  /* Prevent transparent/inherit state on hover which hides elements */
+  .header .logo-image,
+  .header .icon-btn img,
+  .header .icon-btn svg,
+  .header:hover .logo-image,
+  .header:hover .icon-btn img,
+  .header:hover .icon-btn svg {
+    filter: brightness(0) invert(0.12) !important;
+    transform: translateZ(0) !important;
+    /* Keep hardware accel so logo doesn't shift */
+  }
+
+  .header .tagline,
+  .header .logo-text,
+  .header .nav-link,
+  .header .icon-btn,
+  .header:hover .tagline,
+  .header:hover .logo-text,
+  .header:hover .nav-link,
+  .header:hover .icon-btn {
+    color: var(--color-black) !important;
+    background-color: transparent !important;
+  }
+
+  .header .hamburger span,
+  .header:hover .hamburger span {
+    background-color: var(--color-black) !important;
+  }
+
+  /* Disable hover transitions to prevent "sticky" touch lag for links */
+  a:hover,
+  button:hover {
+    transition-duration: 0s !important;
+  }
+
+  /* Image zoom resets */
+  .premium-image-container:hover img,
+  .product-card:hover img,
+  .discover-card:hover img,
+  .collection-card:hover img,
+  .fashion-insight-card:hover img {
+    transform: none !important;
+  }
+
+  /* Link & Button resets */
+  .premium-link:hover::after,
+  .story-link:hover::after,
+  .nav-link:hover::after {
+    transform: scaleX(0) !important;
+  }
+
+  .magnetic-btn:hover {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
+  .magnetic-btn::before {
+    display: none !important;
+  }
+
+  /* Category Filter specific resets */
+  .filter-checkbox:hover {
+    background: transparent !important;
+  }
+
+  /* Fashion Insights Title Mobile Fix to match other headings */
+  .fashion-insights-title {
+    font-size: 1rem !important;
+    font-weight: 450 !important;
+    text-align: center !important;
+    letter-spacing: 0.2em !important;
+    line-height: inherit !important;
+    margin-bottom: var(--spacing-lg) !important;
+  }
+
+}
+
+/* ==================== FINAL MOBILE UX OVERRIDES (Round 3 - Post-Nuclear) ==================== */
+/* These rules are placed at the absolute bottom of the file to guarantee they override 
+   the "Final Spacing Overrides" block and any rogue global touch-action rules. */
+
+@media screen and (max-width: 768px) {
+
+  /* 1. SCROLL FIX: Restore native momentum and vertical touch action */
+  html,
+  body {
+    touch-action: auto !important;
+    overflow-x: hidden !important;
+    /* Prevent horizontal sway */
+    overflow-y: auto !important;
+    /* Force native vertical scroll */
+    height: auto !important;
+    /* Prevent height-clipping locks */
+    -webkit-overflow-scrolling: touch !important;
+    /* Legacy momentum support */
+  }
+
+  /* 2. GAP FIX: Explicitly collapse the Story -> Fashion Insights void */
+  /* Target the parent wrappers that were receiving 120px gaps */
+  .story-wrapper,
+  #craft-matters {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  /* Target the Fashion Insights entrance */
+  #fashion-insights,
+  .fashion-insights-section {
+    padding-top: 6rem !important;
+    /* Tight, intentional editorial gap */
+    margin-top: 0 !important;
+  }
+
+  /* Ensure the title itself doesn't push the section down */
+  .fashion-insights-title {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    margin-bottom: 3rem !important;
+    /* Spacing between title and the cards below */
+  }
+}
+
+/* End @media (max-width: 768px) */

@@ -164,7 +164,7 @@ const CategoryRouter = {
                     <p style="font-family:var(--font-heading); font-size:1.2rem; color:#555; letter-spacing:0.05em;">
                         ${message}
                     </p>
-                    <a href="collections.html" class="view-more-link" style="margin-top:20px; display:inline-block;">View All Collections</a>
+                    <a href="/category?type=all" class="view-more-link" style="margin-top:20px; display:inline-block;">View All Collections</a>
                 </div>
             `;
         }

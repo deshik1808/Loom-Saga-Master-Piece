@@ -4,6 +4,7 @@
  */
 import CartManager from './CartManager.js';
 import { CART_UPDATED_EVENT } from './CartManager.js';
+import CheckoutRedirectManager from './CheckoutRedirectManager.js';
 
 function productUrl(productId) {
   return `/product-detail.html?id=${encodeURIComponent(String(productId))}`;
@@ -165,46 +166,66 @@ const CartRenderer = {
     });
 
     // Rebind checkout button to prevent native navigation issues
-    import('./CheckoutRedirectManager.js').then(module => {
-      // Force init to re-scan for new dynamically added buttons
-      document.querySelectorAll('#checkoutBtn, .drawer-checkout-btn').forEach(btn => {
-        btn.dataset.checkoutBound = 'false'; // force rebind
-      });
-      module.default.init();
+    // Force init to re-scan for new dynamically added buttons
+    document.querySelectorAll('#checkoutBtn, .drawer-checkout-btn').forEach(btn => {
+      btn.dataset.checkoutBound = 'false'; // force rebind
     });
+    CheckoutRedirectManager.init();
   },
 
   initDrawer() {
+    console.log('CartRenderer: Initializing drawer listeners');
     const trigger = document.getElementById('cartTriggerBtn');
-    const closeBtn = document.getElementById('drawerClose');
-    const overlay = document.getElementById('cartOverlay');
 
     if (trigger) {
       trigger.addEventListener('click', (e) => {
         e.preventDefault();
+        console.log('CartRenderer: Cart trigger clicked');
         this.openDrawer();
       });
     }
 
-    if (closeBtn) {
-      closeBtn.addEventListener('click', () => this.closeDrawer());
-    }
+    // Use event delegation for close button and overlay to be more robust
+    document.addEventListener('click', (e) => {
+      // Check if clicked close button or a child of it
+      if (e.target.closest('#drawerClose')) {
+        console.log('CartRenderer: Close button clicked');
+        this.closeDrawer();
+      }
 
-    if (overlay) {
-      overlay.addEventListener('click', () => this.closeDrawer());
-    }
+      // Check if clicked overlay
+      if (e.target.id === 'cartOverlay') {
+        console.log('CartRenderer: Overlay clicked');
+        this.closeDrawer();
+      }
+    });
+
+    // Handle ESC key to close drawer
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        this.closeDrawer();
+      }
+    });
   },
 
   openDrawer() {
-    document.getElementById('cartDrawer')?.classList.add('active');
-    document.getElementById('cartOverlay')?.classList.add('active');
+    console.log('CartRenderer: Opening drawer');
+    const drawer = document.getElementById('cartDrawer');
+    const overlay = document.getElementById('cartOverlay');
+
+    if (drawer) drawer.classList.add('active');
+    if (overlay) overlay.classList.add('active');
     document.body.style.overflow = 'hidden';
     this.renderDrawer();
   },
 
   closeDrawer() {
-    document.getElementById('cartDrawer')?.classList.remove('active');
-    document.getElementById('cartOverlay')?.classList.remove('active');
+    console.log('CartRenderer: Closing drawer');
+    const drawer = document.getElementById('cartDrawer');
+    const overlay = document.getElementById('cartOverlay');
+
+    if (drawer) drawer.classList.remove('active');
+    if (overlay) overlay.classList.remove('active');
     document.body.style.overflow = '';
   },
 
@@ -320,12 +341,10 @@ const CartRenderer = {
     this.bindDrawerItemEvents();
 
     // Drawer checkout buttons need explicit rebinding after rendering
-    import('./CheckoutRedirectManager.js').then(module => {
-      document.querySelectorAll('#cartDrawerFooter .drawer-checkout-btn').forEach(btn => {
-        btn.dataset.checkoutBound = 'false';
-      });
-      module.default.init();
+    document.querySelectorAll('#cartDrawerFooter .drawer-checkout-btn').forEach(btn => {
+      btn.dataset.checkoutBound = 'false';
     });
+    CheckoutRedirectManager.init();
   },
 
   bindDrawerItemEvents() {
