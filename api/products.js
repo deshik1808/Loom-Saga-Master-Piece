@@ -90,8 +90,8 @@ export default async function handler(req, res) {
 
         // ACF Custom Fields (PDP Accordion Descriptions)
         acf: {
-          fabricComposition: getMetaValue(product.meta_data, 'fabric_composition'),
-          materialDetails: getMetaValue(product.meta_data, 'materail_details'),
+          descriptionFit: getMetaValue(product.meta_data, 'description_fit'),
+          materials: getMetaValue(product.meta_data, 'materials'),
           careInstructions: getMetaValue(product.meta_data, 'care_instructions'),
           deliveryInfo: getMetaValue(product.meta_data, 'delivery_info'),
         },

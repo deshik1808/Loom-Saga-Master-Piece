@@ -9,8 +9,8 @@
 
 const ContactFormManager = {
     // CF7 endpoint config — same WP site used by the rest of the project
-    CF7_ENDPOINT: 'https://itirhuta.in/loomsaga-mvp/wp-json/contact-form-7/v1/contact-forms/112/feedback',
-    CF7_FORM_ID: '112',
+    CF7_ENDPOINT: 'https://checkout.loomsaga.com/wp/wp-json/contact-form-7/v1/contact-forms/26/feedback',
+    CF7_FORM_ID: '26',
 
     // Map CF7 field names to HTML input IDs for error display
     CF7_FIELD_TO_HTML_ID: {

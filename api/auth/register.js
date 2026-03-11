@@ -88,7 +88,7 @@ export default async function handler(req, res) {
 
             console.error('WC register error:', wcResponse.status, JSON.stringify(responseBody));
             return res.status(500).json({
-                error: errMessage || 'Unable to create your account at this time. Please try again later.',
+                error: 'Unable to create your account at this time. Please try again later.',
             });
         }
 

@@ -556,10 +556,11 @@ function renderPDP(product) {
   // ── Accordion: Description & Fit ──
   const descAccordion = document.getElementById('pdpAccordionDescription');
   if (descAccordion) {
-    const desc = product.description || product.shortDescription || '';
-    if (desc) {
-      // The description from WooCommerce is HTML, inject it directly
-      descAccordion.innerHTML = desc;
+    const acf = product.acf || {};
+    const descFit = acf.descriptionFit || '';
+    if (descFit) {
+      // WYSIWYG HTML from ACF
+      descAccordion.innerHTML = descFit;
     }
   }
 
@@ -567,15 +568,10 @@ function renderPDP(product) {
   const matAccordion = document.getElementById('pdpAccordionMaterials');
   if (matAccordion) {
     const acf = product.acf || {};
-    const fabricComp = acf.fabricComposition ||
-      product.attributes?.fabricComposition || '';
-    const materialDetails = acf.materialDetails || '';
+    const materialsInfo = acf.materials || '';
 
-    if (fabricComp || materialDetails) {
-      let html = '';
-      if (fabricComp) html += `<p><strong>Fabric Composition:</strong> ${fabricComp}</p>`;
-      if (materialDetails) html += materialDetails;
-      matAccordion.innerHTML = html;
+    if (materialsInfo) {
+      matAccordion.innerHTML = materialsInfo;
     }
     // If no data, leave existing placeholder content
   }
@@ -763,22 +759,15 @@ function initShareBtn(product) {
  */
 function updatePDPAccordions(product) {
   const descAccordion = document.getElementById('pdpAccordionDescription');
-  if (descAccordion && (product.description || product.shortDescription)) {
-    descAccordion.innerHTML = product.description || product.shortDescription;
+  const acf = product.acf || {};
+  
+  if (descAccordion && acf.descriptionFit) {
+    descAccordion.innerHTML = acf.descriptionFit;
   }
 
   const matAccordion = document.getElementById('pdpAccordionMaterials');
-  if (matAccordion) {
-    const acf = product.acf || {};
-    const fabricComp = acf.fabricComposition || product.attributes?.fabricComposition || '';
-    const materialDetails = acf.materialDetails || '';
-
-    if (fabricComp || materialDetails) {
-      let html = '';
-      if (fabricComp) html += `<p><strong>Fabric Composition:</strong> ${fabricComp}</p>`;
-      if (materialDetails) html += materialDetails;
-      matAccordion.innerHTML = html;
-    }
+  if (matAccordion && acf.materials) {
+    matAccordion.innerHTML = acf.materials;
   }
 
   const careAccordion = document.getElementById('pdpAccordionCare');

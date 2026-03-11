@@ -37,14 +37,21 @@ export default async function handler(req, res) {
       }),
     });
 
-    const data = await response.json();
+    const text = await response.text();
+    let data = {};
+    try {
+      data = JSON.parse(text);
+    } catch (e) {
+      console.error("WooCommerce returned non-JSON:", text);
+      return res.status(500).json({ error: "WooCommerce returned invalid formatting", details: text });
+    }
 
     if (!response.ok) {
       // If the email already exists, we treat it as a success for the user
       if (data.code === "registration-error-email-exists") {
         return res.status(200).json({ success: true, message: "Already subscribed!" });
       }
-      
+
       console.error("WooCommerce Error:", data);
       return res.status(500).json({ error: data.message || "Failed to save to WordPress" });
     }

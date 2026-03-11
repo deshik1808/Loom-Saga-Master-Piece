@@ -51,11 +51,23 @@ export default async function handler(req, res) {
 
             if (status === 403 || status === 401) {
                 // Try to extract error message from JWT plugin
-                let errorMsg = 'Invalid email or password.';
+                let errorMsg = 'Incorrect email or password. Please try again.';
                 try {
                     const errBody = await tokenResponse.json();
                     if (errBody?.message) {
-                        errorMsg = errBody.message;
+                        // Strip HTML tags recursively to prevent any backend leakage
+                        let cleanMsg = errBody.message.replace(/<[^>]*>?/gm, '').trim();
+
+                        // Map known messy WP errors to premium frontend copy
+                        const msgLower = cleanMsg.toLowerCase();
+                        if (msgLower.includes('incorrect') || msgLower.includes('password you entered')) {
+                            errorMsg = 'Incorrect credentials. Please try again or reset your password.';
+                        } else if (msgLower.includes('unknown email') || msgLower.includes('invalid email') || msgLower.includes('invalid username')) {
+                            errorMsg = 'We could not find an account with that email address.';
+                        } else {
+                            // Fallback to sanitized message if we don't recognize it
+                            errorMsg = cleanMsg;
+                        }
                     }
                 } catch (_) { /* ignore */ }
 
