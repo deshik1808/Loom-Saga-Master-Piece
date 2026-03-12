@@ -160,11 +160,18 @@ const CategoryRouter = {
         const grid = document.getElementById('categoryProductsGrid');
         if (grid) {
             grid.innerHTML = `
-                <div style="grid-column: 1/-1; text-align:center; padding:5rem 1rem;">
-                    <p style="font-family:var(--font-heading); font-size:1.2rem; color:#555; letter-spacing:0.05em;">
-                        ${message}
+                <div style="grid-column: 1/-1; text-align:center; padding:5rem 2rem;">
+                    <p style="font-family:var(--font-heading); font-size:1.4rem; color:#333; letter-spacing:0.12em; margin-bottom:0.6rem;">
+                        COMING SOON
                     </p>
-                    <a href="/category?type=all" class="view-more-link" style="margin-top:20px; display:inline-block;">View All Collections</a>
+                    <p style="font-family:var(--font-body, Georgia, serif); font-size:0.95rem; color:#888; line-height:1.7; max-width:420px; margin:0 auto 2rem;">
+                        Our artisans are weaving something extraordinary for this collection. Stay tuned for timeless pieces crafted with love.
+                    </p>
+                    <a href="/category?type=all"
+                       style="display:inline-block; padding:0.7rem 2.2rem; border:1px solid #333; color:#333; font-family:var(--font-heading); font-size:0.8rem; letter-spacing:0.15em; text-decoration:none; text-transform:uppercase; transition:background 0.3s ease, color 0.3s ease;"
+                       onmouseover="this.style.background='#333'; this.style.color='#fff';"
+                       onmouseout="this.style.background='transparent'; this.style.color='#333';"
+                    >View Collections</a>
                 </div>
             `;
         }

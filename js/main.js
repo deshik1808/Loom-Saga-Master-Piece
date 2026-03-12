@@ -2954,9 +2954,16 @@ const FilterSortManager = {
                 <p style="font-family:var(--font-body,Georgia,serif);font-size:0.95rem;color:#888;line-height:1.8;max-width:420px;margin:0 auto 1.8rem;">
                     Your refined selection yields no results at this moment &mdash; our curators are continually expanding the atelier. Try adjusting your filters or explore the full collection.
                 </p>
-                <button onclick="FilterSortManager.clearFilters();" style="background:none;border:1px solid #2c2c2c;color:#2c2c2c;font-family:var(--font-heading,'Cormorant Garamond',Georgia,serif);font-size:0.78rem;letter-spacing:0.22em;padding:0.75rem 2.2rem;cursor:pointer;text-transform:uppercase;">Clear Filters</button>
+                <button class="filter-empty-state-clear" style="background:none;border:1px solid #2c2c2c;color:#2c2c2c;font-family:var(--font-heading,'Cormorant Garamond',Georgia,serif);font-size:0.78rem;letter-spacing:0.22em;padding:0.75rem 2.2rem;cursor:pointer;text-transform:uppercase;">Clear Filters</button>
             `;
             this.productsGrid.appendChild(emptyState);
+            
+            const clearBtn = emptyState.querySelector('.filter-empty-state-clear');
+            if (clearBtn) {
+                clearBtn.addEventListener('click', () => {
+                    this.clearFilters();
+                });
+            }
         }
 
         CartManager.showNotification(

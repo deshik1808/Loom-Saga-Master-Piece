@@ -88,7 +88,9 @@ const CheckoutRedirectManager = {
       // Keep the cart intact during the redirect to prevent "Your cart is empty" flash.
       // The cart will be cleared automatically on the order-confirmation page.
 
-      window.location.href = payload.url;
+      // Use location.replace() so the WooCommerce checkout URL does NOT enter 
+      // browser history. Pressing "Back" will skip past WooCommerce entirely.
+      window.location.replace(payload.url);
     } catch (error) {
       console.error('Checkout redirect failed:', error);
       alert('Unable to redirect to secure checkout right now. Please try again.');

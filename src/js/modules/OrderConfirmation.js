@@ -19,6 +19,11 @@ class OrderConfirmationController {
         localStorage.removeItem('loomSaga_suspendedCart');
         window.dispatchEvent(new Event('cartUpdated'));
 
+        // ── Back-Button Guard ──
+        // Prevent the browser "Back" button from taking users to the 
+        // empty WooCommerce checkout page. Instead, redirect to our cart.
+        this.setupBackButtonGuard();
+
         // Show the loading state
         this.showLoading();
 
@@ -219,6 +224,23 @@ class OrderConfirmationController {
     formatPrice(amount) {
         if (isNaN(amount)) return '0';
         return amount.toLocaleString('en-IN');
+    }
+
+    /**
+     * Prevents browser Back button from navigating to the WooCommerce checkout.
+     * Uses history.pushState + popstate listener to intercept Back navigation
+     * and redirect to our custom cart page instead.
+     */
+    setupBackButtonGuard() {
+        // Push a dummy state so that pressing "Back" pops THIS state
+        // instead of navigating away from our page
+        window.history.pushState({ loomSagaGuard: true }, '');
+
+        window.addEventListener('popstate', (event) => {
+            // When Back is pressed, the dummy state gets popped.
+            // Redirect to our custom cart page instead of WooCommerce.
+            window.location.replace('cart.html');
+        });
     }
 }
 
