@@ -242,11 +242,17 @@ async function triggerPasswordReset(wpUrl, email, credentials) {
  */
 function generateSecurePassword(length = 24) {
     const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';
-    const crypto = require('crypto');
-    const randomBytes = crypto.randomBytes(length);
     let password = '';
-    for (let i = 0; i < length; i++) {
-        password += chars[randomBytes[i] % chars.length];
+    if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+        const randomValues = new Uint32Array(length);
+        crypto.getRandomValues(randomValues);
+        for (let i = 0; i < length; i++) {
+            password += chars[randomValues[i] % chars.length];
+        }
+    } else {
+        for (let i = 0; i < length; i++) {
+            password += chars[Math.floor(Math.random() * chars.length)];
+        }
     }
     return password;
 }

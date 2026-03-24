@@ -34,6 +34,12 @@ class ProductService {
       this.loadCategories(),
       this.loadCollections()
     ]).then(() => {
+      // Ensure out-of-stock products are always pushed to the bottom globally
+      this.products.sort((a, b) => {
+        if (a.inStock === b.inStock) return 0;
+        return a.inStock ? -1 : 1;
+      });
+
       this.isLoaded = true;
       console.log(`ProductService: ${this.products.length} products loaded from ${this.dataSource}`);
     });
@@ -323,7 +329,7 @@ class ProductService {
     if (explicitIds.length > 0) {
       const explicit = explicitIds
         .map(id => this.getProductById(id))
-        .filter(p => p !== null && !addedIds.has(p.id));
+        .filter(p => p !== null && !addedIds.has(p.id) && p.inStock); // Never show out of stock in related
 
       for (const p of explicit) {
         if (results.length < limit) {
@@ -345,7 +351,7 @@ class ProductService {
       });
     }
 
-    const others = this.products.filter(p => !addedIds.has(p.id));
+    const others = this.products.filter(p => !addedIds.has(p.id) && p.inStock); // Never show out of stock in related
     const sameCat = others.filter(p => {
       if (currentSlugs.has(p.category) || currentSlugs.has(p.categorySlug)) return true;
       if (Array.isArray(p.categories)) {
@@ -364,7 +370,7 @@ class ProductService {
     if (results.length >= limit) return results;
 
     // 3. Completely random fallback
-    const remaining = this.products.filter(p => !addedIds.has(p.id));
+    const remaining = this.products.filter(p => !addedIds.has(p.id) && p.inStock); // Never show out of stock in related
     const shuffled = remaining.sort(() => 0.5 - Math.random());
 
     for (const p of shuffled) {
@@ -457,21 +463,27 @@ class ProductService {
   sortProducts(products, sortBy = 'newest') {
     const sorted = [...products];
 
+    // Helper to keep out-of-stock items at the bottom when sorting
+    const stockSort = (a, b) => {
+      if (a.inStock === b.inStock) return 0;
+      return a.inStock ? -1 : 1;
+    };
+
     switch (sortBy) {
       case 'newest':
-        return sorted.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+        return sorted.sort((a, b) => stockSort(a, b) || new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
       case 'price-low':
-        return sorted.sort((a, b) => a.price - b.price);
+        return sorted.sort((a, b) => stockSort(a, b) || a.price - b.price);
       case 'price-high':
-        return sorted.sort((a, b) => b.price - a.price);
+        return sorted.sort((a, b) => stockSort(a, b) || b.price - a.price);
       case 'name-az':
-        return sorted.sort((a, b) => a.name.localeCompare(b.name));
+        return sorted.sort((a, b) => stockSort(a, b) || a.name.localeCompare(b.name));
       case 'name-za':
-        return sorted.sort((a, b) => b.name.localeCompare(a.name));
+        return sorted.sort((a, b) => stockSort(a, b) || b.name.localeCompare(a.name));
       case 'rating':
-        return sorted.sort((a, b) => (b.ratings?.average || 0) - (a.ratings?.average || 0));
+        return sorted.sort((a, b) => stockSort(a, b) || (b.ratings?.average || 0) - (a.ratings?.average || 0));
       default:
-        return sorted;
+        return sorted.sort(stockSort);
     }
   }
 

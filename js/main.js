@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Loom Saga - Main JavaScript
  * Handles interactive features for the e-commerce website
  */
@@ -3142,6 +3142,17 @@ function initProductDetail() {
         addToCartBtn.addEventListener('click', () => {
             if (addToCartBtn.dataset.dynamicBound === 'true') return;
 
+            // Handle Notify Me if button is out-of-stock
+            if (addToCartBtn.classList.contains('product-notify-btn')) {
+                const notifyOverlay = document.getElementById('notifyOverlay');
+                const notifyModal = document.getElementById('notifyModal');
+                if (notifyOverlay && notifyModal) {
+                    notifyOverlay.classList.add('active');
+                    notifyModal.classList.add('active');
+                }
+                return;
+            }
+
             const parsedStockQuantity = Number(productInfo.dataset.stockQuantity);
             const inStock = productInfo.dataset.inStock === 'false' ? false : true;
             // Get product data from data attributes
@@ -3323,6 +3334,64 @@ function initProductDetail() {
                 break;
         }
     });
+
+    // ==================== NOTIFY ME MODAL ====================
+    const notifyOverlay = document.getElementById('notifyOverlay');
+    const notifyModal = document.getElementById('notifyModal');
+    const notifyClose = document.getElementById('notifyClose');
+    const notifyForm = document.getElementById('notifyForm');
+    const notifySuccess = document.getElementById('notifySuccess');
+
+    function closeNotifyModal() {
+        if (notifyOverlay) notifyOverlay.classList.remove('active');
+        if (notifyModal) notifyModal.classList.remove('active');
+        if (notifySuccess) notifySuccess.style.display = 'none';
+        if (notifyForm) notifyForm.reset();
+    }
+
+    if (notifyClose) notifyClose.addEventListener('click', closeNotifyModal);
+    if (notifyOverlay) notifyOverlay.addEventListener('click', closeNotifyModal);
+
+    if (notifyForm) {
+        notifyForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = notifyForm.querySelector('.notify-submit-btn');
+            const originalText = btn.textContent;
+            btn.textContent = 'PLEASE WAIT...';
+            btn.disabled = true;
+
+            const emailInput = document.getElementById('notifyEmail');
+            const productInfo = document.querySelector('.product-info');
+            const data = { 
+                email: emailInput.value,
+                productName: productInfo ? productInfo.dataset.productName : 'Unknown Product',
+                productId: productInfo ? productInfo.dataset.productId : ''
+            };
+
+            try {
+                // Sent to our Vercel Serverless Function which forwards to WordPress
+                const response = await fetch('/api/notify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                // Regardless of outcome we treat it as success for UI unless network error
+                if (notifySuccess) notifySuccess.style.display = 'block';
+                notifyForm.reset();
+            } catch (err) {
+                console.error('Notify Me error:', err);
+                if (notifySuccess) {
+                    notifySuccess.style.color = '#d32f2f';
+                    notifySuccess.textContent = 'Oops, something went wrong. Please try again.';
+                    notifySuccess.style.display = 'block';
+                }
+            } finally {
+                btn.textContent = originalText;
+                btn.disabled = false;
+                setTimeout(closeNotifyModal, 3000); // Close automatically after 3 seconds
+            }
+        });
+    }
 }
 
 // Run initialization when DOM is ready

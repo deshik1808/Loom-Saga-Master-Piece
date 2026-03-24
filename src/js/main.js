@@ -304,17 +304,10 @@ function resolveSwatchColor(name) {
   }
 
   // 3. Native CSS named color: test by assigning to a temp element
-  //    If the browser can resolve it, getComputedStyle returns a non-empty value
+  //    If the browser can resolve it, the style property will retain the value
   const testEl = document.createElement('div');
-  testEl.style.display = 'none';
   testEl.style.color = name;
-  document.body.appendChild(testEl);
-  const computed = window.getComputedStyle(testEl).color;
-  document.body.removeChild(testEl);
-  // 'rgb(0, 0, 0)' means it resolved to black (which could mean it worked
-  // for 'black' but also means it failed for unknown names since the default
-  // is transparent, not black). Check for non-default non-transparent value:
-  if (computed && computed !== 'rgba(0, 0, 0, 0)' && computed !== '') {
+  if (testEl.style.color !== '') {
     return { bg: name, isMulti: false };
   }
 
@@ -465,18 +458,38 @@ function renderPDP(product) {
 
   // ── Add to Cart button ──
   const addToCartBtn = document.getElementById('addToCartBtn');
+  const outOfStockText = document.getElementById('outOfStockText');
+  const lowStockText = document.getElementById('lowStockText');
+  
   if (addToCartBtn) {
     addToCartBtn.setAttribute('data-product-id', product.id || '');
 
     const purchasable = ProductRenderer.isPurchasable(product);
+    const stockQuantity = Number(product.stockQuantity || product.stock_quantity);
+
+    // Hide low stock text by default
+    if (lowStockText) lowStockText.style.display = 'none';
+
     if (!purchasable) {
-      addToCartBtn.disabled = true;
-      addToCartBtn.textContent = 'OUT OF STOCK';
-      addToCartBtn.classList.add('product-add-btn--disabled');
+      if (outOfStockText) outOfStockText.style.display = 'block';
+      addToCartBtn.disabled = false;
+      addToCartBtn.textContent = 'NOTIFY ME';
+      addToCartBtn.classList.add('product-notify-btn');
+      addToCartBtn.classList.remove('product-add-btn--disabled');
     } else {
+      if (outOfStockText) outOfStockText.style.display = 'none';
+      
+      // Handle low stock string logic (9 or fewer items)
+      if (Number.isFinite(stockQuantity) && stockQuantity > 0 && stockQuantity <= 9) {
+          if (lowStockText) {
+              lowStockText.textContent = `'Only ${stockQuantity} left in stock.'`;
+              lowStockText.style.display = 'block';
+          }
+      }
+      
       addToCartBtn.disabled = false;
       addToCartBtn.textContent = 'ADD TO CART';
-      addToCartBtn.classList.remove('product-add-btn--disabled');
+      addToCartBtn.classList.remove('product-notify-btn', 'product-add-btn--disabled');
     }
   }
 
