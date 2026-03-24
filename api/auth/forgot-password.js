@@ -209,51 +209,28 @@ export default async function handler(req, res) {
 }
 
 /**
- * Triggers the WordPress password reset via the wp-rest-password-reset plugin endpoint.
- * This is more robust than POSTing to wp-login.php in headless environments.
+ * Triggers the WordPress password reset via the custom Loom Saga REST endpoint
+ * registered by the WPCode "Loom Saga – Headless Password Reset API" snippet.
+ * Endpoint: POST /wp-json/loomsaga/v1/password-reset
+ * No auth needed — the PHP snippet handles security internally.
  */
 async function triggerPasswordReset(wpUrl, email, credentials) {
     try {
-        // First choice: Dedicated REST endpoint (installed via mcp_wordpress-mcp)
-        const restResponse = await fetch(
-            `${wpUrl}/wp-json/wp-rest-password-reset/v1/password/reset`,
+        const response = await fetch(
+            `${wpUrl}/wp-json/loomsaga/v1/password-reset`,
             {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    user_login: email,
-                }),
+                body: JSON.stringify({ email }),
             }
         );
 
-        if (restResponse.ok) return true;
+        const data = await response.json().catch(() => ({}));
+        console.log('Password reset endpoint response:', response.status, JSON.stringify(data));
 
-        // Fallback: If for some reason the plugin is not responsive, try standard WC LOST_PASSWORD 
-        // trigger by creating a WC customer WITHOUT a password (if new) or updating it? 
-        // No, standard POST to wp-login.php is likely blocked by Loginizer (403).
-        
-        console.warn('REST password reset endpoint failed, trying wp-login.php fallback...');
-
-        const formData = new URLSearchParams();
-        formData.append('user_login', email);
-        formData.append('wp-submit', 'Get New Password');
-        formData.append('action', 'lostpassword');
-
-        await fetch(
-            `${wpUrl}/wp-login.php?action=lostpassword`,
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                   'User-Agent': 'Vercel-Auth-Module/1.0',
-                },
-                body: formData.toString(),
-                redirect: 'manual',
-            }
-        );
-        return true;
+        return response.ok && data.success === true;
     } catch (err) {
         console.error('Password reset trigger error:', err);
         return false;
