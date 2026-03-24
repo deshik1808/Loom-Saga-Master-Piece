@@ -88,9 +88,9 @@ const CheckoutRedirectManager = {
       // Keep the cart intact during the redirect to prevent "Your cart is empty" flash.
       // The cart will be cleared automatically on the order-confirmation page.
 
-      // Use location.replace() so the WooCommerce checkout URL does NOT enter 
-      // browser history. Pressing "Back" will skip past WooCommerce entirely.
-      window.location.replace(payload.url);
+      // Use location.href (NOT replace) so cart.html STAYS in browser history.
+      // This way, pressing Back from WooCommerce checkout returns to the Vite cart.
+      window.location.href = payload.url;
     } catch (error) {
       console.error('Checkout redirect failed:', error);
       alert('Unable to redirect to secure checkout right now. Please try again.');

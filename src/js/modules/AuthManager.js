@@ -161,7 +161,9 @@ async function forgotPassword(email) {
     const { ok, data } = await apiRequest('/api/auth/forgot-password', { email });
 
     return {
-        success: true,
+        success: data.success !== false,
+        accountCreated: !!data.accountCreated,
+        noAccount: !!data.noAccount,
         message:
             data.message ||
             'If an account exists with this email, you will receive a password reset link shortly.',
