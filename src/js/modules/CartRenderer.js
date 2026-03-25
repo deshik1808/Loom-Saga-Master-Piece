@@ -7,7 +7,7 @@ import { CART_UPDATED_EVENT } from './CartManager.js';
 import CheckoutRedirectManager from './CheckoutRedirectManager.js';
 
 function productUrl(productId) {
-  return `/product-detail.html?id=${encodeURIComponent(String(productId))}`;
+  return `/product-detail?id=${encodeURIComponent(String(productId))}`;
 }
 
 const CartRenderer = {

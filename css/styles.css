@@ -3612,7 +3612,12 @@ section.fashion-insights-section {
   display: block;
 }
 
-/* --- WordPress spacing utility classes (Gutenberg) --- */
+/* --- WordPress spacing & alignment utility classes (Gutenberg) --- */
+
+.article-body .has-text-align-left { text-align: left !important; }
+.article-body .has-text-align-center { text-align: center !important; }
+.article-body .has-text-align-right { text-align: right !important; }
+.article-body .has-text-align-justify { text-align: justify !important; }
 
 .article-body .has-small-font-size {
   font-size: 0.8rem;

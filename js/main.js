@@ -2508,7 +2508,7 @@ const CategoryPageManager = {
         'muslin-jamdani': 'MUSLIN JAMDANI',
         'tissue-matka-jamdani': 'TISSUE MATKA JAMDANI',
         'silk-lenin': 'SILK LENIN',
-        'all': 'COLLECTION'
+        'all': 'ALL COLLECTIONS'
     },
 
     normalizeSlug(value) {

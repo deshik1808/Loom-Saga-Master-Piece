@@ -41,7 +41,8 @@ const CategoryRouter = {
         'lavender': 'LAVENDER',
         'orange': 'ORANGE',
         'sea-green': 'SEA GREEN',
-        'multi-color': 'MULTI COLOR'
+        'multi-color': 'MULTI COLOR',
+        'all': 'ALL COLLECTIONS'
     },
 
     init: async function () {

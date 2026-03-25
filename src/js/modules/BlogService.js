@@ -44,6 +44,11 @@ class BlogService {
                 url += `&category=${encodeURIComponent(category)}`;
             }
 
+            // If user requests nocache=1 in browser URL, pass a timestamp to bypass CDN
+            if (new URLSearchParams(window.location.search).has('nocache')) {
+                url += `&nocache=${Date.now()}`;
+            }
+
             const response = await fetch(url);
 
             if (!response.ok) {
@@ -90,7 +95,12 @@ class BlogService {
 
         // ── 2. Fetch from API ──
         try {
-            const response = await fetch(`/api/posts?slug=${encodeURIComponent(slug)}`);
+            let url = `/api/posts?slug=${encodeURIComponent(slug)}`;
+            if (new URLSearchParams(window.location.search).has('nocache')) {
+                url += `&nocache=${Date.now()}`;
+            }
+
+            const response = await fetch(url);
 
             if (!response.ok) {
                 if (response.status === 404) {

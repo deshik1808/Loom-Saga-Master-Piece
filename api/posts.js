@@ -15,7 +15,10 @@ export default async function handler(req, res) {
   if (slug) {
     // --- SINGLE POST MODE ---
     try {
-      const apiUrl = `${WP_BASE_URL}/wp-json/wp/v2/posts?slug=${encodeURIComponent(slug)}&_embed&status=publish`;
+      let apiUrl = `${WP_BASE_URL}/wp-json/wp/v2/posts?slug=${encodeURIComponent(slug)}&_embed&status=publish`;
+      if (req.query.nocache) {
+        apiUrl += `&nocache=${req.query.nocache}`;
+      }
 
       const response = await fetch(apiUrl, { method: "GET" });
 
@@ -75,7 +78,11 @@ export default async function handler(req, res) {
 
       // Cache at Vercel's edge CDN — 10 min fresh, 20 min stale-while-revalidate
       // (articles change less frequently than listings)
-      res.setHeader('Cache-Control', 's-maxage=600, stale-while-revalidate=1200');
+      if (req.query.nocache) {
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+      } else {
+        res.setHeader('Cache-Control', 's-maxage=600, stale-while-revalidate=1200');
+      }
 
       return res.status(200).json({
         post: {
@@ -120,6 +127,10 @@ export default async function handler(req, res) {
         } catch (catErr) {
           console.warn("Could not resolve category slug:", catErr.message);
         }
+      }
+
+      if (req.query.nocache) {
+        apiUrl += `&nocache=${req.query.nocache}`;
       }
 
       const response = await fetch(apiUrl, { method: "GET" });
@@ -172,7 +183,11 @@ export default async function handler(req, res) {
       });
 
       // Cache at Vercel's edge CDN — 5 min fresh, 10 min stale-while-revalidate
-      res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=600');
+      if (req.query.nocache) {
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+      } else {
+        res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=600');
+      }
 
       return res.status(200).json({
         posts,

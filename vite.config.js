@@ -25,6 +25,21 @@ function categoryRewritePlugin() {
   };
 }
 
+function productDetailRewritePlugin() {
+  return {
+    name: 'product-detail-rewrite',
+    configureServer(server) {
+      server.middlewares.use((req, res, next) => {
+        if (req.url && req.url.match(/^\/product-detail(\?|$)/)) {
+          req.url = req.url.replace('/product-detail', '/product-detail.html');
+        }
+        next();
+      });
+    },
+  };
+}
+
+
 function vercelApiDevPlugin() {
   return {
     name: 'vercel-api-dev',
@@ -164,7 +179,7 @@ export default defineConfig({
   root: '.',
 
   // Plugins
-  plugins: [categoryRewritePlugin(), vercelApiDevPlugin(), apiNewsletterPlugin()],
+  plugins: [categoryRewritePlugin(), productDetailRewritePlugin(), vercelApiDevPlugin(), apiNewsletterPlugin()],
 
   // Build options
   build: {
